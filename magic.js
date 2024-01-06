@@ -1,6 +1,6 @@
 let syntaxOKFlag,syntaxErrorMessage
 
-async function callVirtualEndpoint(url,method) {
+async function callVirtualEndpoint(url,verb) {
     const res = new SimResponse()
     document.getElementById("codehost")?.remove()
 
@@ -32,15 +32,15 @@ async function callVirtualEndpoint(url,method) {
     const req = new SimRequest()
 
     req.setPath(url)
-    req._method = method
-    if(method == "POST") req.setBody(postdata.innerText)
+    req.method = verb
+    if(verb == "POST") req.setBody(postdata.innerText)
 
 
     window.initWebService(); // We are doing this each time although we wouldn't 
-
-    if (window[`_${req.params[2]}`]) {
+    const fName = `${verb.toLowerCase()}_${req.params[2]}`
+    if (window[fName]) {
         try {
-            await window[`_${req.params[2]}`](req, res)
+            await window[fName](req, res)
         } catch(e) {
             console.log(e)
             res.status(500);
@@ -48,7 +48,7 @@ async function callVirtualEndpoint(url,method) {
         }
     } else {
         res.status(404);
-        res.send(`Not Found /${req.params[2]}`)
+        res.send(`Not Found handler ${fName}`)
     }
     return res;
 }
