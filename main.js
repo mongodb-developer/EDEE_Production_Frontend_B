@@ -52,11 +52,11 @@ async function callService(method) {
 //Load a JS file and populate the code side
 
 async function loadTemplateCode(fname) {
-    const response = await fetch(`/${fname}`)
+    const response = await fetch(`${fname}`)
     const js = await response.text()
     code.innerText = js;
     try {
-    const postexample = await fetch(`/${fname}.data`)
+    const postexample = await fetch(`${fname}.data`)
     const posttemaplte = await postexample.text()
     postdata.innerText = posttemaplte;
     } catch(e) {
