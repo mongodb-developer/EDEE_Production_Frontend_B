@@ -5,6 +5,7 @@ const mongoClient = null;
 async function initWebService() {
     const userName = "bob"
     const passWord = "builder"
+    //User created automatically if it doesn't exist in simulator
     mongoClient = new MongoClient("mongodb+srv://" + userName + ":" +  passWord +  "@atlascluster.rnlzxqz.mongodb.net"); 
 }
 

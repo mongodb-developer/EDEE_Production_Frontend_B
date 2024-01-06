@@ -53,7 +53,12 @@ html {
 }
 
 .button {
-  width: 10em;
+  font-size: large;
+  border-radius: 0.5em;
+  margin: 0.5em;
+  background-color: white;
+  padding: 0.5em 1em 0.5em 1em;
+
 }
 
 .label {
@@ -72,10 +77,14 @@ html {
 }
 
 .url {
-  width: 100%;
-  padding: 1em;
+  margin: 1em;
   border: 1px solid black;
+  margin-left: 3em;
+  padding: 0.5em;
+  background: white;
+  border-radius: 0.5em;
 }
+
 
 .path { 
   background: white;
@@ -86,7 +95,7 @@ html {
 }
 
 .staticpath {
-  margin-left: 3em;
+  margin-left: 1em;
 }
 
 .postdata {
@@ -100,7 +109,7 @@ html {
   padding: 1em;
   white-space: pre;
   margin-left: 3em;
-
+  border-radius: 0.5em;
   overflow: scroll;
   font-family: 'Andale Mono', 'Courier New', Courier, monospace;
 }
@@ -111,9 +120,10 @@ html {
 
   border: 1px solid black;
   height: 90%;
-  margin: 1vw;
+  margin: 1em;
   white-space: pre-wrap;
-
+  margin-left: 3em;
   overflow: scroll;
+  border-radius: 0.5em;
   font-family: 'Andale Mono', 'Courier New', Courier, monospace;
 }
