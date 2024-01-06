@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://unpkg.com/realm-web/dist/bundle.iife.js"></script>
+        <script src="main.js"></script>
+        <script src="magic.js"></script>
+        <script src="reqres.js"></script>
+        <script src="driver.js"></script>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body onLoad="onLoad()">
+        <div class="sim-container">
+            <div id="infobox" class="infobox"></div>
+        <div class="flex-container">
+            <div id="codediv" contenteditable class="code">
+                Code Here
+            </div>
+            <div id="outputdiv" class="test">
+                <div >
+                    <div class="label">Endpoint URL:</div>
+                    <span class="path staticpath" id="url" ></span>
+                    <span class="path" contenteditable id="endpoint"/>addData</span>
+                    </div>
+                    <div class="label">POST Data:</div>
+                    <div class="postdata" contenteditable id="postdata"></div>
+                    <div class="button-container">
+                    <button class="button" onclick = "callService('GET')" id="callService"> GET </button> 
+                    <button class="button" onclick = "callService('POST')" id="callService"> POST </button>
+                </div>
+                    <div class="label">Response:</div>
+                <div id="response" class="response"> </div>
+                
+            </div>
+        </div>
+        <div>
+    </body>
+<html>

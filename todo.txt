@@ -1,0 +1,17 @@
+
+Clean up UI
+
+Test and Demonstrate aggregation / $search
+
+Add shared read-only support
+Add Load and Save
+Add read only loads (Templates)
+
+Faux Console for debugging ?
+TAB to insert N spaces
+
+Add Cursors
+Add list Collections/Databases
+Add 'findOneAnd'
+
+Add 'Java' 'C#' and 'Python' support
