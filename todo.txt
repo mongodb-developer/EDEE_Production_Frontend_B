@@ -1,17 +1,16 @@
-
-Clean up UI
-
-Test and Demonstrate aggregation / $search
-
 Add shared read-only support
-Add Load and Save
-Add read only loads (Templates)
-
-Faux Console for debugging ?
-TAB to insert N spaces
-
 Add Cursors
+Add read only loads (Templates)
+Add Load and Save
+
+TAB to insert N spaces
 Add list Collections/Databases
-Add 'findOneAnd'
+Add findOneAndUpdate
+Add createIndex??
+
+N.B cannot add explain() bu that may not matter.
+
+MVP?
+
 
 Add 'Java' 'C#' and 'Python' support
