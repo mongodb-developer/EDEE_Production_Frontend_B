@@ -1,10 +1,11 @@
 
 Add Cursors
+Break "Driver" into classes
 
 TAB to insert N spaces
 Add list Collections/Databases
 Add findOneAndUpdate
-Add createIndex??
+Add createIndex and other non App service funtions.
 
 N.B cannot add explain() bu that may not matter.
 

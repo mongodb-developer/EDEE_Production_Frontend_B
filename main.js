@@ -13,10 +13,28 @@ async function onLoad() {
         await loadTemplateCode(myURL.searchParams.get("src"))
     }
 
+    code.onkeydown = function(e){
+
+        if(e.key == 'Tab') {
+            console.log("TAB")
+            insertTextAtCursor("    ");
+            e.preventDefault();
+        }
+    }
     // messageBox("Hi - I'm for debugging and things");
 
 }
 
+function insertTextAtCursor(text)
+{
+    let selection = window.getSelection();
+    let range = selection.getRangeAt(0);
+    range.deleteContents();
+    let node = document.createTextNode(text);
+    range.insertNode(node);
+
+    selection.collapseToEnd();
+}
 
 
 function messageBox(str) {
