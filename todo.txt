@@ -2,8 +2,14 @@
 Add Cursors
 Break "Driver" into classes
 
-TAB to insert N spaces
+
 Add list Collections/Databases
+
+  Java mongoClient.listDatbaseNames()
+  Node db.admin().listDatbaseNames()
+  db.listCollections()
+
+
 Add findOneAndUpdate
 Add createIndex and other non App service funtions.
 
