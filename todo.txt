@@ -1,7 +1,5 @@
 Add shared read-only support
 Add Cursors
-Add Load and Save (Maybe just Copy)
-
 TAB to insert N spaces
 Add list Collections/Databases
 Add findOneAndUpdate
@@ -11,5 +9,5 @@ N.B cannot add explain() bu that may not matter.
 
 MVP?
 
-
+Add Load and Save ?
 Add 'Java' 'C#' and 'Python' support

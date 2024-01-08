@@ -25,7 +25,7 @@ async function get_Person(req, res) {
    res.send(rval)
   } catch(err) {
     res.status(500);
-    res.send(e)
+    res.send(err)
   }
 }
 
@@ -41,6 +41,6 @@ async function post_Person(req, res) {
    res.send(rval)
   } catch(err) {
     res.status(500);
-    res.send(e)
+    res.send(err)
   }
 }
