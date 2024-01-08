@@ -1,7 +1,6 @@
 Add shared read-only support
 Add Cursors
-Add read only loads (Templates)
-Add Load and Save
+Add Load and Save (Maybe just Copy)
 
 TAB to insert N spaces
 Add list Collections/Databases

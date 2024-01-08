@@ -83,3 +83,9 @@ async function loadTemplateCode(fname) {
     }
 
 }
+
+function saveToClipboard()
+{
+    navigator.clipboard.writeText(code.innerText);
+  
+}
