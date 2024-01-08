@@ -1,5 +1,6 @@
-Add shared read-only support
+
 Add Cursors
+
 TAB to insert N spaces
 Add list Collections/Databases
 Add findOneAndUpdate
@@ -11,3 +12,4 @@ MVP?
 
 Add Load and Save ?
 Add 'Java' 'C#' and 'Python' support
+$out,$merge,$lookup,$unionWith doctoring

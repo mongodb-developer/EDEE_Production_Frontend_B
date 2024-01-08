@@ -1,10 +1,10 @@
 
 // This is called once when the web service starts up
-const mongoClient = null;
+var mongoClient = null;
 
 async function initWebService() {
-  const userName = "bob"
-  const passWord = "builder"
+  var userName = "bob"
+  var passWord = "builder"
   //User created automatically if it doesn't exist in simulator
   mongoClient = new MongoClient("mongodb+srv://" + userName + ":" + passWord + "@atlascluster.rnlzxqz.mongodb.net");
 }
@@ -26,7 +26,7 @@ async function get_Movies(req, res) {
     query.title = titleLookedFor
 
     rval = await collection.find(query)
-    
+
     res.status(200);
     res.send(rval)
   } catch (err) {
