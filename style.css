@@ -1,3 +1,5 @@
+
+
 :root {
   --slate: #001e2b;
   --springgreen: #00ed64;
@@ -94,7 +96,7 @@ html {
   color: var(--springgreen);
   background: black;
   width: 48vw;
-  height: 92vh;
+  height: 85vh;
   margin: 1em;
   display: block;
   padding: 1em;
@@ -110,6 +112,33 @@ html {
   flex-direction: row;
   margin: auto;
 }
+
+
+.menu-container {
+  display: flex;
+  flex-direction: row;
+   margin-left: 1em;
+}
+
+.menu {
+  background-color: var(--forestgreen);
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: large;
+  border-radius: 0.5em;
+  margin: 0.5em;
+
+  padding: 0.5em 1em 0.5em 1em;
+
+}
+
+menu.a:hover, menu.a:active {
+  background-color: red;
+}
+
 
 .button {
   font-size: large;
@@ -127,11 +156,12 @@ html {
 .test {
     border-radius: 1em;
     width: 48vw;
-    height: 96vh;
+    height: 88vh;
     margin: 1vw;
     display: flex;
     background: rgb(240,240,240);
     flex-direction: column;
+
   
 }
 
@@ -142,20 +172,30 @@ html {
   padding: 0.5em;
   background: white;
   border-radius: 0.5em;
+  display: flex;
+  flex-direction: row;
 }
 
 
+#endpoint {
+  border: 1px solid rgb(240,240,240);
+  min-width: 50%;
+
+}
 .path { 
+  display:inline-block;
   font-family: 'Source Code Pro', monospace;
   background: white;
   color: black;
-  margin: 1em;
-  margin-left: -1.6em;
-  padding: 0.2em;
+  margin: 0em;  
+
+  padding: 0em;
+ 
 }
 
 .staticpath {
   margin-left: 1em;
+  margin-right: 0em;
 }
 
 .postdata {

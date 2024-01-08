@@ -14,7 +14,7 @@ async function initWebService() {
 //Functions names starting with get_ or post_ are exposed as HTTP endpoints
 //Request and response objects are sent to each
 
-async function get_Person(req,res) {
+async function get_Person(req, res) {
 
   db = mongoClient.getDatabase("test")
   collection = db.getCollection("example")
@@ -30,7 +30,7 @@ async function get_Person(req,res) {
 }
 
 
-async function post_Person(req,res) {
+async function post_Person(req, res) {
 
   db = mongoClient.getDatabase("test")
   collection = db.getCollection("example")
