@@ -1,17 +1,14 @@
 
-Add Cursors
+
 Break "Driver" into classes
-
-
-Add list Collections/Databases
-
-  Java mongoClient.listDatbaseNames()
-  Node db.admin().listDatbaseNames()
-  db.listCollections()
-
-
+Add Cursors
+Add list Collections/Databases (client.listDatabaseNames())
 Add findOneAndUpdate
 Add createIndex and other non App service funtions.
+
+Classes CMongoDatabase, MongoCollection, Document/BSON 
+Add helpers ?
+
 
 N.B cannot add explain() bu that may not matter.
 
