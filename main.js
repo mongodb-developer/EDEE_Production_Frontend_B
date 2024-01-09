@@ -8,7 +8,6 @@ async function onLoad() {
     endpointName = document.getElementById('endpoint')
     document.getElementById('url').innerText = serviceHostname;
     const myURL = new URL(window.location)
-    console.log(myURL)
     if (myURL.searchParams && myURL.searchParams.get("src")) {
         await loadTemplateCode(myURL.searchParams.get("src"))
     }
@@ -75,8 +74,6 @@ async function loadTemplateCode(fname) {
     parts = fname.split("_")
 
     url = "examples/" + parts.join("/") + "/" + parts[parts.length - 1]
-    console.log(url)
-
 
     let response = await fetch(`${url}.js`)
     if (response.status == 200) {

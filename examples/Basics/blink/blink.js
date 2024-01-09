@@ -20,12 +20,13 @@ async function get_Person(req, res) {
   collection = db.getCollection("example")
 
   try {
-   rval = await collection.find({})
+    cursor = collection.find({})
+    rval = await cursor.next()
    res.status(200);
    res.send(rval)
   } catch(err) {
     res.status(500);
-    res.send(err)
+    res.send({ok:false,err:err.message})
   }
 }
 
@@ -41,6 +42,6 @@ async function post_Person(req, res) {
    res.send(rval)
   } catch(err) {
     res.status(500);
-    res.send(err)
+    res.send({ok:false,err:err.message})
   }
 }
