@@ -25,12 +25,13 @@ async function get_Movies(req, res) {
     var query = {}
     query.title = titleLookedFor
 
-    rval = await collection.find(query)
+    cursor = collection.find(query)
+    results = await cursor.toArray();
 
     res.status(200);
-    res.send(rval)
+    res.send(results)
   } catch (err) {
     res.status(500);
-    res.send(err)
+    res.send(err.message)
   }
 }

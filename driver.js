@@ -6,6 +6,18 @@
    or java or python or dozens of other languages  not from browser JS,
    you use it to write the services you call fron the browser. */
 
+class Document {
+    set(key,value) {
+        this[key]=value
+    }
+
+    get(key) {
+        return this[key]
+    }
+
+    
+}
+
 class MongoClient {
 
     constructor(URI) {
