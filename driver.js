@@ -42,7 +42,7 @@ class MongoClient {
         if (this.connected) { return true }
         //TODO error message
         if (this.userName == null || !this.passWord == null) {
-            this.lastError = "Invalid Credentials"
+            this.lastError = "Invalid Credentials Supplied"
             return false
         }
 
@@ -56,16 +56,20 @@ class MongoClient {
             this.connected = true;
             return true;
         } catch (e) {
+            console.log(e);
             //On error try to regiuster as new user
             try {
                 const deets = { email: this.userName, password: this.passWord }
                 await realmApp.emailPasswordAuth.registerUser(deets);
+             
                 this.user = await realmApp.logIn(credential);
                 this.lastError = "New User Created"
                 this.connected = true;
                 return true;
             } catch (e) {
-                this.lastError = e;
+                this.lastError = "MongoDB Authentication fail: User exists but incorrect password"
+                localStorage.clear();
+                codeChanged = true;
                 return false;
             }
         }
@@ -93,13 +97,13 @@ class MongoCollection {
     }
 
     async insertOne(document) {
-        if (!await this.mongoClient.connect()) return { ok: false, lastError }
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, [document])
         return rval
     }
 
     async insertMany(documents) {
-        if (!await this.mongoClient.connect()) return { ok: false, lastError }
+        if (!await this.mongoClient.connect())throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, documents)
         return rval
     }
@@ -113,7 +117,7 @@ class MongoCollection {
     }
 
     async findOne(query, projection) {
-        if (!await this.mongoClient.connect()) return { ok: false, lastError }
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
         const rval = await this.mongoClient.user.functions.find(this.dbName, this.collName, query, projection, 1)
         console.log(rval)
@@ -122,26 +126,26 @@ class MongoCollection {
     }
 
     async updateMany(query, updates) {
-        if (!await this.mongoClient.connect()) return { ok: false, lastError }
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
         const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates)
         return rval;
     }
     async updateOne(query, updates) {
-        if (!await this.mongoClient.connect()) return { ok: false, lastError }
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
         const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates, true)
         return rval;
     }
 
     async deleteMany(query) {
-        if (!await this.mongoClient.connect()) return { ok: false, lastError }
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.delete(this.dbName, this.collName, query)
         return rval;
     }
 
     async deleteOne(query) {
-        if (!await this.mongoClient.connect()) return { ok: false, lastError }
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
         const rval = await this.mongoClient.user.functions.delete(this.dbName, this.collName, query, true)
         return rval;
@@ -153,7 +157,7 @@ class MongoCollection {
     }
 
     async countDocuments(query) {
-        if (!await this.mongoClient.connect()) return { ok: false, lastError }
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
         const rval = await this.mongoClient.user.functions.count(this.dbName, this.collName, query)
         return rval.result
@@ -241,7 +245,8 @@ class MongoCursor {
     }
 
     async runFind() {
-        if (!await this.mongoClient.connect()) return { ok: false, lastError }
+        console.log(this.mongoClient)
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         this._results = await this.mongoClient.user.functions.find(this.dbName,
             this.collName, this._query, this._projection, this._limit)
 
@@ -250,7 +255,8 @@ class MongoCursor {
     }
 
     async runAgg() {
-        if (!await this.mongoClient.connect()) return { ok: false, lastError }
+
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         this._results = await this.mongoClient.user.functions.aggregate(this.dbName,
             this.collName, this._pipeline)
 

@@ -38,21 +38,23 @@ async function callVirtualEndpoint(url, verb) {
     req.method = verb
     if (verb == "POST") req.setBody(postdata.innerText)
 
-    //TODO dont call if code not modified
-    if (codeChanged) {
-        window.initWebService?.(); // We are doing this each time although we wouldn't 
-        codeChanged = false
-    }
-
     console.log(req.params[2]);
     if (req.params[2].trim().length == 0) {
         res.status(404);
         res.send(`Perhaps you need more in the URL as /service is not an endpoint`)
         return res;
     }
+
     const fName = `${verb.toLowerCase()}_${req.params[2]}`
     if (window[fName]) {
         try {
+
+            //TODO dont call if code not modified
+            if (codeChanged) {
+                await window.initWebService?.(); // We are doing this each time although we wouldn't 
+                codeChanged = false
+            }
+
             await window[fName](req, res)
         } catch (e) {
             console.log(e)
@@ -74,15 +76,16 @@ function cleanCode(sourcecode) {
 
 
 const system = {
-    getenv : function(name) {
+    getenv: function (name) {
         let rval = localStorage.getItem(name);
-        if(rval == null || rval == undefined) {
-            rval = prompt(`Please enter a value for "${name}
+        if (rval == null || rval == undefined) {
+            rval = prompt(`Please enter a value for "${name}".
 This is stored in the browser so 
 DO NOT ENTER A REAL PASSWORD.`)
-if(rval == null) return "";
-            localStorage.setItem(name,rval)
+            if (rval == null) return "";
+            if (rval.length < 6) throw new Error("Usernames and passwords must be at least 6 characters long in this environment.")
+            localStorage.setItem(name, rval)
         }
         return rval
-    } 
+    }
 }
