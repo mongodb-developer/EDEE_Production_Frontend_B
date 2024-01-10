@@ -202,7 +202,7 @@ class MongoCursor {
         }
 
         if (this._results.error) {
-            throw new Error(this._results.error)
+            throw new Error("Database Error: " + this._results.error)
         }
         if (this._position >= this._results.length) {
             return null;
@@ -220,7 +220,7 @@ class MongoCursor {
             if (this._cursorType == "FIND") {
                 await this.runFind();
                 if (this._results.error) {
-                    throw new Error(this._results.error)
+                    throw new Error("Database Error: " + this._results.error)
                 }
                 cursor.exhaused = true;
                 return this._results.result;
@@ -228,7 +228,7 @@ class MongoCursor {
             if (this._cursorType == "AGGREGATE") {
                 await this.runAgg();
                 if (this._results.error) {
-                    throw new Error(this._results.error)
+                    throw new Error("Database Error: " +  this._results.error)
                 }
                 cursor.exhaused = true;
                 return this._results.result;

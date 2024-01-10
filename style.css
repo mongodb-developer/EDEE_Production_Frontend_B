@@ -179,7 +179,7 @@ menu.a:hover, menu.a:active {
 
 #endpoint {
   border: 1px solid rgb(240,240,240);
-  min-width: 50%;
+  width: 40vw;
 
 }
 .path { 
@@ -188,7 +188,7 @@ menu.a:hover, menu.a:active {
   background: white;
   color: black;
   margin: 0em;  
-
+ 
   padding: 0em;
  
 }
