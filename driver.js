@@ -7,15 +7,15 @@
    you use it to write the services you call fron the browser. */
 
 class Document {
-    set(key,value) {
-        this[key]=value
+    set(key, value) {
+        this[key] = value
     }
 
     get(key) {
         return this[key]
     }
 
-    
+
 }
 
 class MongoClient {
@@ -30,7 +30,7 @@ class MongoClient {
             this.passWord = getCreds[2]
         }
 
-        
+
     }
 
     getDatabase(dbName) {
@@ -80,39 +80,39 @@ class MongoDatabase {
     }
 
     getCollection(collName) {
-        const coll = new MongoCollection(collName, this.dbName,this.mongoClient)
+        const coll = new MongoCollection(collName, this.dbName, this.mongoClient)
         return coll
     }
 }
 
 class MongoCollection {
-    constructor(collName,dbName,mongoClient) {
+    constructor(collName, dbName, mongoClient) {
         this.collName = collName;
         this.dbName = dbName;
         this.mongoClient = mongoClient
     }
 
-    async insertOne (document) {
+    async insertOne(document) {
         if (!await this.mongoClient.connect()) return { ok: false, lastError }
         const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, [document])
         return rval
     }
 
-    async insertMany (documents) {
+    async insertMany(documents) {
         if (!await this.mongoClient.connect()) return { ok: false, lastError }
         const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, documents)
         return rval
     }
 
- 
-    find (query,projection) {
-        const findCursor = new MongoCursor("FIND",this.mongoClient,this.dbName,this.collName)
+
+    find(query, projection) {
+        const findCursor = new MongoCursor("FIND", this.mongoClient, this.dbName, this.collName)
         findCursor._query = query
         findCursor._projection = projection
         return findCursor
     }
 
-    async  findOne (query, projection) {
+    async findOne(query, projection) {
         if (!await this.mongoClient.connect()) return { ok: false, lastError }
 
         const rval = await this.mongoClient.user.functions.find(this.dbName, this.collName, query, projection, 1)
@@ -121,38 +121,38 @@ class MongoCollection {
         return null;
     }
 
-    async  updateMany (query, updates) {
+    async updateMany(query, updates) {
         if (!await this.mongoClient.connect()) return { ok: false, lastError }
 
         const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates)
         return rval;
     }
-    async  updateOne (query, updates) {
+    async updateOne(query, updates) {
         if (!await this.mongoClient.connect()) return { ok: false, lastError }
 
         const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates, true)
         return rval;
     }
 
-    async  deleteMany (query) {
+    async deleteMany(query) {
         if (!await this.mongoClient.connect()) return { ok: false, lastError }
         const rval = await this.mongoClient.user.functions.delete(this.dbName, this.collName, query)
         return rval;
     }
 
-    async  deleteOne (query) {
+    async deleteOne(query) {
         if (!await this.mongoClient.connect()) return { ok: false, lastError }
 
         const rval = await this.mongoClient.user.functions.delete(this.dbName, this.collName, query, true)
         return rval;
     }
-    aggregate (pipeline) {
-        const aggCursor = new MongoCursor("AGGREGATE",this.mongoClient,this.dbName,this.collName)
+    aggregate(pipeline) {
+        const aggCursor = new MongoCursor("AGGREGATE", this.mongoClient, this.dbName, this.collName)
         aggCursor._pipeline = pipeline
         return aggCursor
     }
 
-    async  countDocuments (query) {
+    async countDocuments(query) {
         if (!await this.mongoClient.connect()) return { ok: false, lastError }
 
         const rval = await this.mongoClient.user.functions.count(this.dbName, this.collName, query)
@@ -161,8 +161,7 @@ class MongoCollection {
 }
 
 class MongoCursor {
-    constructor(cursorType,mongoClient,dbName,collName)
-    {
+    constructor(cursorType, mongoClient, dbName, collName) {
         this._cursorType = cursorType
         this.collName = collName
         this.dbName = dbName
@@ -177,64 +176,83 @@ class MongoCursor {
     }
 
     limit(x) {
-        if(x > 10000) x = 10000;
-        if(x<0) x=0;
+        if (x > 10000) x = 10000;
+        if (x < 0) x = 0;
         this.limit = x;
         return this;
     }
 
+    async *[Symbol.asyncIterator]() {
+        if (this._results == undefined) {
+            await this.toArray();
+        }
+        yield this._results[Symbol.iterator]();
+    }
+
     async next() {
-        if(this._exhausted) {
+        if (this._exhausted) {
             return null;
-        } 
-        if(!this._results) {
-            if(this._cursorType == "FIND") {
-            await this.runFind();
-         } else if( this._cursorType == "AGGREGATE") {
-           await this.runAgg()
+        }
+        if (!this._results) {
+            if (this._cursorType == "FIND") {
+                await this.runFind();
+            } else if (this._cursorType == "AGGREGATE") {
+                await this.runAgg()
             }
         }
-        if(this._position >= this._results.length) {
+
+        if (this._results.error) {
+            throw new Error(this._results.error)
+        }
+        if (this._position >= this._results.length) {
             return null;
         }
-        const doc = this._results.result[this._position]
+        const doc = this._results?.result[this._position]
         this._position++;
         return doc;
     }
 
     async toArray() {
-        if(this._exhausted) {
+        if (this._exhausted) {
             throw new Error("Cursor Exhausted")
             return null;
         } else {
-            if(this._cursorType == "FIND") {
-            await this.runFind();
-            cursor.exhaused = true;
-            return this._results.result;
+            if (this._cursorType == "FIND") {
+                await this.runFind();
+                if (this._results.error) {
+                    throw new Error(this._results.error)
+                }
+                cursor.exhaused = true;
+                return this._results.result;
             }
-            if(this._cursorType == "AGGREGATE") {
+            if (this._cursorType == "AGGREGATE") {
                 await this.runAgg();
+                if (this._results.error) {
+                    throw new Error(this._results.error)
+                }
                 cursor.exhaused = true;
                 return this._results.result;
             }
         }
     }
 
-    async runFind()  {
+    async runFind() {
         if (!await this.mongoClient.connect()) return { ok: false, lastError }
-        this._results = await this.mongoClient.user.functions.find(this.dbName, 
+        this._results = await this.mongoClient.user.functions.find(this.dbName,
             this.collName, this._query, this._projection, this._limit)
+
         this._position = 0;
-       
+
     }
 
-    async runAgg()  {
+    async runAgg() {
         if (!await this.mongoClient.connect()) return { ok: false, lastError }
-       this._results = await this.mongoClient.user.functions.aggregate(this.dbName,
-         this.collName, this._pipeline)
-       this._position = 0;
+        this._results = await this.mongoClient.user.functions.aggregate(this.dbName,
+            this.collName, this._pipeline)
 
-       
+        this._position = 0;
+
+
     }
 
 

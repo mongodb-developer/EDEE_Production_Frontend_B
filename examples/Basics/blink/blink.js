@@ -6,7 +6,8 @@ async function initWebService() {
     var userName = "bob"
     var passWord = "builder"
     //User created automatically if it doesn't exist in simulator
-    mongoClient = new MongoClient("mongodb+srv://" + userName + ":" +  passWord +  "@atlascluster.rnlzxqz.mongodb.net"); 
+    mongoClient = new MongoClient("mongodb+srv://" + userName + ":" 
+                                  +  passWord +  "@atlascluster.rnlzxqz.mongodb.net"); 
 }
 
 
@@ -16,32 +17,26 @@ async function initWebService() {
 
 async function get_Person(req, res) {
 
-  db = mongoClient.getDatabase("test")
-  collection = db.getCollection("example")
+  var db = mongoClient.getDatabase("test")
+  var collection = db.getCollection("example")
 
-  try {
-    cursor = collection.find({})
-    rval = await cursor.next()
-   res.status(200);
-   res.send(rval)
-  } catch(err) {
-    res.status(500);
-    res.send({ok:false,err:err.message})
+  cursor = collection.find({})
+  results = []
+  for await ( var doc of cursor) {
+    results.push(doc)
   }
+  res.status(200);
+  res.send(results)
 }
 
 
 async function post_Person(req, res) {
 
-  db = mongoClient.getDatabase("test")
-  collection = db.getCollection("example")
-  object = JSON.parse(req.body)
-  try {
-   rval = await collection.insertOne(object)
-   res.status(201);
-   res.send(rval)
-  } catch(err) {
-    res.status(500);
-    res.send({ok:false,err:err.message})
-  }
+  var db = mongoClient.getDatabase("test")
+  var collection = db.getCollection("example")
+  var object = JSON.parse(req.body)
+
+  var rval = await collection.insertOne(object)
+  res.status(201);
+  res.send(rval)
 }
