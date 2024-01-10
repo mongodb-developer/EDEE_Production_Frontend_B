@@ -3,8 +3,8 @@
 var mongoClient = null;
 
 async function initWebService() {
-    var userName = "bob"
-    var passWord = "builder"
+    var userName = system.getenv("MONGO_USERNAME")
+    var passWord = system.getenv("MONGO_PASSWORD")
     //User created automatically if it doesn't exist in simulator
     mongoClient = new MongoClient("mongodb+srv://" + userName + ":" 
                                   +  passWord +  "@atlascluster.rnlzxqz.mongodb.net"); 

@@ -1,5 +1,7 @@
 
 let code, response, endpointName, databox, infobox
+let codeChanged
+
 const serviceHostname = "https://hostname:5500/service/"
 async function onLoad() {
     code = document.getElementById('codediv')
@@ -7,13 +9,15 @@ async function onLoad() {
     postdata = document.getElementById('postdata')
     endpointName = document.getElementById('endpoint')
     document.getElementById('url').innerText = serviceHostname;
+    codeChanged = true;
+
     const myURL = new URL(window.location)
     if (myURL.searchParams && myURL.searchParams.get("src")) {
         await loadTemplateCode(myURL.searchParams.get("src"))
     }
 
     code.onkeydown = function(e){
-
+        codeChanged = true;
         if(e.key == 'Tab') {
             console.log("TAB")
             insertTextAtCursor("    ");
@@ -104,3 +108,4 @@ function saveToClipboard()
     navigator.clipboard.writeText(code.innerText);
   
 }
+

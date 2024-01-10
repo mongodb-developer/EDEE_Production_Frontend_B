@@ -182,11 +182,15 @@ class MongoCursor {
         return this;
     }
 
-    async *[Symbol.asyncIterator]() {
-        if (this._results == undefined) {
-            await this.toArray();
+    [Symbol.asyncIterator]() {
+        let cursor=this
+        return {
+            next: async function() {
+                let doc = await cursor.next()
+                if(doc == null) { return { done:true}}
+                return { value: doc, done:false}
+            }
         }
-        yield this._results[Symbol.iterator]();
     }
 
     async next() {

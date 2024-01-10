@@ -1,47 +1,60 @@
-let syntaxOKFlag,syntaxErrorMessage
+let syntaxOKFlag, syntaxErrorMessage
 
-async function callVirtualEndpoint(url,verb) {
+async function callVirtualEndpoint(url, verb) {
     const res = new SimResponse()
-    document.getElementById("codehost")?.remove()
 
-    const codehost = document.createElement("script")
-    codehost.id = "codehost"
-    document.body.appendChild(codehost)
-    let source = code.innerText
-    source = cleanCode(source)
+    if (codeChanged) {
+        document.getElementById("codehost")?.remove()
 
-
-    window.addEventListener("error", (event) => {
-        console.log(event)
-        syntaxOKFlag = false
-        syntaxErrorMessage =`${event.message} : Line ${event.lineno} Col: ${event.colno}`
-    }
-    )
+        const codehost = document.createElement("script")
+        codehost.id = "codehost"
+        document.body.appendChild(codehost)
+        let source = code.innerText
+        source = cleanCode(source)
 
 
-    syntaxOKFlag = true
-    codehost.innerHTML = source
+        window.addEventListener("error", (event) => {
+            console.log(event)
+            syntaxOKFlag = false
+            syntaxErrorMessage = `${event.message} : Line ${event.lineno} Col: ${event.colno}`
+        }
+        )
 
-    if (!syntaxOKFlag) {
-        res.status(500);
 
-        res.send(`Server Error ocurred: ${syntaxErrorMessage}`)
-        return res;
+        syntaxOKFlag = true
+        codehost.innerHTML = source
+
+        if (!syntaxOKFlag) {
+            res.status(500);
+
+            res.send(`Server Error ocurred: ${syntaxErrorMessage}`)
+            return res;
+        }
     }
 
     const req = new SimRequest()
 
     req.setPath(url)
     req.method = verb
-    if(verb == "POST") req.setBody(postdata.innerText)
+    if (verb == "POST") req.setBody(postdata.innerText)
 
+    //TODO dont call if code not modified
+    if (codeChanged) {
+        window.initWebService?.(); // We are doing this each time although we wouldn't 
+        codeChanged = false
+    }
 
-    window.initWebService(); // We are doing this each time although we wouldn't 
+    console.log(req.params[2]);
+    if (req.params[2].trim().length == 0) {
+        res.status(404);
+        res.send(`Perhaps you need more in the URL as /service is not an endpoint`)
+        return res;
+    }
     const fName = `${verb.toLowerCase()}_${req.params[2]}`
     if (window[fName]) {
         try {
             await window[fName](req, res)
-        } catch(e) {
+        } catch (e) {
             console.log(e)
             res.status(500);
             res.send(`Server Error ocurred: ${e}`)
@@ -57,4 +70,19 @@ function cleanCode(sourcecode) {
     sourcecode = sourcecode.replaceAll("const ", "var ")
     sourcecode = sourcecode.replaceAll("let ", "var ")
     return sourcecode
+}
+
+
+const system = {
+    getenv : function(name) {
+        let rval = localStorage.getItem(name);
+        if(rval == null || rval == undefined) {
+            rval = prompt(`Please enter a value for "${name}
+This is stored in the browser so 
+DO NOT ENTER A REAL PASSWORD.`)
+if(rval == null) return "";
+            localStorage.setItem(name,rval)
+        }
+        return rval
+    } 
 }

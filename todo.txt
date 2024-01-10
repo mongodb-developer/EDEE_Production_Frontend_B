@@ -1,19 +1,12 @@
 
 Errors
-  - handle erorrs that server read op fails
-
-Handle failures of findOneAnd
---------
-
-
-
-Add cursor itterator like Jave
- (for d of cursor) {
-
- }
+ 
 
 Add Skip and Limit
 Update example usernames and delete existing users.
+  --- need to ENFORCE crating own user. maybe some sort of getENV woudl be nice
+  with a popup request for it to be entered and stored in local sorage
+  
 Add list Collections/Databases (client.listDatabaseNames())
 Add findOneAnd*
 
