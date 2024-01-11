@@ -33,6 +33,12 @@ class MongoClient {
 
     }
 
+    async listDatabaseNames() {
+        if (!await this.connect()) throw new Error(this.lastError)
+        const rval = await this.user.functions.listDatabaseNames()
+        return rval
+    }
+
     getDatabase(dbName) {
         const db = new MongoDatabase(dbName, this)
         return db;
@@ -87,6 +93,12 @@ class MongoDatabase {
         const coll = new MongoCollection(collName, this.dbName, this.mongoClient)
         return coll
     }
+
+    async listCollectionNames() {
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.listCollectionNames(this.dbName)
+        return rval
+    }
 }
 
 class MongoCollection {
@@ -94,6 +106,12 @@ class MongoCollection {
         this.collName = collName;
         this.dbName = dbName;
         this.mongoClient = mongoClient
+    }
+
+    async drop() {
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.dropCollection(this.dbName, this.collName)
+        return rval
     }
 
     async insertOne(document) {
@@ -171,18 +189,34 @@ class MongoCursor {
         this.dbName = dbName
         this.mongoClient = mongoClient
         this._limit = 10000
+        this._skip = 0
         this._query = undefined;
         this._projection = undefined
         this._results = undefined;
         this._position = undefined;
         this._exhaused = false;
         this._pipeline = null;
+        this._sort = null;
+    }
+
+    sort(x) {
+        if( typeof x != "object" ) {
+            throw new Error("sort function takes an object not a " + typeof x)
+        }
+        this._sort = x
+        return this
+    }
+
+    skip(x) {
+        if(x<0) x=0;
+        this._skip = x
+        return this;
     }
 
     limit(x) {
         if (x > 10000) x = 10000;
         if (x < 0) x = 0;
-        this.limit = x;
+        this._limit = x;
         return this;
     }
 
@@ -230,7 +264,7 @@ class MongoCursor {
                 if (this._results.error) {
                     throw new Error("Database Error: " + this._results.error)
                 }
-                cursor.exhaused = true;
+                this._exhausted = true;
                 return this._results.result;
             }
             if (this._cursorType == "AGGREGATE") {
@@ -238,7 +272,7 @@ class MongoCursor {
                 if (this._results.error) {
                     throw new Error("Database Error: " +  this._results.error)
                 }
-                cursor.exhaused = true;
+                this._exhausted = true;
                 return this._results.result;
             }
         }
@@ -248,7 +282,7 @@ class MongoCursor {
         console.log(this.mongoClient)
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         this._results = await this.mongoClient.user.functions.find(this.dbName,
-            this.collName, this._query, this._projection, this._limit)
+            this.collName, this._query, this._projection, this._limit,this._skip,this._sort)
 
         this._position = 0;
 
