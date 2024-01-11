@@ -30,7 +30,7 @@ async function post_Test(req, res) {
 
 async function get_Test(req, res) {
         db = mongoClient.getDatabase("test")
-        rval = await db.listCollectionNames()
+        rval = EJSON.stringify({a:1})
         res.status(201);
         res.send(rval)
     

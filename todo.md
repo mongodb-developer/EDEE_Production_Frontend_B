@@ -1,15 +1,17 @@
 
 
 
-~~Add Sort
-~~Add dropCollection
+~~Add Sort~~
+~~Add dropCollection~~
 
 
-Add list Collections/Databases (client.listDatabaseNames())
-Add findOneAnd*
-Add createIndex and other non App service funtions.
-
+~~Add list Collections/Databases (client.listDatabaseNames())~~
 BSON Types
+Add createIndex and other non App service funtions.
+EJSON support
+
+Add findOneAndUpdate/findOneAndDelete/FindOneAndReplace
+
 
 Docs and Examples
 
