@@ -42,7 +42,7 @@ class MongoClient {
     async listDatabaseNames() {
         if (!await this.connect()) throw new Error(this.lastError)
         const rval = await this.user.functions.listDatabaseNames()
-        return rval
+        return rval.result
     }
 
     getDatabase(dbName) {
@@ -103,7 +103,7 @@ class MongoDatabase {
     async listCollectionNames() {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.listCollectionNames(this.dbName)
-        return rval
+        return rval.result
     }
 }
 
