@@ -6,9 +6,11 @@
 
 
 ~~Add list Collections/Databases (client.listDatabaseNames())~~
-BSON Types
-Add createIndex and other non App service funtions.
-EJSON support
+~~BSON Types~~
+add Drop database
+a
+Add createIndex 
+~~EJSON support~~
 
 Add findOneAndUpdate/findOneAndDelete/FindOneAndReplace
 
@@ -20,7 +22,6 @@ N.B cannot add explain() bu that may not matter.
 After MVP
 =====
 
-Add dropDatabase
 Add Transactions
 
 Add Load and Save ?

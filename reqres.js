@@ -60,6 +60,11 @@ class SimResponse {
     }
 
     send(data) {
+        if( data instanceof Promise) {
+            this._status = 500
+            this._data = "Server Error - you are passing an unresolved Promise to send(), did you forget await?"
+            return this
+        }
         this._data = data
         return this
     }

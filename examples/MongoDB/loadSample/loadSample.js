@@ -6,7 +6,7 @@ async function initWebService() {
   var userName = system.getenv("MONGO_USERNAME")
   var passWord = system.getenv("MONGO_PASSWORD")
 
-  mongoClient = new MongoClient("mongodb+srv://" + userName  + ":" + passWord + "@atlascluster.rnlzxqz.mongodb.net");
+  mongoClient = new MongoClient("mongodb+srv://" + userName  + ":" + passWord + "@learn.mongodb.net");
  
   db = mongoClient.getDatabase("test")
   collection = db.getCollection("sampleData")

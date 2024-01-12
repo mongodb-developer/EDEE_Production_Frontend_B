@@ -33,6 +33,12 @@ class MongoClient {
 
     }
 
+    //Hello is used by a driver to learn about the server - it's available even without auth u
+    async hello() {
+        if (!await this.connect()) throw new Error(this.lastError)
+        const rval = await this.user.functions.hello()
+        return rval
+    }
     async listDatabaseNames() {
         if (!await this.connect()) throw new Error(this.lastError)
         const rval = await this.user.functions.listDatabaseNames()
@@ -67,7 +73,7 @@ class MongoClient {
             try {
                 const deets = { email: this.userName, password: this.passWord }
                 await realmApp.emailPasswordAuth.registerUser(deets);
-             
+
                 this.user = await realmApp.logIn(credential);
                 this.lastError = "New User Created"
                 this.connected = true;
@@ -121,7 +127,7 @@ class MongoCollection {
     }
 
     async insertMany(documents) {
-        if (!await this.mongoClient.connect())throw new Error(this.mongoClient.lastError)
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, documents)
         return rval
     }
@@ -200,7 +206,7 @@ class MongoCursor {
     }
 
     sort(x) {
-        if( typeof x != "object" ) {
+        if (typeof x != "object") {
             throw new Error("sort function takes an object not a " + typeof x)
         }
         this._sort = x
@@ -208,7 +214,7 @@ class MongoCursor {
     }
 
     skip(x) {
-        if(x<0) x=0;
+        if (x < 0) x = 0;
         this._skip = x
         return this;
     }
@@ -221,12 +227,12 @@ class MongoCursor {
     }
 
     [Symbol.asyncIterator]() {
-        let cursor=this
+        let cursor = this
         return {
-            next: async function() {
+            next: async function () {
                 let doc = await cursor.next()
-                if(doc == null) { return { done:true}}
-                return { value: doc, done:false}
+                if (doc == null) { return { done: true } }
+                return { value: doc, done: false }
             }
         }
     }
@@ -270,7 +276,7 @@ class MongoCursor {
             if (this._cursorType == "AGGREGATE") {
                 await this.runAgg();
                 if (this._results.error) {
-                    throw new Error("Database Error: " +  this._results.error)
+                    throw new Error("Database Error: " + this._results.error)
                 }
                 this._exhausted = true;
                 return this._results.result;
@@ -282,7 +288,7 @@ class MongoCursor {
         console.log(this.mongoClient)
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         this._results = await this.mongoClient.user.functions.find(this.dbName,
-            this.collName, this._query, this._projection, this._limit,this._skip,this._sort)
+            this.collName, this._query, this._projection, this._limit, this._skip, this._sort)
 
         this._position = 0;
 

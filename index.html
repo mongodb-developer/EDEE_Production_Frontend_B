@@ -17,7 +17,10 @@
             <div id="infobox" class="infobox"></div>
         <div class="flex-container">
             <div id="codediv" contenteditable class="code">
-// Write your code here - see Examples above
+function get_Hello(req, res) {
+    res.status(200);
+    res.send({ msg : "Hello"})
+}
             </div>
             <div id="outputdiv" class="test">
                 <div >
@@ -25,7 +28,7 @@
                     <div class="url">
                     
                     <div class="path staticpath" id="url" ></div>
-                    <div class="path" contenteditable id="endpoint"/></div>
+                    <div class="path" contenteditable id="endpoint"/>Hello</div>
                     </div>
                     </div>
                     <div class="label">POST Data:</div>
