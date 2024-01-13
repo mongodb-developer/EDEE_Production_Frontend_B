@@ -2,7 +2,7 @@ let syntaxOKFlag, syntaxErrorMessage
 
 async function callVirtualEndpoint(url, verb) {
     const res = new SimResponse()
-
+    
     if (codeChanged) {
         document.getElementById("codehost")?.remove()
 
@@ -38,7 +38,6 @@ async function callVirtualEndpoint(url, verb) {
     req.method = verb
     if (verb == "POST") req.setBody(postdata.innerText)
 
-    console.log(req.params[2]);
     if (req.params[2].trim().length == 0) {
         res.status(404);
         res.send(`Perhaps you need more in the URL as /service is not an endpoint`)

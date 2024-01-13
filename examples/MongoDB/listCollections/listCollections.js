@@ -8,15 +8,37 @@ async function initWebService() {
 }
 
 async function get_Collections(req, res) {
-    response = new Object()
+
+    var db = mongoClient.getDatabase("dropMe")
+    var collection1 = db.getCollection("dropMe")
+    var collection2= db.getCollection("keepMe")
+
+    //Creates two collections in the db
+    await collection1.insertOne({msg: "Hello"})
+    await collection2.insertOne({msg: "Hello"})
+    var before = await listNamespaces()
+
+    await collection1.drop();
+    var droppedCollection = await listNamespaces()
+
+    await db.drop();
+    var droppedDatabase = await listNamespaces()
+
+    res.status(200);
+    res.send({before,droppedCollection,droppedDatabase})
+}
+
+async function listNamespaces()
+{
+    nameSpaces = new Document()
+
     var databaseNames =  await mongoClient.listDatabaseNames();
     for( var dbName of databaseNames)
     {
         var db =  mongoClient.getDatabase(dbName)
         var collectionNames = await db.listCollectionNames()
-        response[dbName] = collectionNames
+        nameSpaces[dbName] = collectionNames.toString() ; // More compact to view
     }
 
-    res.status(200);
-    res.send(response)
+   return nameSpaces
 }

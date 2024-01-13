@@ -46,6 +46,7 @@ function messageBox(str) {
 
 async function callService(method) {
     try {
+        output.innerText = ""
         const fullURL = serviceHostname + endpointName.innerText
 
 

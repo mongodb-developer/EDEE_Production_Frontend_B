@@ -11,7 +11,7 @@ add Drop database
 
 ~~Add createIndex ~~
 ~~EJSON support~~
-upsert!
+~~upsert!~~
 dropDatabase
 listSearchIndexes
 dropIndexe

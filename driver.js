@@ -107,6 +107,12 @@ class MongoDatabase {
         const rval = await this.mongoClient.user.functions.listCollectionNames(this.dbName)
         return rval.result
     }
+
+    async drop() {
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.dropDatabase(this.dbName)
+        return rval
+    }
 }
 
 class MongoCollection {
