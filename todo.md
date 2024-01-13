@@ -8,11 +8,19 @@
 ~~Add list Collections/Databases (client.listDatabaseNames())~~
 ~~BSON Types~~
 add Drop database
-a
-Add createIndex 
-~~EJSON support~~
 
-Add findOneAndUpdate/findOneAndDelete/FindOneAndReplace
+~~Add createIndex ~~
+~~EJSON support~~
+upsert!
+dropDatabase
+listSearchIndexes
+dropIndexe
+
+listSearchIndexes
+dropSearchIndex
+
+findOneAndUpdate/findOneAndDelete/FindOneAndReplace
+
 
 
 Docs and Examples

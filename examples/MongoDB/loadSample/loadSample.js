@@ -8,22 +8,29 @@ async function initWebService() {
 
   mongoClient = new MongoClient("mongodb+srv://" + userName  + ":" + passWord + "@learn.mongodb.net");
  
-  db = mongoClient.getDatabase("test")
-  collection = db.getCollection("sampleData")
+  db = mongoClient.getDatabase("game")
+  collection = db.getCollection("highscores")
 }
   
 
 
 async function post_Highscores(req, res) {
+    var schema = ["first_name","last_name","email","country","ip_address","timestamp","score"]
+    var docs = []
+    await collection.drop() // Remove this to load more
 
+    var players = JSON.parse(req.body)
+    for( var player of players) {    
+        var doc = new Document()
+        for ( field of schema ) { doc[field] = player[field] }
 
-    var documents = JSON.parse(req.body)
-    for( doc of documents) {    
-        //Data should not be strings so convert from JSON 
-        doc.timestamp = Date.parse(doc.timeStamp)
+        //Data types where needed - Dates and Integers (Int32)
+        doc.timestamp = new Date(doc.timestamp)
+        doc.score = new Integer(doc.score)
+        docs.push(doc)   
     }
     
-    var rval = await collection.insertMany(documents)
+    var rval = await collection.insertMany(docs)
     res.status(201);
     res.send(rval)
   }
@@ -33,10 +40,14 @@ async function get_Highscores(req, res) {
     if(req.query.get("count") == "true")
     {
         var count = await collection.countDocuments()
-        res.status(201);
+        res.status(200);
         res.send({nDocs:count})
     } else {
-        res.status(501);
-        res.send("Not implemented");
+        var query = new Document()
+        //query.country = "Greece"
+        var cursor =  collection.find(query)
+        var data = await cursor.toArray()
+        res.status(200);
+        res.send(data);
     }
 }

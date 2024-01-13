@@ -100,11 +100,11 @@ html {
   margin: 1em;
   display: block;
   padding: 1em;
-  white-space: pre-wrap;
+  white-space: pre;
   overflow: scroll;
   font-family: 'Source Code Pro', monospace;
   border-radius: 1em;
- 
+ font-size: small;
 }
 
 .button-container {
@@ -212,6 +212,7 @@ menu.a:hover, menu.a:active {
   border-radius: 0.5em;
   overflow: scroll;
   font-family: 'Source Code Pro', monospace;
+  font-size: small;
 }
 
 .response {
@@ -226,4 +227,5 @@ menu.a:hover, menu.a:active {
   overflow: scroll;
   border-radius: 0.5em;
   font-family: 'Source Code Pro', monospace;
+  font-size: small;
 }

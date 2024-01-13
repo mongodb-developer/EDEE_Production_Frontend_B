@@ -6,6 +6,8 @@
    or java or python or dozens of other languages  not from browser JS,
    you use it to write the services you call fron the browser. */
 
+   /* TODO _ Make this multiple files */
+
 class Document {
     set(key, value) {
         this[key] = value
@@ -114,6 +116,20 @@ class MongoCollection {
         this.mongoClient = mongoClient
     }
 
+    async createSearchIndex(name,definition) {
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.createIndex(this.dbName, this.collName,name,definition)
+        if(rval.error) { throw new Error(rval.error) }
+        return rval
+    }
+
+    async createIndex(name,definition) {
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.createIndex(this.dbName, this.collName,name,definition)
+        if(rval.error) { throw new Error(rval.error) }
+        return rval
+    }
+
     async drop() {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.dropCollection(this.dbName, this.collName)
@@ -143,22 +159,22 @@ class MongoCollection {
     async findOne(query, projection) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
-        const rval = await this.mongoClient.user.functions.find(this.dbName, this.collName, query, projection, 1)
+        const rval = await this.mongoClient.user.functions.find(this.dbName, this.collName, query, projection, 1, 0)
         console.log(rval)
         if (rval.result && rval.result.length > 0) return rval.result[0]
         return null;
     }
 
-    async updateMany(query, updates) {
+    async updateMany(query, updates , options) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
-        const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates)
+        const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates,false,options)
         return rval;
     }
-    async updateOne(query, updates) {
+    async updateOne(query, updates, options ) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
-        const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates, true)
+        const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates, true,options)
         return rval;
     }
 
