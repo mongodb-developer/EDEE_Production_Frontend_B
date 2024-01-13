@@ -111,9 +111,10 @@ class MongoDatabase {
     async drop() {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.dropDatabase(this.dbName)
-        return rval
+        return {ok:1}}
     }
 }
+
 
 class MongoCollection {
     constructor(collName, dbName, mongoClient) {
@@ -129,17 +130,25 @@ class MongoCollection {
         return rval
     }
 
+    async listIndexes(name,definition) {
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.listIndexes(this.dbName, this.collName)
+        if(rval.error) { throw new Error(rval.error) }
+        return rval.cursor?.firstBatch
+    }
+
     async createIndex(name,definition) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.createIndex(this.dbName, this.collName,name,definition)
         if(rval.error) { throw new Error(rval.error) }
-        return rval
+        const {numIndexesBefore,numIndexesAfter,note} = rval;
+        return {numIndexesBefore,numIndexesAfter,note};
     }
 
     async drop() {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.dropCollection(this.dbName, this.collName)
-        return rval
+        return {ok:1}}
     }
 
     async insertOne(document) {

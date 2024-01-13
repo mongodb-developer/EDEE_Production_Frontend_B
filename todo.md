@@ -12,8 +12,9 @@ add Drop database
 ~~Add createIndex ~~
 ~~EJSON support~~
 ~~upsert!~~
-dropDatabase
-listSearchIndexes
+~~dropDatabase~~
+
+listIndexes
 dropIndexe
 
 listSearchIndexes
@@ -22,7 +23,7 @@ dropSearchIndex
 findOneAndUpdate/findOneAndDelete/FindOneAndReplace
 
 
-
+STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony
 Docs and Examples
 
 N.B cannot add explain() bu that may not matter.

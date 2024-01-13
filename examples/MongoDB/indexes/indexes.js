@@ -20,9 +20,10 @@ async function post_createIndex(req, res) {
   var indexDefinition = requestObj.definition
   var name = requestObj.name
   
-  rval = await collection.createIndex(name,indexDefinition)
+  create = await collection.createIndex(name,indexDefinition)
+  list = await collection.listIndexes()
 
   res.status(201);
-  res.send(rval)
+  res.send({create,list})
  }
   
