@@ -6,7 +6,7 @@
    or java or python or dozens of other languages  not from browser JS,
    you use it to write the services you call fron the browser. */
 
-   /* TODO _ Make this multiple files */
+/* TODO _ Make this multiple files */
 
 class Document {
     set(key, value) {
@@ -111,9 +111,10 @@ class MongoDatabase {
     async drop() {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.dropDatabase(this.dbName)
-        return {ok:1}}
+        return { ok: 1 }
     }
 }
+
 
 
 class MongoCollection {
@@ -123,100 +124,101 @@ class MongoCollection {
         this.mongoClient = mongoClient
     }
 
-    async createSearchIndex(name,definition) {
+    async createSearchIndex(name, definition) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
-        const rval = await this.mongoClient.user.functions.createIndex(this.dbName, this.collName,name,definition)
-        if(rval.error) { throw new Error(rval.error) }
+        const rval = await this.mongoClient.user.functions.createIndex(this.dbName, this.collName, name, definition)
+        if (rval.error) { throw new Error(rval.error) }
         return rval
     }
 
-    async listIndexes(name,definition) {
+    async listIndexes(name, definition) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.listIndexes(this.dbName, this.collName)
-        if(rval.error) { throw new Error(rval.error) }
+        if (rval.error) { throw new Error(rval.error) }
         return rval.cursor?.firstBatch
     }
 
-    async createIndex(name,definition) {
+    async createIndex(name, definition) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
-        const rval = await this.mongoClient.user.functions.createIndex(this.dbName, this.collName,name,definition)
-        if(rval.error) { throw new Error(rval.error) }
-        const {numIndexesBefore,numIndexesAfter,note} = rval;
-        return {numIndexesBefore,numIndexesAfter,note};
+        const rval = await this.mongoClient.user.functions.createIndex(this.dbName, this.collName, name, definition)
+        if (rval.error) { throw new Error(rval.error) }
+        const { numIndexesBefore, numIndexesAfter, note } = rval;
+        return { numIndexesBefore, numIndexesAfter, note };
     }
 
     async drop() {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.dropCollection(this.dbName, this.collName)
-        return {ok:1}}
+        return { ok: 1 }
     }
+}
 
     async insertOne(document) {
-        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
-        const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, [document])
-        return rval
-    }
+    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+    const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, [document])
+    return rval
+}
 
     async insertMany(documents) {
-        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
-        const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, documents)
-        return rval
-    }
+    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+    const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, documents)
+    return rval
+}
 
 
-    find(query, projection) {
-        const findCursor = new MongoCursor("FIND", this.mongoClient, this.dbName, this.collName)
-        findCursor._query = query
-        findCursor._projection = projection
-        return findCursor
-    }
+find(query, projection) {
+    const findCursor = new MongoCursor("FIND", this.mongoClient, this.dbName, this.collName)
+    findCursor._query = query
+    findCursor._projection = projection
+    return findCursor
+}
 
     async findOne(query, projection) {
-        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
-        const rval = await this.mongoClient.user.functions.find(this.dbName, this.collName, query, projection, 1, 0)
-        console.log(rval)
-        if (rval.result && rval.result.length > 0) return rval.result[0]
-        return null;
-    }
+    const rval = await this.mongoClient.user.functions.find(this.dbName, this.collName, query, projection, 1, 0)
+    console.log(rval)
+    if (rval.result && rval.result.length > 0) return rval.result[0]
+    return null;
+}
 
-    async updateMany(query, updates , options) {
-        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+    async updateMany(query, updates, options) {
+    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
-        const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates,false,options)
-        return rval;
-    }
-    async updateOne(query, updates, options ) {
-        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+    const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates, false, options)
+    return rval;
+}
+    async updateOne(query, updates, options) {
+    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
-        const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates, true,options)
-        return rval;
-    }
+    const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates, true, options)
+    return rval;
+}
 
     async deleteMany(query) {
-        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
-        const rval = await this.mongoClient.user.functions.delete(this.dbName, this.collName, query)
-        return rval;
-    }
+    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+    const rval = await this.mongoClient.user.functions.delete(this.dbName, this.collName, query)
+    return rval;
+}
 
     async deleteOne(query) {
-        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
-        const rval = await this.mongoClient.user.functions.delete(this.dbName, this.collName, query, true)
-        return rval;
-    }
-    aggregate(pipeline) {
-        const aggCursor = new MongoCursor("AGGREGATE", this.mongoClient, this.dbName, this.collName)
-        aggCursor._pipeline = pipeline
-        return aggCursor
-    }
+    const rval = await this.mongoClient.user.functions.delete(this.dbName, this.collName, query, true)
+    return rval;
+}
+aggregate(pipeline) {
+    const aggCursor = new MongoCursor("AGGREGATE", this.mongoClient, this.dbName, this.collName)
+    aggCursor._pipeline = pipeline
+    return aggCursor
+}
 
     async countDocuments(query) {
-        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
-        const rval = await this.mongoClient.user.functions.count(this.dbName, this.collName, query)
-        return rval.result
-    }
+    const rval = await this.mongoClient.user.functions.count(this.dbName, this.collName, query)
+    return rval.result
+}
 }
 
 class MongoCursor {

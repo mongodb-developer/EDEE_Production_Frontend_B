@@ -13,17 +13,18 @@ add Drop database
 ~~EJSON support~~
 ~~upsert!~~
 ~~dropDatabase~~
+~~listIndexes~~
 
-listIndexes
-dropIndexe
+dropIndex
 
+verify createSearchIndex
 listSearchIndexes
 dropSearchIndex
 
 findOneAndUpdate/findOneAndDelete/FindOneAndReplace
 
 
-STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony
+STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony from runCommands
 Docs and Examples
 
 N.B cannot add explain() bu that may not matter.
@@ -33,9 +34,7 @@ After MVP
 
 Add Transactions
 
-Add Load and Save ?
+Add Load and Save (TO DB? Locally?)
 Add 'Java' 'C#' and 'Python' support
-$out,$merge,$lookup,$unionWith doctoring
-autocomplete"
-
-§
+$out,$merge,$lookup,$unionWith doctoring for aggregation ( JSON.stringify magic)
+autocomplete / highlighting / line numbers
