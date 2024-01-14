@@ -151,74 +151,73 @@ class MongoCollection {
         const rval = await this.mongoClient.user.functions.dropCollection(this.dbName, this.collName)
         return { ok: 1 }
     }
-}
 
     async insertOne(document) {
-    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
-    const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, [document])
-    return rval
-}
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, [document])
+        return rval
+    }
 
     async insertMany(documents) {
-    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
-    const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, documents)
-    return rval
-}
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, documents)
+        return rval
+    }
 
 
-find(query, projection) {
-    const findCursor = new MongoCursor("FIND", this.mongoClient, this.dbName, this.collName)
-    findCursor._query = query
-    findCursor._projection = projection
-    return findCursor
-}
+    find(query, projection) {
+        const findCursor = new MongoCursor("FIND", this.mongoClient, this.dbName, this.collName)
+        findCursor._query = query
+        findCursor._projection = projection
+        return findCursor
+    }
 
     async findOne(query, projection) {
-    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
-    const rval = await this.mongoClient.user.functions.find(this.dbName, this.collName, query, projection, 1, 0)
-    console.log(rval)
-    if (rval.result && rval.result.length > 0) return rval.result[0]
-    return null;
-}
+        const rval = await this.mongoClient.user.functions.find(this.dbName, this.collName, query, projection, 1, 0)
+        console.log(rval)
+        if (rval.result && rval.result.length > 0) return rval.result[0]
+        return null;
+    }
 
     async updateMany(query, updates, options) {
-    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
-    const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates, false, options)
-    return rval;
-}
+        const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates, false, options)
+        return rval;
+    }
     async updateOne(query, updates, options) {
-    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
-    const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates, true, options)
-    return rval;
-}
+        const rval = await this.mongoClient.user.functions.update(this.dbName, this.collName, query, updates, true, options)
+        return rval;
+    }
 
     async deleteMany(query) {
-    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
-    const rval = await this.mongoClient.user.functions.delete(this.dbName, this.collName, query)
-    return rval;
-}
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.delete(this.dbName, this.collName, query)
+        return rval;
+    }
 
     async deleteOne(query) {
-    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
-    const rval = await this.mongoClient.user.functions.delete(this.dbName, this.collName, query, true)
-    return rval;
-}
-aggregate(pipeline) {
-    const aggCursor = new MongoCursor("AGGREGATE", this.mongoClient, this.dbName, this.collName)
-    aggCursor._pipeline = pipeline
-    return aggCursor
-}
+        const rval = await this.mongoClient.user.functions.delete(this.dbName, this.collName, query, true)
+        return rval;
+    }
+    aggregate(pipeline) {
+        const aggCursor = new MongoCursor("AGGREGATE", this.mongoClient, this.dbName, this.collName)
+        aggCursor._pipeline = pipeline
+        return aggCursor
+    }
 
     async countDocuments(query) {
-    if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
-    const rval = await this.mongoClient.user.functions.count(this.dbName, this.collName, query)
-    return rval.result
-}
+        const rval = await this.mongoClient.user.functions.count(this.dbName, this.collName, query)
+        return rval.result
+    }
 }
 
 class MongoCursor {
