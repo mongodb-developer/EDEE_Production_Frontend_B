@@ -21,7 +21,7 @@ async function post_createIndex(req, res) {
   var name = requestObj.name
   
 
-  await collection.insertOne({Country: "China"}) // Fails if collection doesnt exist
+  await collection.insertOne({Country: "China"}) 
   var create = await collection.createIndex(name,indexDefinition)
   var list = await collection.listIndexes()
   var dropIndex = await collection.dropIndex(indexDefinition)

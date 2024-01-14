@@ -15,7 +15,7 @@ add Drop database
 ~~dropDatabase~~
 ~~listIndexes~~
 
-dropIndex
+~~dropIndex~~
 
 verify createSearchIndex
 listSearchIndexes

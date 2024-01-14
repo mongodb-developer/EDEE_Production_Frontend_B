@@ -126,16 +126,43 @@ class MongoCollection {
 
     async createSearchIndex(name, definition) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
-        const rval = await this.mongoClient.user.functions.createIndex(this.dbName, this.collName, name, definition)
+        const rval = await this.mongoClient.user.functions.createSearchIndex(this.dbName, this.collName, name, definition)
         if (rval.error) { throw new Error(rval.error) }
-        return rval
+
+        return {ok:rval.ok,indexesCreated:rval.indexesCreated}
     }
+
+    async listSearchIndexes() {
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+
+        const pipeline = [ { $listSearchIndexes : {}}]
+
+        const rval = await this.mongoClient.user.functions.aggregate(this.dbName,
+            this.collName, pipeline)
+        for(let i of rval.result) {
+            delete i.statusDetail // TMI
+        }
+        return rval.result;
+    }
+
+
 
     async listIndexes(name, definition) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.listIndexes(this.dbName, this.collName)
         if (rval.error) { throw new Error(rval.error) }
         return rval.cursor?.firstBatch
+    }
+
+    async dropSearchIndex(index) {
+        console.log(index)
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.dropSearchIndex(this.dbName, this.collName,index)
+        if(rval.result.ok) {
+            console.log(rval)
+            return { ok: 1, nIndexesWas: rval.result.nIndexesWas }
+        }
+        return {ok: 0,error: rval.result.error};
     }
 
     async createIndex(name, definition) {
@@ -340,6 +367,7 @@ class MongoCursor {
     async runAgg() {
 
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        console.log(this._pipeline)
         this._results = await this.mongoClient.user.functions.aggregate(this.dbName,
             this.collName, this._pipeline)
 
