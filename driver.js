@@ -152,6 +152,17 @@ class MongoCollection {
         return { ok: 1 }
     }
 
+    async dropIndex(index) {
+        console.log(index)
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.dropIndex(this.dbName, this.collName,index)
+        if(rval.result.ok) {
+            console.log(rval)
+            return { ok: 1, nIndexesWas: rval.result.nIndexesWas }
+        }
+        return {ok: 0,error: rval.result.error};
+    }
+
     async insertOne(document) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, [document])

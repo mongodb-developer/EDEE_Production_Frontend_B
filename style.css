@@ -90,6 +90,9 @@ html {
   }
 
 
+  button:active {
+    background-color: var(--forestgreen);
+  }
 
 .code {
   border: 1px solid green;
