@@ -1,39 +1,35 @@
 
-
-
 ~~Add Sort~~
 ~~Add dropCollection~~
-
-
 ~~Add list Collections/Databases (client.listDatabaseNames())~~
 ~~BSON Types~~
-add Drop database
-
+~~add Drop database~~
 ~~Add createIndex ~~
 ~~EJSON support~~
 ~~upsert!~~
 ~~dropDatabase~~
 ~~listIndexes~~
-
 ~~dropIndex~~
-
-verify createSearchIndex
-listSearchIndexes
-dropSearchIndex
+~~createSearchIndex~~
+~~listSearchIndexes~~
+~~dropSearchIndex~~
 
 findOneAndUpdate/findOneAndDelete/FindOneAndReplace
 
+expression builders for $gt,$lt etc
 
-STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony from runCommands
+gt(x) = { $gt: x }
+gt(x,y) = { $gt : [ ]}
+
+STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony from Commands
+
 Docs and Examples
-
-N.B cannot add explain() bu that may not matter.
 
 After MVP
 =====
 
 Add Transactions
-
+Add explain()
 Add Load and Save (TO DB? Locally?)
 Add 'Java' 'C#' and 'Python' support
 $out,$merge,$lookup,$unionWith doctoring for aggregation ( JSON.stringify magic)
