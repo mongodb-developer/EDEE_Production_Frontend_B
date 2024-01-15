@@ -1,47 +1,58 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <script src="https://unpkg.com/realm-web/dist/bundle.iife.js"></script>
-        <script src="bson.js"></script>
-        <script src="main.js"></script>
-        <script src="magic.js"></script>
-        <script src="reqres.js"></script>
-        <script src="driver.js"></script>
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body onLoad="onLoad()">
-        <div class="sim-container">
-            <div class="menu-container"> <a class="menu" target="_blank" href="examples/examples.html">Examples</a>
-                 <a class="menu"  href="docs/index.html">Documentation</a> 
-                 <a class="menu"  onclick="saveToClipboard()">Save to Clipboard</a> </div>
-            <div id="infobox" class="infobox"></div>
+
+<head>
+    <script src="https://unpkg.com/realm-web/dist/bundle.iife.js"></script>
+    <script src="bson.js"></script>
+    <script src="main.js"></script>
+    <script src="magic.js"></script>
+    <script src="reqres.js"></script>
+    <script src="driver.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body onLoad="onLoad()">
+    <!-- Simulator -->
+    <div class="sim-container">
+        <!-- Menu Buttons -->
+        <div class="menu-container"> 
+            <a class="menu" target="_blank" href="examples/examples.html">Examples</a>
+            <a class="menu" href="docs/index.html">Documentation</a>
+            <a class="menu" onclick="saveToClipboard()">Save to Clipboard</a>
+        </div>
+        <div id="infobox" class="infobox"></div>
         <div class="flex-container">
+            <!-- Code Editor -->
             <div id="codediv" contenteditable class="code">
 function get_Hello(req, res) {
     res.status(200);
     res.send({ msg : "Hello"})
 }
             </div>
+            <!-- Endpoint URL output -->
             <div id="outputdiv" class="test">
-                <div >
+                <div>
                     <div class="label">Endpoint URL:</div>
                     <div class="url">
-                    
-                    <div class="path staticpath" id="url" ></div>
-                    <div class="path" contenteditable id="endpoint"/>Hello</div>
+                        <div class="path staticpath" id="url"></div>
+                        <div class="path" contenteditable id="endpoint" />Hello
                     </div>
-                    </div>
-                    <div class="label">POST Data:</div>
-                    <div class="postdata" contenteditable id="postdata"></div>
-                    <div class="button-container">
-                    <button class="button" onclick = "callService('GET')" id="callService"> GET </button> 
-                    <button class="button" onclick = "callService('POST')" id="callService"> POST </button>
                 </div>
-                    <div class="label">Response:</div>
-                <div id="response" class="response"> </div>
-                
             </div>
+            <!-- POST data output -->
+            <div class="label">POST Data:</div>
+            <div class="postdata" contenteditable id="postdata"></div>
+            <div class="button-container">
+                <button class="button" onclick="callService('GET')" id="callServiceGET"> GET </button>
+                <button class="button" onclick="callService('POST')" id="callServicePOST"> POST </button>
+                <!-- loader commented out, we can add it in the future if that's needed -->
+                <!-- <div class="loader" id="loader"></div> -->
+            </div>
+            <!-- Response output -->
+            <div class="label">Response:</div>
+            <div id="response" class="response"> </div>
         </div>
-        <div>
-    </body>
+    </div>
+    <div>
+</body>
 <html>

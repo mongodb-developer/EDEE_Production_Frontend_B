@@ -11,6 +11,8 @@ async function onLoad() {
     document.getElementById('url').innerText = serviceHostname;
     codeChanged = true;
 
+    // we can feed index.html with a different src file each time
+    // we extract the code and put it in the code element
     const myURL = new URL(window.location)
     if (myURL.searchParams && myURL.searchParams.get("src")) {
         await loadTemplateCode(myURL.searchParams.get("src"))
@@ -26,6 +28,20 @@ async function onLoad() {
     }
     // messageBox("Hi - I'm for debugging and things");
 
+    // Sometimes we want to hide the GET or POST buttons
+    if (myURL.searchParams && myURL.searchParams.get("hideGETbutton")) {
+        callServiceGETButton = document.getElementById('callServiceGET');
+        callServiceGETButton.style.visibility = "hidden";
+    }
+
+    if (myURL.searchParams && myURL.searchParams.get("hidePOSTbutton")) {
+        callServicePOSTButton = document.getElementById('callServicePOST');
+        callServicePOSTButton.style.visibility = "hidden";
+    }
+
+    // loader commented out, we can add it in the future if that's needed
+    // loader = document.getElementById("loader");
+    // loader.style.visibility = "hidden";
 }
 
 function insertTextAtCursor(text)
@@ -46,9 +62,9 @@ function messageBox(str) {
 
 async function callService(method) {
     try {
+        // loader.style.visibility = "visible";
         output.innerText = ""
         const fullURL = serviceHostname + endpointName.innerText
-
 
         const response = await callVirtualEndpoint(fullURL, method)
 
@@ -70,6 +86,9 @@ async function callService(method) {
     catch (error) {
         console.error(error)
         messageBox(error);
+    }
+    finally {
+        // loader.style.visibility = "hidden";
     }
 }
 
@@ -101,12 +120,10 @@ async function loadTemplateCode(fname) {
     } else  {
         endpointName.innerText = ""
     }
-
 }
 
 function saveToClipboard()
 {
     navigator.clipboard.writeText(code.innerText);
-  
 }
 
