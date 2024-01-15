@@ -28,6 +28,24 @@ async function onLoad() {
     }
     // messageBox("Hi - I'm for debugging and things");
 
+    // Sometimes we want to hide the GET or POST buttons
+    if (myURL.searchParams && myURL.searchParams.get("hideGETbutton")) {
+        callServiceGETButton = document.getElementById('callServiceGET');
+        callServiceGETButton.style.visibility = "hidden";
+    }
+
+    if (myURL.searchParams && myURL.searchParams.get("hidePOSTbutton")) {
+        callServicePOSTButton = document.getElementById('callServicePOST');
+        callServicePOSTButton.style.visibility = "hidden";
+    }
+
+    if (myURL.searchParams && myURL.searchParams.get("title")) {
+        document.getElementById('pageTitle').innerHTML = myURL.searchParams.get("title");
+    }
+
+    loader = document.getElementById("loader");
+    console.log(loader.style.visibility)
+    loader.style.visibility = "hidden";
 }
 
 function insertTextAtCursor(text)
@@ -48,6 +66,7 @@ function messageBox(str) {
 
 async function callService(method) {
     try {
+        loader.style.visibility = "visible";
         output.innerText = ""
         const fullURL = serviceHostname + endpointName.innerText
 
@@ -71,6 +90,9 @@ async function callService(method) {
     catch (error) {
         console.error(error)
         messageBox(error);
+    }
+    finally {
+        loader.style.visibility = "hidden";
     }
 }
 
