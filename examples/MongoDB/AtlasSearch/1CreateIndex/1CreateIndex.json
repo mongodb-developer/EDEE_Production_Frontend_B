@@ -1,0 +1,6 @@
+{
+    "index" : {
+        "name": "default",
+        "definition": { "mappings": { "dynamic": true } }
+     }
+}
