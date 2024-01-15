@@ -1,0 +1,85 @@
+{
+    "data" :   
+    [
+      {
+        "claim_id": 1,
+        "policy_number": "ABC123456",
+        "date_of_incident": "2024-01-15",
+        "claim_description": "A minor fender bender occurred at the local parking lot. The policyholder's car sustained minimal damage to the rear bumper. The claim is currently pending review by the insurance company.",
+        "claim_amount": 500,
+        "status": "Pending"
+      },
+      {
+        "claim_id": 2,
+        "policy_number": "XYZ789012",
+        "date_of_incident": "2024-01-16",
+        "claim_description": "The insured vehicle's windshield was shattered due to a severe hailstorm. The policyholder promptly reported the incident, and the claim has been approved. The approved claim amount is $1000.",
+        "claim_amount": 1000,
+        "status": "Approved"
+      },
+      {
+        "claim_id": 3,
+        "policy_number": "LMN456789",
+        "date_of_incident": "2024-01-18",
+        "claim_description": "The policyholder's car collided with a deer on a rural road, resulting in significant damage to the front bumper and headlights. Unfortunately, the claim has been rejected after a thorough investigation.",
+        "claim_amount": 1500,
+        "status": "Rejected"
+      },
+      {
+        "claim_id": 4,
+        "policy_number": "PQR123456",
+        "date_of_incident": "2024-01-20",
+        "claim_description": "Vandalism occurred in the parking garage where the policyholder's car was parked. The claim is currently pending, awaiting further investigation and assessment of the damages.",
+        "claim_amount": 800,
+        "status": "Pending"
+      },
+      {
+        "claim_id": 5,
+        "policy_number": "ABC123456",
+        "date_of_incident": "2024-01-22",
+        "claim_description": "The insured vehicle was involved in a rear-end collision on the highway. Fortunately, no injuries were reported. The claim has been approved, and the policyholder is eligible for a claim amount of $1200.",
+        "claim_amount": 1200,
+        "status": "Approved"
+      },
+      {
+        "claim_id": 6,
+        "policy_number": "XYZ789012",
+        "date_of_incident": "2024-01-25",
+        "claim_description": "The policyholder's car was a victim of a hit and run incident in a parking lot. The claim is currently pending as the insurance company works to identify the responsible party and assess damages.",
+        "claim_amount": 2000,
+        "status": "Pending"
+      },
+      {
+        "claim_id": 7,
+        "policy_number": "LMN456789",
+        "date_of_incident": "2024-01-28",
+        "claim_description": "During a severe storm, a tree fell on the insured vehicle, causing extensive damage to the roof and windows. The claim has been approved, and the policyholder is entitled to a claim amount of $1800.",
+        "claim_amount": 1800,
+        "status": "Approved"
+      },
+      {
+        "claim_id": 8,
+        "policy_number": "PQR123456",
+        "date_of_incident": "2024-01-30",
+        "claim_description": "The policyholder's car experienced a side swipe in heavy traffic, resulting in damage to the driver's side. Unfortunately, the claim has been rejected due to conflicting accounts of the incident.",
+        "claim_amount": 950,
+        "status": "Rejected"
+      },
+      {
+        "claim_id": 9,
+        "policy_number": "ABC123456",
+        "date_of_incident": "2024-02-02",
+        "claim_description": "Accidental damage occurred while the insured vehicle was parked on the street. The policyholder reported the incident promptly, and the claim is currently pending assessment and approval.",
+        "claim_amount": 600,
+        "status": "Pending"
+      },
+      {
+        "claim_id": 10,
+        "policy_number": "XYZ789012",
+        "date_of_incident": "2024-02-05",
+        "claim_description": "The insured vehicle caught fire due to electrical issues. The policyholder and passengers are safe, but the car is a total loss. The claim has been approved, and the policyholder is eligible for a claim amount of $2500.",
+        "claim_amount": 2500,
+        "status": "Approved"
+      }
+    ]
+}

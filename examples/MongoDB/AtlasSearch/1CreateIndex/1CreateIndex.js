@@ -1,31 +1,34 @@
+// Create a Search Index
 
 var mongoClient = null;
 var collection
 
+// Connect to MongoDB Atlas
 async function initWebService() {
   var userName = system.getenv("MONGO_USERNAME")
   var passWord = system.getenv("MONGO_PASSWORD")
 
   mongoClient = new MongoClient("mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net");
-  collection = mongoClient.getDatabase("search").getCollection("metals")
+  collection = mongoClient.getDatabase("search").getCollection("claims")
 }
 
-
+// create a Search Index
 async function post_AtlasSearch(req, res) {
   var rval = {}
 
-  await collection.drop()
   var requestObj = JSON.parse(req.body)
-  rval.insert = await collection.insertMany(requestObj.data)
+
   var indexName = requestObj.index.name
   var indexDefinition = requestObj.index.definition
 
+  // delete the index if exists
   try {
     rval.drop = await collection.dropSearchIndex({name : indexName})
   } catch(e) {
     rval.drop = "Index cannot be dropped - perhaps does not exist\n" + e.toString()
   }
 
+  // create the new Search index
   try {
     rval.index = await collection.createSearchIndex(indexName,indexDefinition)
   }
@@ -37,7 +40,7 @@ async function post_AtlasSearch(req, res) {
   res.send(rval)
 }
 
-
+// do a simple text search to check that everything works, change the queryTerm in "Endpoint URL" 
 async function get_AtlasSearch(req, res) {
   var rval = {}
   
@@ -49,7 +52,6 @@ async function get_AtlasSearch(req, res) {
   searchResultsCursor = collection.aggregate(searchOperation)
 
   rval.searchResult = await searchResultsCursor.toArray()
-
 
   res.status(201);
   res.send(rval)
