@@ -39,13 +39,9 @@ async function onLoad() {
         callServicePOSTButton.style.visibility = "hidden";
     }
 
-    if (myURL.searchParams && myURL.searchParams.get("title")) {
-        document.getElementById('pageTitle').innerHTML = myURL.searchParams.get("title");
-    }
-
-    loader = document.getElementById("loader");
-    console.log(loader.style.visibility)
-    loader.style.visibility = "hidden";
+    // loader commented out, we can add it in the future if that's needed
+    // loader = document.getElementById("loader");
+    // loader.style.visibility = "hidden";
 }
 
 function insertTextAtCursor(text)
@@ -66,7 +62,7 @@ function messageBox(str) {
 
 async function callService(method) {
     try {
-        loader.style.visibility = "visible";
+        // loader.style.visibility = "visible";
         output.innerText = ""
         const fullURL = serviceHostname + endpointName.innerText
 
@@ -92,7 +88,7 @@ async function callService(method) {
         messageBox(error);
     }
     finally {
-        loader.style.visibility = "hidden";
+        // loader.style.visibility = "hidden";
     }
 }
 

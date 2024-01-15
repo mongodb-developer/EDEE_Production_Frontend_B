@@ -16,8 +16,7 @@
     <div class="sim-container">
         <!-- Menu Buttons -->
         <div class="menu-container"> 
-            <p id="pageTitle"></p>
-            <a class="menu" href="examples/examples.html">Examples</a>
+            <a class="menu" target="_blank" href="examples/examples.html">Examples</a>
             <a class="menu" href="docs/index.html">Documentation</a>
             <a class="menu" onclick="saveToClipboard()">Save to Clipboard</a>
         </div>
@@ -46,7 +45,8 @@ function get_Hello(req, res) {
             <div class="button-container">
                 <button class="button" onclick="callService('GET')" id="callServiceGET"> GET </button>
                 <button class="button" onclick="callService('POST')" id="callServicePOST"> POST </button>
-                <div class="loader" id="loader"></div>
+                <!-- loader commented out, we can add it in the future if that's needed -->
+                <!-- <div class="loader" id="loader"></div> -->
             </div>
             <!-- Response output -->
             <div class="label">Response:</div>
