@@ -11,6 +11,8 @@ async function onLoad() {
     document.getElementById('url').innerText = serviceHostname;
     codeChanged = true;
 
+    // we can feed index.html with a different src file each time
+    // we extract the code and put it in the code element
     const myURL = new URL(window.location)
     if (myURL.searchParams && myURL.searchParams.get("src")) {
         await loadTemplateCode(myURL.searchParams.get("src"))
@@ -48,7 +50,6 @@ async function callService(method) {
     try {
         output.innerText = ""
         const fullURL = serviceHostname + endpointName.innerText
-
 
         const response = await callVirtualEndpoint(fullURL, method)
 
@@ -101,12 +102,10 @@ async function loadTemplateCode(fname) {
     } else  {
         endpointName.innerText = ""
     }
-
 }
 
 function saveToClipboard()
 {
     navigator.clipboard.writeText(code.innerText);
-  
 }
 
