@@ -13,13 +13,12 @@
 ~~createSearchIndex~~
 ~~listSearchIndexes~~
 ~~dropSearchIndex~~
-
+~~expression builders for $gt,$lt etc~~
 findOneAndUpdate/findOneAndDelete/FindOneAndReplace
 
-expression builders for $gt,$lt etc
+Document - add Constructor, add/put/get,toJSON,parse
 
-gt(x) = { $gt: x }
-gt(x,y) = { $gt : [ ]}
+
 
 STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony from Commands
 
