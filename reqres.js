@@ -7,9 +7,13 @@ class SimRequest
         this.path = ""
         this.protocol="https"
         this.body = undefined;
-      
+        function octet() { 
+            return `${Math.floor(Math.random()*180)+11}`
+        }
+        this.sourceIp = octet()+"."+octet()+"."+octet()+"."+octet()
     }
 
+    
     setPath(url) {
  
         const URLObj = new URL(url)
