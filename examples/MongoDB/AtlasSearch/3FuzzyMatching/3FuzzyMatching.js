@@ -4,9 +4,7 @@ var collection
 
 // Connect to MongoDB Atlas
 async function initWebService() {
-  var userName = system.getenv("MONGO_USERNAME")
-  var passWord = system.getenv("MONGO_PASSWORD")
-
+  let [userName, passWord] = await readUserPassword();
   mongoClient = new MongoClient("mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net");
   collection = mongoClient.getDatabase("search").getCollection("claims")
 }

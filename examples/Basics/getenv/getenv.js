@@ -1,8 +1,8 @@
 var some_value = 0;
 
 
-function initWebService() {
-    some_value = system.getenv("SOME_VAR")
+async function initWebService() {
+    some_value = await system.getenv("SOME_VAR")
 }
 
 function get_Value(req, res) {
