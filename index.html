@@ -8,6 +8,7 @@
     <script src="magic.js"></script>
     <script src="reqres.js"></script>
     <script src="driver.js"></script>
+    <script src="helpers.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -26,7 +27,7 @@
             <div id="codediv" contenteditable class="code">
 function get_Hello(req, res) {
     res.status(200);
-    res.send({ msg : "Hello"})
+    res.send({ msg : "Hello " + req.query.get("name" )})
 }
             </div>
             <!-- Endpoint URL output -->
@@ -35,7 +36,7 @@ function get_Hello(req, res) {
                     <div class="label">Endpoint URL:</div>
                     <div class="url">
                         <div class="path staticpath" id="url"></div>
-                        <div class="path" contenteditable id="endpoint" />Hello
+                        <div class="path" contenteditable id="endpoint" />Hello?name=Fellow+Developer
                     </div>
                 </div>
             </div>
