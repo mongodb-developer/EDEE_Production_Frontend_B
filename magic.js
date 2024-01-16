@@ -75,16 +75,20 @@ function cleanCode(sourcecode) {
 
 
 const system = {
-    getenv: function (name) {
+    // name: name of the variable stored in the environment
+    getenv: function (name, secure = false) {
         let rval = localStorage.getItem(name);
         if (rval == null || rval == undefined) {
-            rval = prompt(`Please enter a value for "${name}".
-This is stored in the browser so 
-DO NOT ENTER A REAL PASSWORD.`)
+            rval = modal.prompt(`This is stored in the browser so 
+            DO NOT ENTER A REAL PASSWORD.`, `Please enter a value for "${name}".`, secure)
             if (rval == null) return "";
             if (rval.length < 6) throw new Error("Usernames and passwords must be at least 6 characters long in this environment.")
             localStorage.setItem(name, rval)
-        }
-        return rval
     }
+    return rval
+    },
+
+    clearenv: function (name) {
+        localStorage.removeItem(name);
+    },
 }
