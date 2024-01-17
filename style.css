@@ -57,7 +57,51 @@
   font-display: swap;
 }
 
+.column {
+  float: left;
+  width: calc(50% - 2em);
+  padding: 1em;
+}
 
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+li {
+  margin-bottom: 0.6em;
+  list-style-type: none;
+}
+
+ a {
+  border: 1px solid rgb(200,200,200);
+  padding: 0.2em;
+  margin-bottom: 0.3em;
+  border-radius: 0.3em;
+  padding-left: 1em;
+  padding-right: 1em;
+  text-decoration: none; 
+  color: black;
+}
+
+
+
+h1 {
+  font-family: MongoDB Value Serif;
+  font-weight: 200;
+  font-size: 42pt;
+  margin-top: 2pt;
+  margin-bottom: 3pt;
+}
+
+h2 {
+  font-family: 'Euclid Circular A', monospace;
+  font-weight: 200;
+  margin-top: 1pt;
+  margin-bottom: 1pt;
+}
 
 html {
   font-family: 'Euclid Circular A', monospace;

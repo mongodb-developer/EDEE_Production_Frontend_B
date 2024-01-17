@@ -18,6 +18,8 @@ async function onLoad() {
         await loadTemplateCode(myURL.searchParams.get("src"))
     }
 
+   
+
     code.onkeydown = function(e){
         codeChanged = true;
         if(e.key == 'Tab') {
