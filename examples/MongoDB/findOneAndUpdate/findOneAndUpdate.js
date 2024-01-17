@@ -13,7 +13,7 @@ async function post_Sequence(req, res) {
     // Use findOneAndUpdate to Update and Get the before or after record
     // If you duid update() then find() you might get a race condition and
     // See it after another user has changed it again
-    
+
     var rval = await sequenceCollection.findOneAndUpdate(query,updateOps,options)
 
     res.status(204)
@@ -23,7 +23,11 @@ async function post_Sequence(req, res) {
 async function initWebService() {
     var userName = await system.getenv("MONGO_USERNAME")
     var passWord = await system.getenv("MONGO_PASSWORD")
-    mongoClient = new MongoClient("mongodb+srv://" + userName  + ":" + passWord + "@learn.mongodb.net");
-    sequenceCollection = mongoClient.getDatabase("test").getCollection("sequences")
+    mongoClient = new MongoClient("mongodb+srv://" + userName 
+                             + ":" + passWord + "@learn.mongodb.net");
+                             
+    sequenceCollection = mongoClient
+                        .getDatabase("test")
+                        .getCollection("sequences")
 }
     
