@@ -19,7 +19,7 @@ findOneAndUpdate/findOneAndDelete/FindOneAndReplace
 Document - add Constructor, add/put/get,toJSON,parse
 
 
-
+Standardise Java Code
 STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony from Commands
 
 Docs and Examples

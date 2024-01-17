@@ -6,51 +6,89 @@
 </head>
 
 <body>
+
     <h1> Examples </h1>
-    N.B Still to make this pretty
-    <h2> Getting Started with the IDE </h2>
-    <ul>
-     <li><a class="" href="../index.html?src=Basics_response"> Minimal Web Service </a></li>
-     <li><a class="" href="../index.html?src=Basics_request"> Using the Request Object </a></li>
-     <li><a class="" href="../index.html?src=Basics_initWebService"> Setup persistent variables on startup </a></li>
-     <li><a class="" href="../index.html?src=Basics_getenv"> Store things not in code</a></li>
-   
-    </ul>
 
-    <h2> MongoDB 101 </h2>
-    <ul>
-        <li><a class="" href="../index.html?src=MongoDB_minimal"> Connect to MongoDB</a></li>
-        <li><a class="" href="../index.html?src=MongoDB_addandget"> Add and Retrieve a simple document</a></li>
-        <li><a class="" href="../index.html?src=MongoDB_basicQuery"> Query by different fields</a></li>
-        <li><a class="" href="../index.html?src=MongoDB_basicUpdate"> Perform conditional updates to records</a></li>
-        <li><a class="" href="../index.html?src=MongoDB_conditionalUpdate"> Perform conditional updates to records</a></li>
-        <li><a class="" href="../index.html?src=MongoDB_bucketPattern"> Use upsert to create buckets</a></li>
-    </ul>
 
-    <h2> MongoDB other</h2>
-       <ul>
-        <li><a class="" href="../index.html?src=MongoDB_minimal"> Connect and get server details</a></li>
-          <li><a class="" href="../index.html?src=MongoDB_minimal"> Connect and get server details</a></li>
-        <li><a class="" href="../index.html?src=MongoDB_listCollections"> List and Drop Databases and Collecitons</a></li>
-        <li><a class="" href="../index.html?src=MongoDB_blink"> Blink - A Simple CRUD example with POST and GET</a></li>
-        <li>  <a class="" href="../index.html?src=MongoDB_movies"> GET movie documents by title</a></li>
-        <li>  <a class="" href="../index.html?src=MongoDB_loadSample"> Load a file of JSON data</a></li>
-        <li>  <a class="" href="../index.html?src=MongoDB_indexes"> List, Create and Drop indexes for queries</a></li>
-        <li>  <a class="" href="../index.html?src=MongoDB_upsert"> Update or add if does not exist</a></li>
+    <div class="row">
+        <div class="column">
+            <h2> Getting Started with the IDE </h2>
+            <ul>
+                <li><a class="" href="../index.html?src=Basics_response"> Create a simple Web Service </a></li>
+                <li><a class="" href="../index.html?src=Basics_request"> Using the Request Object </a></li>
+                <li><a class="" href="../index.html?src=Basics_initWebService"> Initialise variables on startup
+                    </a></li>
+                <li><a class="" href="../index.html?src=Basics_getenv"> Environment variables </a></li>
 
-       </ul>
+            </ul>
 
-    <h2> Developer Data Platform</h2>
-    <h3> Atlas Search</h3>
-    <ul>
-        <li>    <a class="" href="../index.html?src=MongoDB_AtlasSearch_0InsertData"> Start by inserting some test data</a></li>
-        <li>    <a class="" href="../index.html?src=MongoDB_AtlasSearch_1CreateIndex"> Create a Search Index</a></li>
-        <li>    <a class="" href="../index.html?src=MongoDB_AtlasSearch_2SimpleSearch"> Perform basic Search</a></li>
-        <li>    <a class="" href="../index.html?src=MongoDB_AtlasSearch_3FuzzyMatching"> Add Fuzzy Matching!</a></li>
-        <li>    <a class="" href="../index.html?src=MongoDB_AtlasSearch_4RangeSearch"> Search using ranges</a></li>
-        <li>    <a class="" href="../index.html?src=MongoDB_AtlasSearch_5CompoundSearch"> Compound Search</a></li>
-        <li>    <a class="" href="../index.html?src=MongoDB_AtlasSearch_6RelevanceScoring"> Relevance Score</a></li>
-    </ul>
+            <h2> MongoDB 101 </h2>
+            <ul>
+                <li><a class="" href="../index.html?src=MongoDB_minimal"> Connecting to MongoDB</a></li>
+                <li><a class="" href="../index.html?src=MongoDB_addandget"> Add and retrieve a record</a></li>
+                <li><a class="" href="../index.html?src=MongoDB_basicQuery"> Basic Querying</a></li>
+                <li><a class="" href="../index.html?src=MongoDB_basicUpdate"> Basic Updates of existing data </a>
+                </li>
+                <li><a class="" href="../index.html?src=MongoDB_conditionalUpdate"> Atomic conditional updates
+                        records</a></li>
+                <li><a class="" href="../index.html?src=MongoDB_bucketPattern"> Upsert and the Bucket pattern</a></li>
+            </ul>
+
+            <h2> Atlas Search</h3>
+                <ul>
+                    <li> <a class="" href="../index.html?src=MongoDB_AtlasSearch_0InsertData"> Insert searchable data.
+                            data</a></li>
+                    <li> <a class="" href="../index.html?src=MongoDB_AtlasSearch_1CreateIndex"> Create an Atlas Search
+                            index</a>
+                    </li>
+                    <li> <a class="" href="../index.html?src=MongoDB_AtlasSearch_2SimpleSearch"> Basic search
+                            opertions</a>
+                    </li>
+                    <li> <a class="" href="../index.html?src=MongoDB_AtlasSearch_3FuzzyMatching"> Search with fuzzy
+                            matching</a>
+                    </li>
+                    <li> <a class="" href="../index.html?src=MongoDB_AtlasSearch_4RangeSearch"> Search using ranges</a>
+                    </li>
+                    <li> <a class="" href="../index.html?src=MongoDB_AtlasSearch_5CompoundSearch"> Search with multiple
+                            conditions</a></li>
+                    <li> <a class="" href="../index.html?src=MongoDB_AtlasSearch_6RelevanceScoring"> View result
+                            relevance score</a>
+                    </li>
+                </ul>
+
+
+        </div>
+        <div class="column">
+
+
+            <h2> MongoDB 101 </h2>
+            <ul>
+                <li><a class="" href="../index.html?src=MongoDB_minimal"> Connecting to MongoDB</a></li>
+                <li><a class="" href="../index.html?src=MongoDB_addandget"> Add and retrieve a record</a></li>
+                <li><a class="" href="../index.html?src=MongoDB_basicQuery"> Basic Querying</a></li>
+                <li><a class="" href="../index.html?src=MongoDB_basicUpdate"> Basic Updates of existing data </a>
+                </li>
+                <li><a class="" href="../index.html?src=MongoDB_conditionalUpdate"> Atomic conditional updates
+                        records</a></li>
+                <li><a class="" href="../index.html?src=MongoDB_bucketPattern"> Upsert and the Bucket pattern</a></li>
+            </ul>
+            
+            <h2> Other MongoDB Examples</h2>
+            <ul>
+                <li><a class="" href="../index.html?src=MongoDB_listCollections"> List and Drop Databases and
+                        Collecitons</a></li>
+                <li> <a class="" href="../index.html?src=MongoDB_movies"> Look for Movies by title</a></li>
+                <li> <a class="" href="../index.html?src=MongoDB_loadSample"> Load a batch of JSON documents </a></li>
+                <li> <a class="" href="../index.html?src=MongoDB_indexes"> List,Create and Drop indexes</a>
+                </li>
+
+            </ul>
+
+
+        </div>
+    </div>
+
+
 </body>
 
 </html>
