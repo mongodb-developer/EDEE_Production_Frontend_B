@@ -5,7 +5,14 @@ var collection
 
 // Connect to MongoDB Atlas
 async function initWebService() {
-  let [userName, passWord] = await readUserPassword();
+  var userName = await system.getenv("MONGO_USERNAME")
+  var passWord = await system.getenv("MONGO_PASSWORD", true)
+  
+  if (userName == "" || userName == null || passWord == ""|| passWord == null) {
+    alert("Please enter valid auth");
+    return;
+  }  
+  
   mongoClient = new MongoClient("mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net");
   collection = mongoClient.getDatabase("search").getCollection("claims")
 }
