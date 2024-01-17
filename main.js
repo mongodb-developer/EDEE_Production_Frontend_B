@@ -16,6 +16,11 @@ async function onLoad() {
     const myURL = new URL(window.location)
     if (myURL.searchParams && myURL.searchParams.get("src")) {
         await loadTemplateCode(myURL.searchParams.get("src"))
+        if (myURL.searchParams.get("title")) {
+            document.title = myURL.searchParams.get("title");
+        } else {
+            document.title = myURL.searchParams.get("src").split("_").join("/");
+        }
     }
 
    
