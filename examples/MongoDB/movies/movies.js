@@ -3,9 +3,7 @@
 var mongoClient = null;
 
 async function initWebService() {
-  var userName = system.getenv("MONGO_USERNAME")
-  var passWord = system.getenv("MONGO_PASSWORD")
-  //User created automatically if it doesn't exist 
+  let [userName, passWord] = await readUserPassword();  //User created automatically if it doesn't exist 
   mongoClient = new MongoClient("mongodb+srv://" + userName  + ":" + passWord + "@learn.mongodb.net")
 }
 
