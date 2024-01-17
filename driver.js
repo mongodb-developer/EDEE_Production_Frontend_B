@@ -219,6 +219,13 @@ class MongoCollection {
         return null;
     }
 
+    async findOneAndUpdate(query, updates, options) {
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+
+        const rval = await this.mongoClient.user.functions.findOneAndUpdate(this.dbName, this.collName, query, updates,options)
+        return rval;
+    }
+
     async updateMany(query, updates, options) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
 
