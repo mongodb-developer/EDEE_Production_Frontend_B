@@ -80,6 +80,7 @@ class ModalDialogElement extends HTMLElement {
         position: fixed;
         top: 0;
         left: 0;
+        background-color: rgba(249, 235, 255, 0.35);
       }
       
       .modal-dialog {
@@ -88,8 +89,10 @@ class ModalDialogElement extends HTMLElement {
         overflow: hidden;
         box-sizing: border-box;
         box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.5);
-        border-radius: 0.3em;
+        border-radius: 0.5em;
         animation: modal-dialog-show 265ms cubic-bezier(0.18, 0.89, 0.32, 1.28)
+        color: rgb(0, 104, 74);
+        background-color: white;
       }
       
       .modal-dialog.modal-dialog-hide {
@@ -123,7 +126,7 @@ class ModalDialogElement extends HTMLElement {
         font-family: inherit;
         font-size: 1.25em;
         color: inherit;
-        background-color: rgba(0, 0, 0, 0.05);
+        background-color: rgba(227, 252, 247, 0.05);
         padding: 1em;
         border-bottom: solid 1px rgba(0, 0, 0, 0.15);
       }
@@ -157,7 +160,7 @@ class ModalDialogElement extends HTMLElement {
       
       .modal-dialog-footer {
         color: inherit;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(227, 252, 247, 0.5);
         display: flex;
         justify-content: stretch;
       }
@@ -165,14 +168,12 @@ class ModalDialogElement extends HTMLElement {
       .modal-dialog-button {
         color: inherit;
         font-family: inherit;
-        font-size: inherit;
-        background-color: rgba(0, 0, 0, 0);
+        font-size: large;
+        background-color: white;
         width: 100%;
         padding: 1em;
-        border: none;
-        border-top: solid 1px rgba(0, 0, 0, 0.15);
-        outline: 0;
-        border-radius: 0px;
+        margin: 0.5em;
+        border-radius: 0.5em;
         transition: background-color 225ms ease-out;
       }
       
@@ -194,7 +195,7 @@ class ModalDialogElement extends HTMLElement {
         margin-top: ${padding};
         outline: 0;
         box-sizing: border-box;
-        border-radius: 0;
+        border-radius: 0.5em;
         box-shadow: 0 0 0 0 rgba(13, 134, 255, 0.5);
         transition: box-shadow 125ms ease-out, border 125ms ease-out;
       }
@@ -202,32 +203,6 @@ class ModalDialogElement extends HTMLElement {
       .modal-dialog-input:focus {
         border: solid 1px rgba(13, 134, 255, 0.8);
         box-shadow: 0 0 0.1em 0.2em rgba(13, 134, 255, 0.5);
-      }
-      
-      @media (prefers-color-scheme: dark) {
-        .modal-dialog-window {
-          background-color: rgba(31, 31, 31, 0.5);
-        }
-        
-        .modal-dialog {
-          color: #f2f2f2;
-          background-color: #464646;
-        }
-        
-        .modal-dialog-input {
-          background-color: #2f2f2f;
-        }
-      }
-      
-      @media (prefers-color-scheme: light) {
-        .modal-dialog-window {
-          background-color: rgba(221, 221, 221, 0.5);
-        }
-        
-        .modal-dialog {
-          color: #101010;
-          background-color: #ffffff;
-        }
       }
     `;
     }
