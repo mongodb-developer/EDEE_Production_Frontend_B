@@ -14,7 +14,8 @@ async function post_Sequence(req, res) {
     // If you duid update() then find() you might get a race condition and
     // See it after another user has changed it again
 
-    var rval = await sequenceCollection.findOneAndUpdate(query,updateOps,options)
+    var rval = await sequenceCollection.findOneAndUpdate(query,
+                                                         updateOps,options)
 
     res.status(204)
     res.send(rval)
@@ -25,7 +26,7 @@ async function initWebService() {
     var passWord = await system.getenv("MONGO_PASSWORD")
     mongoClient = new MongoClient("mongodb+srv://" + userName 
                              + ":" + passWord + "@learn.mongodb.net");
-                             
+
     sequenceCollection = mongoClient
                         .getDatabase("test")
                         .getCollection("sequences")
