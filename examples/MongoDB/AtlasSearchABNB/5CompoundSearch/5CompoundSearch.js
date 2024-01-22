@@ -13,7 +13,7 @@ async function initWebService() {
   }  
   
   mongoClient = new MongoClient("mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net");
-  collection = mongoClient.getDatabase("search").getCollection("claims")
+  collection = mongoClient.getDatabase("sample_airbnb").getCollection("listingsAndReviews");
 }
 
 // we can compound operators in a single search
@@ -32,16 +32,16 @@ async function get_AtlasSearch(req, res) {
           {
             "text": {
               "query": queryTerm,
-              "path": "claim_description"
+              "path": "description"
             }
           }
         ],
         "should": [
           {
             "range": {
-              "path": "claim_amount",
-              "gt": 1000,
-              "lt": 5000
+              "path": "accommodates",
+              "gt": 5,
+              "lt": 10
             }
           }
         ]

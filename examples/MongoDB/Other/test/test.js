@@ -3,7 +3,14 @@ var mongoClient = null;
 var db,collection
 
 async function initWebService() {
-  let [userName, passWord] = await readUserPassword();
+  var userName = await system.getenv("MONGO_USERNAME")
+  var passWord = await system.getenv("MONGO_PASSWORD", true)
+
+  if (userName == "" || userName == null || passWord == ""|| passWord == null) {
+    alert("Please enter valid auth");
+    return;
+  }  
+  
   mongoClient = new MongoClient("mongodb+srv://"+userName  + ":" + passWord + "@learn.mongodb.net");
  
   db = mongoClient.getDatabase("test")

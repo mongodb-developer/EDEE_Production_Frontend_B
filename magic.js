@@ -92,15 +92,3 @@ const system = {
         localStorage.removeItem(name);
     },
 }
-
-async function readUserPassword() {
-    var userName = await await system.getenv("MONGO_USERNAME")
-    var passWord = await await system.getenv("MONGO_PASSWORD", true)
-  
-    if (userName == "" || userName == null || passWord == ""|| passWord == null) {
-      alert("Please enter valid auth");
-      return;
-    }
-
-    return [userName, passWord];
-}
