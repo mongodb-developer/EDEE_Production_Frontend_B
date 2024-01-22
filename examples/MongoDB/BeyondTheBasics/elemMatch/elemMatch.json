@@ -1,0 +1,93 @@
+[
+    {
+      "_id": 1,
+      "components": [
+        {"shape": "circle", "color": "red", "size": "large"},
+        {"shape": "square", "color": "blue", "size": "medium"},
+        {"shape": "triangle", "color": "green", "size": "large"},
+        {"shape": "rectangle", "color": "yellow", "size": "small"}
+      ]
+    },
+    {
+      "_id": 2,
+      "components": [
+        {"shape": "square", "color": "purple", "size": "large"},
+        {"shape": "circle", "color": "orange", "size": "lerge"},
+        {"shape": "rectangle", "color": "pink", "size": "medium"},
+        {"shape": "triangle", "color": "brown", "size": "small"}
+      ]
+    },
+    {
+      "_id": 3,
+      "components": [
+        {"shape": "circle", "color": "cyan", "size": "large"},
+        {"shape": "square", "color": "magenta", "size": "medium"},
+        {"shape": "triangle", "color": "gray", "size": "large"},
+        {"shape": "rectangle", "color": "indigo", "size": "small"}
+      ]
+    },
+    {
+      "_id": 4,
+      "components": [
+        {"shape": "square", "color": "teal", "size": "medium"},
+        {"shape": "circle", "color": "maroon", "size": "large"},
+        {"shape": "rectangle", "color": "olive", "size": "small"},
+        {"shape": "triangle", "color": "navy", "size": "medium"}
+      ]
+    },
+    {
+      "_id": 5,
+      "components": [
+        {"shape": "circle", "color": "lime", "size": "large"},
+        {"shape": "square", "color": "aqua", "size": "medium"},
+        {"shape": "triangle", "color": "silver", "size": "large"},
+        {"shape": "rectangle", "color": "gold", "size": "small"}
+      ]
+    },
+    {
+      "_id": 6,
+      "components": [
+        {"shape": "square", "color": "black", "size": "large"},
+        {"shape": "circle", "color": "white", "size": "medium"},
+        {"shape": "rectangle", "color": "red", "size": "medium"},
+        {"shape": "triangle", "color": "blue", "size": "large"}
+      ]
+    },
+    {
+      "_id": 7,
+      "components": [
+        {"shape": "circle", "color": "green", "size": "medium"},
+        {"shape": "square", "color": "yellow", "size": "medium"},
+        {"shape": "triangle", "color": "purple", "size": "large"},
+        {"shape": "rectangle", "color": "orange", "size": "small"}
+      ]
+    },
+    {
+      "_id": 8,
+      "components": [
+        {"shape": "square", "color": "pink", "size": "large"},
+        {"shape": "circle", "color": "brown", "size": "large"},
+        {"shape": "rectangle", "color": "cyan", "size": "medium"},
+        {"shape": "triangle", "color": "magenta", "size": "large"}
+      ]
+    },
+    {
+      "_id": 9,
+      "components": [
+        {"shape": "circle", "color": "gray", "size": "small"},
+        {"shape": "square", "color": "indigo", "size": "medium"},
+        {"shape": "triangle", "color": "teal", "size": "large"},
+        {"shape": "rectangle", "color": "maroon", "size": "small"}
+      ]
+    },
+    {
+      "_id": 10,
+      "components": [
+        {"shape": "square", "color": "gold", "size": "medium"},
+        {"shape": "circle", "color": "black", "size": "large"},
+        {"shape": "rectangle", "color": "white", "size": "small"},
+        {"shape": "triangle", "color": "lime", "size": "medium"}
+      ]
+    }
+  ]
+  
