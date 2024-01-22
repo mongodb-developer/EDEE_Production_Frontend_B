@@ -14,19 +14,15 @@
 ~~listSearchIndexes~~
 ~~dropSearchIndex~~
 ~~expression builders for $gt,$lt etc~~
-findOneAndUpdate/findOneAndDelete/FindOneAndReplace
+~~findOneAndUpdate~~ /findOneAndDelete/FindOneAndReplace - not advised ususally.
 
-Document - add Constructor, add/put/get,toJSON,parse
-
-
-Standardise Java Code
-STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony from Commands
-
-Docs and Examples
+__Docs and Examples__
 
 After MVP
 =====
-
+Document - add Constructor, add/put/get,toJSON,parse
+Standardise Java Style Code
+STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony from Commands
 Add Transactions
 Add explain()
 Add Load and Save (TO DB? Locally?)
