@@ -1,7 +1,7 @@
 
 
 badfields = ["minimum_nights","maximum_nights","price","weekly_price",
-"monthly_price","cleaning_fee","extra_people","guests_included"]
+"monthly_price","cleaning_fee","extra_people","guests_included","bathrooms"]
 
 toSet = {}
 for(let f of badfields) {

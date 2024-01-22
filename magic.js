@@ -9,7 +9,7 @@ async function callVirtualEndpoint(url, verb) {
         const codehost = document.createElement("script")
         codehost.id = "codehost"
         document.body.appendChild(codehost)
-        let source = code.innerText
+        let source = _code.innerText
         source = cleanCode(source)
 
 
@@ -56,13 +56,15 @@ async function callVirtualEndpoint(url, verb) {
 
             await window[fName](req, res)
         } catch (e) {
+            console.log(e)
             res.status(500);
-            res.send(`Server Error ocurred: ${e}`)
+            res.send(`Server Error ocurred: ${e.message}`)
         }
     } else {
         res.status(404);
         res.send(`Not Found handler ${fName}`)
     }
+    console.log(res)
     return res;
 }
 

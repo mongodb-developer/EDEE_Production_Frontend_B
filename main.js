@@ -4,9 +4,9 @@ let codeChanged
 
 const serviceHostname = "https://hostname:5500/service/"
 async function onLoad() {
-    code = document.getElementById('codediv')
-    output = document.getElementById('response')
-    postdata = document.getElementById('postdata')
+    _code = document.getElementById('codediv')
+    _output = document.getElementById('response')
+    _postdata = document.getElementById('postdata')
     endpointName = document.getElementById('endpoint')
     document.getElementById('url').innerText = serviceHostname;
     codeChanged = true;
@@ -25,7 +25,7 @@ async function onLoad() {
 
    
 
-    code.onkeydown = function(e){
+    _code.onkeydown = function(e){
         codeChanged = true;
         if(e.key == 'Tab') {
             console.log("TAB")
@@ -70,7 +70,7 @@ function messageBox(str) {
 async function callService(method) {
     try {
         // loader.style.visibility = "visible";
-        output.innerText = ""
+        _output.innerText = ""
         const fullURL = serviceHostname + endpointName.innerText
 
         const response = await callVirtualEndpoint(fullURL, method)
@@ -87,12 +87,12 @@ async function callService(method) {
         } else {
             renderOut += JSON.stringify(response._data, null, 2)
         }
-
-        output.innerText = renderOut
+     
+        _output.innerText = renderOut
     }
     catch (error) {
         console.error(error)
-        messageBox(error);
+        messageBox(error); // Fatal problem
     }
     finally {
         // loader.style.visibility = "hidden";
@@ -108,17 +108,17 @@ async function loadTemplateCode(fname) {
 
     let response = await fetch(`${url}.js`)
     if (response.status == 200) {
-        code.innerText = await response.text()
+        _code.innerText = await response.text()
     } else {
         //We dont really care if it's missing
-        code.innerText = ""
+        _code.innerText = ""
     }
 
     response = await fetch(`${url}.json`)
     if (response.status == 200) {
-        postdata.innerText = await response.text()
+        _postdata.innerText = await response.text()
     } else {
-        postdata.innerText = ""
+        _postdata.innerText = ""
     }
 
     response = await fetch(`${url}.url`)
@@ -131,6 +131,6 @@ async function loadTemplateCode(fname) {
 
 function saveToClipboard()
 {
-    navigator.clipboard.writeText(code.innerText);
+    navigator.clipboard.writeText(_code.innerText);
 }
 
