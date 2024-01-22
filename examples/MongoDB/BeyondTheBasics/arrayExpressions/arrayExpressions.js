@@ -7,20 +7,21 @@ async function get_Data(req, res) {
     var query = {}
 
     // WE WANT DOCUMENTS WITH SMALL CIRCLES
-
     specification = { shape: "circle", size: "small"}
-
-    // Uncomment to try
-    // query.components = specification ; // Incorrect as not exact match
-    // query.components  = {$elemMatch: specification} ; //Correct - look for element
+    query.components  = {$elemMatch: specification} ; //Correct - look for element
     
-    query = { "components.shape" : "circle", "components.size" : "large" } // Returns circles if anything is small
-
-    var result = await arrayExample.find(query).toArray();
+    // Use an expression to project just those
+    smallCircles = { $and : [ {$eq: ["$$this.shape","circle"]}, {$eq : ["$$this.size","small" ]} ]}
+    arrayFilter =  { $filter : { input : "$components", cond: smallCircles }}
+    projection = { components : arrayFilter }
+    console.log(JSON.stringify(projection))
+    var result = await arrayExample.find(query,projection).toArray();
     res.status(200)
     res.send(result)
 }
 
+
+//Generate example data
 async function post_Data(req,res) {
     if(await arrayExample.countDocuments() == 0) {
     docs = JSON.parse(req.body)
