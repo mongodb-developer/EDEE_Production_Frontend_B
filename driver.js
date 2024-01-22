@@ -113,13 +113,14 @@ class MongoDatabase {
     async drop() {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.dropDatabase(this.dbName)
-        return { ok: 1 }
+        return rval
     }
 
     async createCollection(collName,options) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.createCollection(this.dbName,collName,options)
-        return { ok: 1 }
+        if(rval.result.ok == false) { throw new Error(JSON.stringify(rval))}
+        return rval
     }
 }
 
@@ -201,6 +202,13 @@ class MongoCollection {
     async insertOne(document) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.insert(this.dbName, this.collName, [document])
+
+        if(rval.error) {
+            let firstBracket = rval.error.indexOf('{')
+            let error = rval.error.substring(firstBracket,rval.error.length-1)
+            throw new Error(JSON.stringify(EJSON.parse(error),null,2))
+        }
+
         return rval
     }
 

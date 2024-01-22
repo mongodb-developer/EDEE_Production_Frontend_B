@@ -56,7 +56,6 @@ async function callVirtualEndpoint(url, verb) {
 
             await window[fName](req, res)
         } catch (e) {
-            console.log(e)
             res.status(500);
             res.send(`Server Error ocurred: ${e}`)
         }
