@@ -30,8 +30,9 @@
                
 function get_Hello(req, res) {
     res.status(200);
-    res.send({ msg : "Hello " + req.query.get("name" )})
-
+    res.send({ msg : "Hello " + req.query.get("name") 
+                        + " try looking at the examples."})
+}
             </div>
             <!-- Endpoint URL output -->
             <div id="outputdiv" class="test">
@@ -45,7 +46,9 @@ function get_Hello(req, res) {
             </div>
             <!-- POST data output -->
             <div class="label">POST Data:</div>
-            <div class="postdata" contenteditable id="postdata"></div>
+            <div class="postdata" contenteditable id="postdata">
+              
+            </div>
             <div class="button-container">
                 <button class="button" onclick="callService('GET')" id="callServiceGET"> GET </button>
                 <button class="button" onclick="callService('POST')" id="callServicePOST"> POST </button>

@@ -1,0 +1,42 @@
+[
+    {
+      "name": "Machine1",
+      "measurements": [85, 92, 76, 68, 94, 79, 88, 72, 90, 81]
+    },
+    {
+      "name": "Machine2",
+      "measurements": [97, 55, 89, 78, 63, 91, 72, 84, 99, 60]
+    },
+    {
+      "name": "Machine3",
+      "measurements": [73, 88, 96, 52, 67, 81, 94, 79, 65, 70]
+    },
+    {
+      "name": "Machine4",
+      "measurements": [60, 85, 72, 94, 78, 91, 88, 57, 63, 99]
+    },
+    {
+      "name": "Machine5",
+      "measurements": [76, 90, 82, 69, 97, 54, 83, 72, 88, 95]
+    },
+    {
+      "name": "Machine6",
+      "measurements": [92, 75, 68, 87, 59, 80, 96, 63, 71, 84]
+    },
+    {
+      "name": "Machine7",
+      "measurements": [55, 82, 77, 94, 61, 89, 73, 68, 96, 80]
+    },
+    {
+      "name": "Machine8",
+      "measurements": [79, 94, 68, 87, 75, 59, 82, 96, 70, 88]
+    },
+    {
+      "name": "Machine9",
+      "measurements": [87, 61, 94, 78, 83, 70, 92, 55, 99, 74]
+    },
+    {
+      "name": "Machine10",
+      "measurements": [69, 80, 92, 57, 84, 76, 63, 95, 71, 88]
+    }
+  ]
