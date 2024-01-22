@@ -11,10 +11,12 @@ async function get_Data(req, res) {
     query.components  = {$elemMatch: specification} ; //Correct - look for element
     
     // Use an expression to project just those
+    // $elemMatch doesn't exist as an expression, have to use $filter
+
     smallCircles = { $and : [ {$eq: ["$$this.shape","circle"]}, {$eq : ["$$this.size","small" ]} ]}
     arrayFilter =  { $filter : { input : "$components", cond: smallCircles }}
     projection = { components : arrayFilter }
-    console.log(JSON.stringify(projection))
+  
     var result = await arrayExample.find(query,projection).toArray();
     res.status(200)
     res.send(result)
