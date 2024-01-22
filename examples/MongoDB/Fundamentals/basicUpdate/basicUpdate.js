@@ -7,11 +7,15 @@ async function get_View(req, res) {
     res.send(data)
 }
 
+// Every time this is called - add the ip of the caller to a list and 
+
+
 async function post_View(req, res) {
 
     var sourceIp = req.sourceIp
     
     query = { propertyId: "ABC123" }
+
     updateOps = {}
     updateOps['$set'] = { lastView: new Date()}
     updateOps['$inc'] = { nViews : 1}

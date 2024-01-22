@@ -7,6 +7,8 @@ async function get_View(req, res) {
     res.send(data)
 }
 
+//Only add a view to the viewIp list if there are fewer than 8 things in the list already.
+
 async function post_View(req, res) {
 
     var sourceIp = req.sourceIp
@@ -19,9 +21,7 @@ async function post_View(req, res) {
     updateOps['$inc'] = { nViews : 1}
     updateOps['$push'] = { viewIp : sourceIp}
     
-    options = { upsert: true }
-    
-    var rval = await viewCollection.updateOne(query,updateOps, options)
+    var rval = await viewCollection.updateOne(query,updateOps)
 
     res.status(202)
     res.send(rval)

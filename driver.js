@@ -271,7 +271,7 @@ class MongoCursor {
         this.collName = collName
         this.dbName = dbName
         this.mongoClient = mongoClient
-        this._limit = 10000
+        this._limit = 30
         this._skip = 0
         this._query = undefined;
         this._projection = undefined

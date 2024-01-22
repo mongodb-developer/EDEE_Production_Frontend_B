@@ -6,8 +6,9 @@ async function post_Claim(req, res) {
    
     var claim = JSON.parse(req.body)
 
-    //Convert strings to dates - ideally copy fields into a new document
-    //To verify input or wrap this in a full verifier
+    //Convert strings to dates or other types
+    // We woudl ideally  copy fields into a new document
+    // To verify the inputs.
 
     claim.incidentDetails.date = new Date(claim.incidentDetails.date )
     for(var interaction of claim.interactions) {
@@ -38,6 +39,6 @@ async function initWebService() {
     var passWord = system.getenv("MONGO_PASSWORD")
     mongoClient = new MongoClient("mongodb+srv://" + userName  + ":" + passWord + "@learn.mongodb.net");
     claimsCollection = mongoClient.getDatabase("insurance").getCollection("claims")
-    // claimsCollection.drop()
+    // await claimsCollection.drop() // Use if you want to restart
   }
     
