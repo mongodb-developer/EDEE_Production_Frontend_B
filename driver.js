@@ -102,6 +102,8 @@ class MongoDatabase {
         return coll
     }
 
+
+
     async listCollectionNames() {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.listCollectionNames(this.dbName)
@@ -111,6 +113,12 @@ class MongoDatabase {
     async drop() {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.dropDatabase(this.dbName)
+        return { ok: 1 }
+    }
+
+    async createCollection(collName,options) {
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.createCollection(this.dbName,collName,options)
         return { ok: 1 }
     }
 }
