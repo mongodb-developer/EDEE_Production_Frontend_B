@@ -13,10 +13,11 @@ async function initWebService() {
   }  
   
   mongoClient = new MongoClient("mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net");
-  collection = mongoClient.getDatabase("search").getCollection("claims")
+  collection = mongoClient.getDatabase("sample_airbnb").getCollection("listingsAndReviews");
 }
 
-// we can compound operators in a single search
+// search in all fields, but now you can make up to two typos
+// try with: "niu york", "bouston", etc.
 async function get_AtlasSearch(req, res) {
   var rval = {}
   
@@ -26,26 +27,13 @@ async function get_AtlasSearch(req, res) {
 
   searchOperation = [ 
     { $search : { 
-      "index": "default",
-      "compound": {
-        "must": [
-          {
-            "text": {
-              "query": queryTerm,
-              "path": "claim_description"
-            }
-          }
-        ],
-        "should": [
-          {
-            "range": {
-              "path": "claim_amount",
-              "gt": 1000,
-              "lt": 5000
-            }
-          }
-        ]
-      }
+      text : { 
+        query: queryTerm , 
+        path:{ wildcard:  '*' },
+        fuzzy: {
+          maxEdits: 2
+        } 
+      } 
     } 
     } 
   ]

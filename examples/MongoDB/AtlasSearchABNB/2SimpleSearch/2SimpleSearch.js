@@ -13,10 +13,10 @@ async function initWebService() {
   }  
   
   mongoClient = new MongoClient("mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net");
-  collection = mongoClient.getDatabase("search").getCollection("claims")
+  collection = mongoClient.getDatabase("sample_airbnb").getCollection("listingsAndReviews");
 }
 
-// we can compound operators in a single search
+// searching rentals, here we're just searching in the "summary" field of each document
 async function get_AtlasSearch(req, res) {
   var rval = {}
   
@@ -26,29 +26,10 @@ async function get_AtlasSearch(req, res) {
 
   searchOperation = [ 
     { $search : { 
-      "index": "default",
-      "compound": {
-        "must": [
-          {
-            "text": {
-              "query": queryTerm,
-              "path": "claim_description"
-            }
-          }
-        ],
-        "should": [
-          {
-            "range": {
-              "path": "claim_amount",
-              "gt": 1000,
-              "lt": 5000
-            }
-          }
-        ]
-      }
+      // if we use the default index we can omit it
+      text : { query: queryTerm , path: "summary" } // here we search just in one field
     } 
-    } 
-  ]
+  } ]
   searchResultsCursor = collection.aggregate(searchOperation)
 
   rval.searchResult = await searchResultsCursor.toArray()

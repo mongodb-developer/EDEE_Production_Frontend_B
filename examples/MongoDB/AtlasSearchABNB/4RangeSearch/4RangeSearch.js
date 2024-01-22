@@ -13,10 +13,10 @@ async function initWebService() {
   }  
   
   mongoClient = new MongoClient("mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net");
-  collection = mongoClient.getDatabase("search").getCollection("claims")
+  collection = mongoClient.getDatabase("sample_airbnb").getCollection("listingsAndReviews");
 }
 
-// we can compound operators in a single search
+// we use range to get rentals for a group of 5 to 10 people
 async function get_AtlasSearch(req, res) {
   var rval = {}
   
@@ -26,26 +26,11 @@ async function get_AtlasSearch(req, res) {
 
   searchOperation = [ 
     { $search : { 
-      "index": "default",
-      "compound": {
-        "must": [
-          {
-            "text": {
-              "query": queryTerm,
-              "path": "claim_description"
-            }
-          }
-        ],
-        "should": [
-          {
-            "range": {
-              "path": "claim_amount",
-              "gt": 1000,
-              "lt": 5000
-            }
-          }
-        ]
-      }
+      "range": {
+        "path": "accommodates",
+        "gte": 5,
+        "lte": 10,
+     }
     } 
     } 
   ]

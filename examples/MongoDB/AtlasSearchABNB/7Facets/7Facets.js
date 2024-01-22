@@ -13,10 +13,30 @@ async function initWebService() {
   }  
   
   mongoClient = new MongoClient("mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net");
-  collection = mongoClient.getDatabase("search").getCollection("claims")
+  collection = mongoClient.getDatabase("sample_airbnb").getCollection("listingsAndReviews");
 }
 
-// we can compound operators in a single search
+// to do Facet search we need a new index that supports facets:
+// Here is that pre-created index JSON definition:
+
+// {
+//   "mappings": {
+//     "dynamic": true,
+//     "fields": {
+//       "address": {
+//         "fields": {
+//           "country": {
+//             "type": "stringFacet"
+//           }
+//         },
+//         "type": "document"
+//       },
+//       "property_type": {
+//         "type": "stringFacet"
+//       }
+//     }
+//   }
+// }
 async function get_AtlasSearch(req, res) {
   var rval = {}
   
@@ -25,29 +45,20 @@ async function get_AtlasSearch(req, res) {
   rval.searchIndexes = await collection.listSearchIndexes()
 
   searchOperation = [ 
-    { $search : { 
-      "index": "default",
-      "compound": {
-        "must": [
-          {
-            "text": {
-              "query": queryTerm,
-              "path": "claim_description"
-            }
+      {
+        $searchMeta: {
+          index: "airbnbFacetIndex",
+           "facet": {
+         
+          "facets": {
+             "typeFacet": {
+             "type": "string",
+             "path": "property_type",
+             }
           }
-        ],
-        "should": [
-          {
-            "range": {
-              "path": "claim_amount",
-              "gt": 1000,
-              "lt": 5000
-            }
-          }
-        ]
-      }
-    } 
-    } 
+       }
+        }
+      } 
   ]
   searchResultsCursor = collection.aggregate(searchOperation)
 
