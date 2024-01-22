@@ -2,8 +2,8 @@ var mongoClient = null;
 var listingsCollection
 
 
-// Can you modify this to find the cheapest House in Canada with a pool?
-// What suburb is it in
+// Challenge: Can you modify this to find the cheapest House in Canada with a pool?
+// What suburb is it in?
 
 async function get_Query(req, res) {
   
@@ -19,7 +19,6 @@ async function get_Query(req, res) {
     query.beds = gt(5)
     query['address.country'] = "Turkey"
 
-    //Highest first
     var sortOrder = { price : -1 }
 
     var cursor = listingsCollection.find(query, projection).limit(10).sort(sortOrder)
