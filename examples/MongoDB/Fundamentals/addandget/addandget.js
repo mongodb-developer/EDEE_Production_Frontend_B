@@ -35,8 +35,8 @@ async function get_Claim(req, res) {
 }
 
 async function initWebService() {
-    var userName = system.getenv("MONGO_USERNAME")
-    var passWord = system.getenv("MONGO_PASSWORD")
+    var userName = awaitt system.getenv("MONGO_USERNAME")
+    var passWord = awaitt system.getenv("MONGO_PASSWORD",true)
     mongoClient = new MongoClient("mongodb+srv://" + userName  + ":" + passWord + "@learn.mongodb.net");
     claimsCollection = mongoClient.getDatabase("insurance").getCollection("claims")
     // await claimsCollection.drop() // Use if you want to restart
