@@ -6,7 +6,7 @@ const STATUS_NEW="1 - New", STATUS_ASSIGNED="2 - Assigned", STATUS_DONE="3 - Com
 // You can add a new job/task with post_Task and list with get_Task
 // You need to add post_Assign?user=Name - which will find any task that is not assigned and
 // Assign it to that user, changing the status to STATUS_ASSIGNED.
-// A task can be (re)assigned i it is NEW or has been Assigned for more than 1 minute (Abandoned)
+// A task can be (re)assigned if it is NEW or has been Assigned for more than 1 minute (Abandoned)
 
 async function post_Assign(req,res) {
     assignedTo = req.query.get("user"), assignedTask=null;

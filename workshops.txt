@@ -1,29 +1,3 @@
-SimDev Basics
-    Minimal Web service response
-    Handling requests
-    Using init
-    Sequence service
-
-
-MongoDB Basics
-  connecting to MongoDB
-  fetching records
-  adding data (simple)
-  adding data (Typing)
-  ObjectId
-  Dates
-  EJSON
-  updating data
-    set
-    inc
-  sorting results
-
-Atlas Search
-   Simpel Searcch
-    Boolean with Search
-    Scores?
-    Skip and Limit
-    ??
 
 MongoDB 201
   - findOneAndUpdate
