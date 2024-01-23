@@ -6,24 +6,25 @@ var collection
 
 async function get_AtlasSearch(req, res) {
   var rval = {}
-  
-  // here we're not using the queryterm, just change the values in the range
-  // var queryTerm = req.query.get("queryTerm")
-    
-  searchOperation = [ 
+
+  var path = "accommodates"
+
+  searchOperation =  
     { $search : { 
       "range": {
-        "path": "accommodates",
+        "path": path,
         "gte": 5,
         "lte": 10,
       }
     } 
   } 
-]
-searchResultsCursor = collection.aggregate(searchOperation)
 
+
+//We use aggregations $project for $search
+projection = {$project : { accommodates: 1, name: 1, 'address.market': 1}} 
+
+searchResultsCursor = collection.aggregate([ searchOperation, projection])
 rval.searchResult = await searchResultsCursor.toArray()
-
 res.status(201);
 res.send(rval)
 }
@@ -33,11 +34,6 @@ async function initWebService() {
   var userName = await system.getenv("MONGO_USERNAME")
   var passWord = await system.getenv("MONGO_PASSWORD", true)
 
-  if (userName == "" || userName == null || passWord == ""|| passWord == null) {
-    alert("Please enter valid auth");
-    return;
-  }  
-  
   mongoClient = new MongoClient("mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net");
   collection = mongoClient.getDatabase("sample_airbnb").getCollection("listingsAndReviews");
 }

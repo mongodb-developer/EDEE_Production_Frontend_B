@@ -11,9 +11,7 @@ var collection
 //     "fields": {
 //       "address": {
 //         "fields": {
-//           "country": {
-//             "type": "stringFacet"
-//           }
+//           "country": {  "type": "stringFacet" }
 //         },
 //         "type": "document"
 //       },
@@ -23,31 +21,30 @@ var collection
 //     }
 //   }
 // }
+
+//Change to show countries
+
 async function get_AtlasSearch(req, res) {
   var rval = {}
-  
-  var queryTerm = req.query.get("queryTerm")
 
-  searchOperation = [ 
-      {
-        $searchMeta: {
-          index: "airbnbFacetIndex",
-           "facet": {
-         
+  searchOperation = [
+    {
+      $searchMeta: {
+        index: "airbnbFacetIndex",
+        "facet": {
           "facets": {
-             "typeFacet": {
-             "type": "string",
-             "path": "property_type",
-             }
+            "typeFacet": {
+              "type": "string",
+              "path": "property_type",
+            }
           }
-       }
         }
-      } 
+      }
+    }
   ]
+
   searchResultsCursor = collection.aggregate(searchOperation)
-
   rval.searchResult = await searchResultsCursor.toArray()
-
   res.status(201);
   res.send(rval)
 }
@@ -57,11 +54,6 @@ async function initWebService() {
   var userName = await system.getenv("MONGO_USERNAME")
   var passWord = await system.getenv("MONGO_PASSWORD", true)
 
-  if (userName == "" || userName == null || passWord == ""|| passWord == null) {
-    alert("Please enter valid auth");
-    return;
-  }  
-  
   mongoClient = new MongoClient("mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net");
   collection = mongoClient.getDatabase("sample_airbnb").getCollection("listingsAndReviews");
 }

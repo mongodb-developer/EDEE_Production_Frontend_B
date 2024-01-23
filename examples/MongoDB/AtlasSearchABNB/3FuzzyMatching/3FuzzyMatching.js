@@ -7,25 +7,24 @@ var collection
 
 async function get_AtlasSearch(req, res) {
   var rval = {}
-  
+
   var queryTerm = req.query.get("queryTerm")
+  var path = { wildcard: '*' }
 
-  searchOperation = [ 
-    { $search : { 
-      text : { 
-        query: queryTerm , 
-        path:{ wildcard:  '*' },
+  searchOperation =  {
+    $search: {
+      text: {
+        query: queryTerm,
+        path: path,
         fuzzy: {
-          maxEdits: 2
-        } 
-      } 
-    } 
-    } 
-  ]
-  searchResultsCursor = collection.aggregate(searchOperation)
+          maxEdits: 2 //Allow for some changes
+        }
+      }
+    }
+  }
 
+  searchResultsCursor = collection.aggregate([searchOperation])
   rval.searchResult = await searchResultsCursor.toArray()
-
   res.status(201);
   res.send(rval)
 }
@@ -35,11 +34,6 @@ async function initWebService() {
   var userName = await system.getenv("MONGO_USERNAME")
   var passWord = await system.getenv("MONGO_PASSWORD", true)
 
-  if (userName == "" || userName == null || passWord == ""|| passWord == null) {
-    alert("Please enter valid auth");
-    return;
-  }  
-  
   mongoClient = new MongoClient("mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net");
   collection = mongoClient.getDatabase("sample_airbnb").getCollection("listingsAndReviews");
 }

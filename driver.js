@@ -137,8 +137,18 @@ class MongoCollection {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
         const rval = await this.mongoClient.user.functions.createSearchIndex(this.dbName, this.collName, name, definition)
         if (rval.error) { throw new Error(rval.error) }
+        if(rval.ok == false) { throw new Error(JSON.stringify(rval)) }
 
         return {ok:rval.ok,indexesCreated:rval.indexesCreated}
+    }
+
+
+    async dropSearchIndex(index) {
+
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.dropSearchIndex(this.dbName, this.collName,index)
+        if(!rval.ok) { throw new Error(JSON.stringify(rval))}
+        return rval;
     }
 
     async listSearchIndexes() {
@@ -156,23 +166,7 @@ class MongoCollection {
 
 
 
-    async listIndexes(name, definition) {
-        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
-        const rval = await this.mongoClient.user.functions.listIndexes(this.dbName, this.collName)
-        if (rval.error) { throw new Error(rval.error) }
-        return rval.cursor?.firstBatch
-    }
-
-    async dropSearchIndex(index) {
-        console.log(index)
-        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
-        const rval = await this.mongoClient.user.functions.dropSearchIndex(this.dbName, this.collName,index)
-        if(rval.result.ok) {
-            console.log(rval)
-            return { ok: 1, nIndexesWas: rval.result.nIndexesWas }
-        }
-        return {ok: 0,error: rval.result.error};
-    }
+   
 
     async createIndex(name, definition) {
         if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
@@ -182,11 +176,7 @@ class MongoCollection {
         return { numIndexesBefore, numIndexesAfter, note };
     }
 
-    async drop() {
-        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
-        const rval = await this.mongoClient.user.functions.dropCollection(this.dbName, this.collName)
-        return { ok: 1 }
-    }
+
 
     async dropIndex(index) {
         console.log(index)
@@ -197,6 +187,20 @@ class MongoCollection {
             return { ok: 1, nIndexesWas: rval.result.nIndexesWas }
         }
         return {ok: 0,error: rval.result.error};
+    }
+
+    async listIndexes(name, definition) {
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.listIndexes(this.dbName, this.collName)
+        if (rval.error) { throw new Error(rval.error) }
+        return rval.cursor?.firstBatch
+    }
+
+
+    async drop() {
+        if (!await this.mongoClient.connect()) throw new Error(this.mongoClient.lastError)
+        const rval = await this.mongoClient.user.functions.dropCollection(this.dbName, this.collName)
+        return { ok: 1 }
     }
 
     async insertOne(document) {
