@@ -21,7 +21,7 @@ async function get_Cohorts(req, res) {
     cohortDefinition.output = output
     bucketAutoStage = { $bucketAuto: cohortDefinition}
 
-    percentWithPool = {$set: { pcWithPool : {$multiply:[{ $divide : [ "$totalWithPool","$totalProperties"]},100]}}}
+    percentWithPool = {$set: { percentWithPool : {$multiply:[{ $divide : [ "$totalWithPool","$totalProperties"]},100]}}}
     renameId = { $set : { price : "$_id", _id: "$$REMOVE" }}
     var pipeline = [bucketAutoStage,percentWithPool,renameId]
     
