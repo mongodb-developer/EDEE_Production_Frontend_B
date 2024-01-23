@@ -1,0 +1,41 @@
+// Output should look like this
+
+"topMarkets": [
+    {
+      "market": "New York",
+      "beds": 916,
+      "pricePerBed": 92.52510917030568
+    },
+    {
+      "market": "Oahu",
+      "beds": 620,
+      "pricePerBed": 86.63064516129032
+    },
+    {
+      "market": "The Big Island",
+      "beds": 336,
+      "pricePerBed": 74.24107142857143
+    }
+  ],
+  "Country": "United States"
+},
+{
+  "topMarkets": [
+    {
+      "market": "Rio De Janeiro",
+      "beds": 1514,
+      "pricePerBed": 209.41941875825628
+    },
+    {
+      "market": "Other (International)",
+      "beds": 5,
+      "pricePerBed": 236.6
+    },
+    {
+      "market": "",
+      "beds": 2,
+      "pricePerBed": 58
+    }
+  ],
+  "Country": "Brazil"
+},
