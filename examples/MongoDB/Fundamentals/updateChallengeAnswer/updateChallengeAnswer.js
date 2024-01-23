@@ -59,8 +59,8 @@ async function post_Complete(req,res) {
 }
 
 async function initWebService() {
-    var userName = awaitt system.getenv("MONGO_USERNAME")
-    var passWord = awaitt system.getenv("MONGO_PASSWORD",true)
+    var userName = await system.getenv("MONGO_USERNAME")
+    var passWord = await system.getenv("MONGO_PASSWORD",true)
     mongoClient = new MongoClient("mongodb+srv://" + userName  + ":" + passWord + "@learn.mongodb.net");
     taskCollection = mongoClient.getDatabase("example").getCollection("tasks")
    //  await taskCollection.drop(); // Uncomment to reset the colleciton

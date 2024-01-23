@@ -31,8 +31,8 @@ async function post_View(req, res) {
 }
 
 async function initWebService() {
-    var userName = awaitt system.getenv("MONGO_USERNAME")
-    var passWord = awaitt system.getenv("MONGO_PASSWORD",true)
+    var userName = await system.getenv("MONGO_USERNAME")
+    var passWord = await system.getenv("MONGO_PASSWORD",true)
     mongoClient = new MongoClient("mongodb+srv://" + userName  + ":" + passWord + "@learn.mongodb.net");
     viewCollection = mongoClient.getDatabase("example").getCollection("advertViews")
     // Set up empty collection with one document

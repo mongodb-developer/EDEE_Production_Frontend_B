@@ -26,8 +26,8 @@ async function get_Data(req,res)
 }
 async function initWebService() {
 
-    var userName = awaitt system.getenv("MONGO_USERNAME")
-    var passWord = awaitt system.getenv("MONGO_PASSWORD",true)
+    var userName = await system.getenv("MONGO_USERNAME")
+    var passWord = await system.getenv("MONGO_PASSWORD",true)
     mongoClient = new MongoClient("mongodb+srv://" + userName  + ":" + passWord + "@learn.mongodb.net");
     
     db = mongoClient.getDatabase("examples")
