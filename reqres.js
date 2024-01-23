@@ -1,5 +1,6 @@
 class SimRequest
 {
+    
     constructor() {
         this._method = "GET"
         this.query = {}
@@ -13,7 +14,6 @@ class SimRequest
         this.sourceIp = octet()+"."+octet()+"."+octet()+"."+octet()
     }
 
-    
     setPath(url) {
  
         const URLObj = new URL(url)

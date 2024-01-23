@@ -5,25 +5,41 @@
     <link rel="stylesheet" href="../style.css">
 </head>
 
-<body>
+<body class="docs" >
     <h1> Request Object </h1>
-    
-   This object is passed to each endpoint and had members describing the HTTPS Request
 
-   <h2>Members</h2>
-    <ul>
-   <li> query -  Object/Map of the URL search parameters</li>
-   <li>params -  The path as an array of strings</li>
-    <li>path - the full path</li>
-    <li>protocol - always "https"</li>
-    <li>body - the submitted body as a string, only applicable for POST</li>
-</ul>
-    <body>
-        
-    </body>
+    <h2> Description </h2>
+    This object is passed to each endpoint and has public members describing the HTTPS Request
 
+    <h2>Members</h2>
 
+    <table>
 
+        <tr>
+            <td>query</td>
+            <td>Object containing search parameters use get("name") to get one.</td>
+        </tr>
+
+        <tr>
+            <td>path</td>
+            <td>The full path part of the URL</td>
+        </tr>
+        <tr>
+            <td>params</td>
+            <td>The path broken into an array of elements for each part.</td>
+        </tr>
+        <tr>
+            <td>body</td>
+            <td>The payload passed with a POST call as a string</td>
+        </tr>
+        <tr>
+            <td>sourceIp</td>
+            <td>A fake source IP address, random each time</td>
+        </tr>
+    </table>
+
+<p></p>
+    <a href="index.html"> Back to Documentation Index</a>
 
 </body>
 

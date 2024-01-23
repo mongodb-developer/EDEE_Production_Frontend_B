@@ -16,8 +16,6 @@ class Document {
     get(key) {
         return this[key]
     }
-
-
 }
 
 class MongoClient {
@@ -31,8 +29,6 @@ class MongoClient {
             this.userName = getCreds[1]
             this.passWord = getCreds[2]
         }
-
-
     }
 
     //Hello is used by a driver to learn about the server - it's available even without auth u
