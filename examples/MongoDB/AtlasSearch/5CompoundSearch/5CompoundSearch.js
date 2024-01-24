@@ -1,59 +1,65 @@
-
 var mongoClient = null;
-var collection
+var collection;
 
 // Connect to MongoDB Atlas
 async function initWebService() {
-  var userName = await system.getenv("MONGO_USERNAME")
-  var passWord = await system.getenv("MONGO_PASSWORD", true)
+  var userName = await system.getenv("MONGO_USERNAME");
+  var passWord = await system.getenv("MONGO_PASSWORD", true);
 
-  if (userName == "" || userName == null || passWord == ""|| passWord == null) {
+  if (
+    userName == "" ||
+    userName == null ||
+    passWord == "" ||
+    passWord == null
+  ) {
     alert("Please enter valid auth");
     return;
-  }  
-  
-  mongoClient = new MongoClient("mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net");
-  collection = mongoClient.getDatabase("search").getCollection("claims")
+  }
+
+  mongoClient = new MongoClient(
+    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net",
+  );
+  collection = mongoClient.getDatabase("search").getCollection("claims");
 }
 
 // we can compound operators in a single search
 async function get_AtlasSearch(req, res) {
-  var rval = {}
-  
-  var queryTerm = req.query.get("queryTerm")
+  var rval = {};
 
-  rval.searchIndexes = await collection.listSearchIndexes()
+  var queryTerm = req.query.get("queryTerm");
 
-  searchOperation = [ 
-    { $search : { 
-      "index": "default",
-      "compound": {
-        "must": [
-          {
-            "text": {
-              "query": queryTerm,
-              "path": "claim_description"
-            }
-          }
-        ],
-        "should": [
-          {
-            "range": {
-              "path": "claim_amount",
-              "gt": 1000,
-              "lt": 5000
-            }
-          }
-        ]
-      }
-    } 
-    } 
-  ]
-  searchResultsCursor = collection.aggregate(searchOperation)
+  rval.searchIndexes = await collection.listSearchIndexes();
 
-  rval.searchResult = await searchResultsCursor.toArray()
+  searchOperation = [
+    {
+      $search: {
+        index: "default",
+        compound: {
+          must: [
+            {
+              text: {
+                query: queryTerm,
+                path: "claim_description",
+              },
+            },
+          ],
+          should: [
+            {
+              range: {
+                path: "claim_amount",
+                gt: 1000,
+                lt: 5000,
+              },
+            },
+          ],
+        },
+      },
+    },
+  ];
+  searchResultsCursor = collection.aggregate(searchOperation);
 
+  rval.searchResult = await searchResultsCursor.toArray();
 
   res.status(201);
-  res.send(rval)
+  res.send(rval);
 }

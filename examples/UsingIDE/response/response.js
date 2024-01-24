@@ -1,7 +1,8 @@
-function get_Hello(req, res) {
-    
-    //Default Content-Type is application/json
+// get_XXXX or post_XXXX define Get and Post endpoints
 
-    res.status(200);
-    res.send({ msg : "Hello"})
+function get_Hello(req, res) {
+  //Default Content-Type is application/json
+
+  res.status(200);
+  res.send({ msg: "Hello" });
 }

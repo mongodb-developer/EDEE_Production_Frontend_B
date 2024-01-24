@@ -19,7 +19,7 @@
     <div class="sim-container">
         <!-- Menu Buttons -->
         <div class="menu-container"> 
-            <a class="menu" target="_blank" href="examples/devday.html">Examples</a>
+            <a class="menu" target="_blank" href="examples/devday.html">Labs and Examples</a>
             <a class="menu" href="docs/index.html">Documentation</a>
             <a class="menu" onclick="saveToClipboard()">Save to Clipboard</a>
         </div>
@@ -27,7 +27,9 @@
         <div class="flex-container">
             <!-- Code Editor -->
             <div id="codediv" contenteditable class="code">
-               
+           
+// get_XXXX or post_XXXX define Get and Post endpoints
+
 function get_Hello(req, res) {
     res.status(200);
     res.send({ msg : "Hello " + req.query.get("name") 

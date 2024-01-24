@@ -16,6 +16,12 @@
 ~~expression builders for $gt,$lt etc~~
 ~~findOneAndUpdate~~ /findOneAndDelete/FindOneAndReplace - not advised ususally.
 
+Documentation For Driver and Framework
+Possibly an 'Info' For each exercise
+Better Editor
+Tab not overwrite code
+
+
 __Docs and Examples__
 
 After MVP
