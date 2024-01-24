@@ -8,6 +8,11 @@ async function onLoad() {
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/cobalt");
     editor.session.setMode("ace/mode/javascript");
+    editor.setOptions({
+      fontFamily: "Source Code Pro",
+      fontSize: "12pt"
+    });
+
     document.getElementById("codediv").style.display = "none";
     _code = editor; // Changed for ACE
   } else {
