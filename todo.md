@@ -18,8 +18,7 @@
 
 Documentation For Driver and Framework
 Possibly an 'Info' For each exercise
-Better Editor
-Tab not overwrite code
+
 
 
 __Docs and Examples__
@@ -35,3 +34,12 @@ Add Load and Save (TO DB? Locally?)
 Add 'Java' 'C#' and 'Python' support
 $out,$merge,$lookup,$unionWith doctoring for aggregation ( JSON.stringify magic)
 autocomplete / highlighting / line numbers
+
+
+Java Version
+------------
+
+Remove await and async
+Add Document() or even BSONDocument()
+Add Filters and similar
+Add types
