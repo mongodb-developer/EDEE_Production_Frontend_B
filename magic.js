@@ -1,7 +1,17 @@
 let syntaxOKFlag, syntaxErrorMessage;
-
+let oldCode = null
 async function callVirtualEndpoint(url, verb) {
   const res = new SimResponse();
+
+  let source = _code.innerText;
+    if(useACE) {
+      source = _code.getValue()
+    }
+    source = cleanCode(source);
+  
+    //Detect if code changed
+  codeChanged = (oldCode != source);
+  oldCode = source;
 
   if (codeChanged) {
     document.getElementById("codehost")?.remove();
@@ -9,12 +19,7 @@ async function callVirtualEndpoint(url, verb) {
     const codehost = document.createElement("script");
     codehost.id = "codehost";
     document.body.appendChild(codehost);
-    let source = _code.innerText;
-    if(useACE) {
-      source = _code.getValue()
-    }
-    source = cleanCode(source);
-
+    
     window.addEventListener("error", (event) => {
       console.log(event);
       syntaxOKFlag = false;
@@ -55,9 +60,11 @@ async function callVirtualEndpoint(url, verb) {
 
       await window[fName](req, res);
     } catch (e) {
-      console.log(e);
       res.status(500);
-      res.send(`Server Error ocurred: ${e.message}`);
+      var line = e.stack.split('\n')[1].trim();
+      line = line.replace('<anonymous>:','')
+      console.log(line)
+      res.send(`Server Error ocurred: ${e.message} ${line}`);
     }
   } else {
     res.status(404);
