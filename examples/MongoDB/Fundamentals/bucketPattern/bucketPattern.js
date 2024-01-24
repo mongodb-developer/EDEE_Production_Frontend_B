@@ -14,7 +14,7 @@ async function post_View(req, res) {
   var sourceIp = req.sourceIp;
 
   query = { propertyId: "ABC123" };
-  query.nViews = lt(8); // Additional condition
+  query.nViews = { $lt: 8 }; // Additional condition
 
   updateOps = {};
   updateOps["$set"] = { lastView: new Date() };
@@ -33,7 +33,7 @@ async function initWebService() {
   var userName = await system.getenv("MONGO_USERNAME");
   var passWord = await system.getenv("MONGO_PASSWORD", true);
   mongoClient = new MongoClient(
-    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net",
+    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net"
   );
   viewCollection = mongoClient
     .getDatabase("example")

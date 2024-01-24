@@ -14,7 +14,7 @@ async function get_Query(req, res) {
   projection["address.market"] = true;
   projection.price = true;
 
-  query.beds = gt(5);
+  query.beds = { $gt : 5 }; 
   query["address.country"] = "Turkey";
 
   var sortOrder = { price: -1 };
