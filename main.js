@@ -114,14 +114,15 @@ async function loadTemplateCode(fname) {
   let response = await fetch(`${url}.js`);
   if (response.status == 200) {
     if (useACE) {
-      _code.setValue(await response.text());
+      _code.setValue(await response.text(),-1);
+   
     } else {
       _code.innerText = await response.text();
     }
   } else {
     //We dont really care if it's missing
     if (useACE) {
-      _code.setValue("");
+      _code.setValue("",-1);
     } else {
       _code.innerText = "";
     }
