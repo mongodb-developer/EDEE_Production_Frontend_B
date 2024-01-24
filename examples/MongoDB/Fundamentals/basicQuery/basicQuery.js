@@ -14,6 +14,7 @@ async function get_Query(req, res) {
   projection["address.market"] = true;
   projection.price = true;
 
+  // 5 Bedrooms or more in Turkey
   query.beds = { $gt : 5 }; 
   query["address.country"] = "Turkey";
 

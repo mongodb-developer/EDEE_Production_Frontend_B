@@ -6,11 +6,9 @@ async function get_Data(req, res) {
 
   // WE WANT DOCUMENTS WITH SMALL CIRCLES
 
-  specification = { shape: "circle", size: "small" };
-
   // Uncomment to try
-  // query.components = specification ; // Incorrect as not exact match
-  // query.components  = {$elemMatch: specification} ; //Correct - look for element
+  // query.components = { shape: "circle", size: "small" }; // Incorrect as not exact match
+  // query.components  = {$elemMatch: { shape: "circle", size: "small" }} ; //Correct - look for element
 
   query = { "components.shape": "circle", "components.size": "large" }; // Returns circles if anything is small
 
@@ -20,14 +18,16 @@ async function get_Data(req, res) {
 }
 
 async function post_Data(req, res) {
-  if ((await arrayExample.countDocuments()) == 0) {
+
+  nDocs = await arrayExample.countDocuments()
+  if (! nDocs ) {
     docs = JSON.parse(req.body);
     rval = await arrayExample.insertMany(docs);
     res.status(201);
     res.send(rval);
   } else {
     res.status(200);
-    res.send({ ok: 1, msg: "No new data loaded" });
+    res.send({ ok: 1, msg: "No new data loaded", docs: JSON.stringify(nDocs) });
   }
 }
 

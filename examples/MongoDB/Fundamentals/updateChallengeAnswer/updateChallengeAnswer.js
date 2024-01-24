@@ -4,8 +4,8 @@ const STATUS_NEW = "1 - New",
   STATUS_ASSIGNED = "2 - Assigned",
   STATUS_DONE = "3 - Complete";
 
-//This Sertvice is a job queue
-// You can add a new job/task with post_Task and list with get_Task
+// This service is a Task  queue
+// You can add a new Task with post_Task and list them  with get_Task
 // You need to add post_Assign?user=Name - which will find any task that is not assigned and
 // Assign it to that user, changing the status to STATUS_ASSIGNED.
 // A task can be (re)assigned if it is NEW or has been Assigned for more than 1 minute (Abandoned)
@@ -32,13 +32,15 @@ async function post_Assign(req, res) {
     $set: { status: STATUS_ASSIGNED, assignedTo, dateAssigned: new Date() },
   };
 
-  // Sort to prioritise status 2 (Abandoned)
+  // findOneAndUpdate returns the document after updating
+  // Sort to prioritise status 2 tasks (Abandoned)
+
   options = { returnNewDocument: true, sort: { status: -1 } };
 
   assignedTask = await taskCollection.findOneAndUpdate(
     assignableTasks,
     assignTask,
-    options,
+    options
   );
   res.status(202);
   res.send({ task: assignedTask });
@@ -87,7 +89,7 @@ async function initWebService() {
   var userName = await system.getenv("MONGO_USERNAME");
   var passWord = await system.getenv("MONGO_PASSWORD", true);
   mongoClient = new MongoClient(
-    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net",
+    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net"
   );
   taskCollection = mongoClient.getDatabase("example").getCollection("tasks");
   //  await taskCollection.drop(); // Uncomment to reset the colleciton

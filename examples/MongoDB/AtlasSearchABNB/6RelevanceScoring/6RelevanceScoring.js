@@ -32,19 +32,20 @@ async function get_AtlasSearch(req, res) {
     },
   };
 
-  //We use aggregations $project for $search
-
-  projection = {
-    $project: {
-      accommodates: 1,
-      description: 1,
-      name: 1,
-      "address.market": 1,
-    },
+  // Basic list of fields we want to see
+  fieldsToProject = {
+    accommodates: 1,
+    description: 1,
+    name: 1,
+    "address.market": 1,
   };
 
-  //Add $meta to get the score
-  projection.$project.score = { $meta: "searchScore" };
+  //Add $meta value to get the score
+  fieldsToProject.score = { $meta: "searchScore" };
+
+  projection = {
+    $project: fieldsToProject,
+  };
 
   searchResultsCursor = collection.aggregate([searchOperation, projection]);
   rval.searchResult = await searchResultsCursor.toArray();
@@ -58,7 +59,7 @@ async function initWebService() {
   var passWord = await system.getenv("MONGO_PASSWORD", true);
 
   mongoClient = new MongoClient(
-    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net",
+    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net"
   );
   collection = mongoClient
     .getDatabase("sample_airbnb")

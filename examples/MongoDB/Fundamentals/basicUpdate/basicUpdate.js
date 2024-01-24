@@ -8,6 +8,7 @@ async function get_View(req, res) {
 }
 
 // Every time this is called - add the ip of the caller to a list and
+// increment the number of view by one.
 
 async function post_View(req, res) {
   var sourceIp = req.sourceIp;

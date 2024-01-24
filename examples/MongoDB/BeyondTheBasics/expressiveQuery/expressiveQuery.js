@@ -9,7 +9,7 @@ async function get_Query(req, res) {
 
   totalPrice = { $add: ["$price", "$cleaning_fee"] };
   query.$expr = { $lt: [totalPrice, 100] };
-  query.guests_included = { $gte: 4 }; //Allowed befor extra charges
+  query.guests_included = { $gte: 4 }; // number allowed before extra charges
 
   projection = {
     name: 1,

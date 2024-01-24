@@ -4,21 +4,20 @@ var listingsCollection;
 // Find out what Cheap, Medium and Expensive AirBNB means
 
 async function get_Cohorts(req, res) {
-  // Calcualte the total price for nights
+  // Calcualte the total price for 3 nights
   var priceFor3Days = { $add: ["$cleaning_fee", { $multiply: ["$price", 3] }] };
 
-  var cohortDefinition = {};
-  cohortDefinition.groupBy = priceFor3Days;
-  cohortDefinition.buckets = 3;
   var output = {};
   output.totalProperties = { $count: {} };
   output.averageBeds = { $avg: "$beds" };
 
-  hasPool = { $in: ["Pool", "$amenities"] };
-  output.totalWithPool = { $sum: { $cond: { if: hasPool, then: 1, else: 0 } } };
+  output.totalWithPool = {
+    $sum: { $cond: { if: { $in: ["Pool", "$amenities"] }, then: 1, else: 0 } },
+  };
 
-  cohortDefinition.output = output;
-  bucketAutoStage = { $bucketAuto: cohortDefinition };
+  var cohortDefinition = { groupBy: priceFor3Days, buckets: 3, output: output };
+
+  var bucketAutoStage = { $bucketAuto: cohortDefinition };
 
   percentWithPool = {
     $set: {
@@ -27,7 +26,8 @@ async function get_Cohorts(req, res) {
       },
     },
   };
-  renameId = { $set: { price: "$_id", _id: "$$REMOVE" } };
+
+  var renameId = { $set: { price: "$_id", _id: "$$REMOVE" } };
   var pipeline = [bucketAutoStage, percentWithPool, renameId];
 
   var cursor = listingsCollection.aggregate(pipeline);
@@ -42,7 +42,7 @@ async function initWebService() {
   var userName = await system.getenv("MONGO_USERNAME");
   var passWord = await system.getenv("MONGO_PASSWORD", true);
   mongoClient = new MongoClient(
-    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net",
+    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net"
   );
   listingsCollection = mongoClient
     .getDatabase("sample_airbnb")
