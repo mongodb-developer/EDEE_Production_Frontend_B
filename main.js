@@ -1,9 +1,19 @@
 let code, response, endpointName, databox, infobox;
 let codeChanged;
+const useACE = true;
 
 const serviceHostname = "https://hostname:5500/service/";
 async function onLoad() {
-  _code = document.getElementById("codediv");
+  if (useACE) {
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/javascript");
+    document.getElementById("codediv").style.display = "none";
+    _code = editor; // Changed for ACE
+  } else {
+    document.getElementById("editor").style.display = "none";
+    _code = document.getElementById("codediv");
+  }
   _output = document.getElementById("response");
   _postdata = document.getElementById("postdata");
   endpointName = document.getElementById("endpoint");
@@ -24,7 +34,7 @@ async function onLoad() {
 
   _code.onkeydown = function (e) {
     codeChanged = true;
-    if (e.key == "Tab") {
+    if (useACE == false && e.key == "Tab") {
       console.log("TAB");
       insertTextAtCursor("    ");
       e.preventDefault();
@@ -103,10 +113,18 @@ async function loadTemplateCode(fname) {
 
   let response = await fetch(`${url}.js`);
   if (response.status == 200) {
-    _code.innerText = await response.text();
+    if (useACE) {
+      _code.setValue(await response.text());
+    } else {
+      _code.innerText = await response.text();
+    }
   } else {
     //We dont really care if it's missing
-    _code.innerText = "";
+    if (useACE) {
+      _code.setValue("");
+    } else {
+      _code.innerText = "";
+    }
   }
 
   response = await fetch(`${url}.json`);
@@ -125,5 +143,9 @@ async function loadTemplateCode(fname) {
 }
 
 function saveToClipboard() {
-  navigator.clipboard.writeText(_code.innerText);
+  if(useACE) {
+    navigator.clipboard.writeText(_code.getValue());
+  } else {
+    navigator.clipboard.writeText(_code.innerText);
+  }
 }

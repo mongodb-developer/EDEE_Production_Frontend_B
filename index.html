@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <script src="//ajaxorg.github.io/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://unpkg.com/realm-web/dist/bundle.iife.js"></script>
     <script src="modaldialog.js"></script>
     <script src="bson.js"></script>
@@ -11,6 +12,8 @@
     <script src="driver.js"></script>
     <script src="helpers.js"></script>
     <link rel="stylesheet" href="style.css">
+
+   
    
 </head>
 
@@ -35,6 +38,18 @@ function get_Hello(req, res) {
     res.send({ msg : "Hello " + req.query.get("name") 
                         + " try looking at the examples."})
 }
+            </div>
+            <!-- New Editor -->
+            <div id="editor">
+           
+// get_XXXX or post_XXXX define Get and Post endpoints
+
+function get_Hello(req, res) {
+    res.status(200);
+    res.send({ msg : "Hello " + req.query.get("name") 
+                        + " try looking at the examples."})
+}
+
             </div>
             <!-- Endpoint URL output -->
             <div id="outputdiv" class="test">

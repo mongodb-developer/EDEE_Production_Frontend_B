@@ -71,6 +71,22 @@ html {
   flex-direction: row;
 }
 
+#editor { 
+  border: 1px solid green;
+  color: var(--springgreen);
+  background: black;
+  width: 48vw;
+  height: 85vh;
+  margin: 1em;
+  display: block;
+  padding: 1em;
+  white-space: pre;
+  overflow: scroll;
+  font-family: 'Source Code Pro', monospace;
+  border-radius: 1em;
+  font-size: small;
+}
+
 .infobox {
   background: white;
   color: black;
@@ -91,6 +107,10 @@ html {
 }
 
 
+.menu:active {
+  background-color: var(--springgreen);
+}
+
 button:active {
   background-color: var(--forestgreen);
 }
@@ -109,6 +129,7 @@ button:active {
   font-family: 'Source Code Pro', monospace;
   border-radius: 1em;
   font-size: small;
+
 }
 
 .button-container {

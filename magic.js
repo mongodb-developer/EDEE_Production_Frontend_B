@@ -10,6 +10,9 @@ async function callVirtualEndpoint(url, verb) {
     codehost.id = "codehost";
     document.body.appendChild(codehost);
     let source = _code.innerText;
+    if(useACE) {
+      source = _code.getValue()
+    }
     source = cleanCode(source);
 
     window.addEventListener("error", (event) => {
