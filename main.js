@@ -6,7 +6,7 @@ const serviceHostname = "https://hostname:5500/service/";
 async function onLoad() {
   if (useACE) {
     var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
+    editor.setTheme("ace/theme/cobalt");
     editor.session.setMode("ace/mode/javascript");
     document.getElementById("codediv").style.display = "none";
     _code = editor; // Changed for ACE
@@ -122,9 +122,9 @@ async function loadTemplateCode(fname) {
   } else {
     //We dont really care if it's missing
     if (useACE) {
-      _code.setValue("",-1);
+      _code.setValue("// EXAMPLE CODE MISSING - Is URL Correct",-1);
     } else {
-      _code.innerText = "";
+      _code.innerText = "// EXAMPLE CODE MISSING - Is URL Correct";
     }
   }
 
