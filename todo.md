@@ -16,7 +16,7 @@
 ~~expression builders for $gt,$lt etc~~
 ~~findOneAndUpdate~~ /findOneAndDelete/FindOneAndReplace - not advised ususally.
 
-Documentation For Driver and Framework
+~~Documentation For Driver and Framework~~
 Possibly an 'Info' For each exercise
 
 
@@ -25,15 +25,15 @@ __Docs and Examples__
 
 After MVP
 =====
-Document - add Constructor, add/put/get,toJSON,parse
-Standardise Java Style Code
+
+
 STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony from Commands
+
 Add Transactions
 Add explain()
+
 Add Load and Save (TO DB? Locally?)
-Add 'Java' 'C#' and 'Python' support
-$out,$merge,$lookup,$unionWith doctoring for aggregation ( JSON.stringify magic)
-autocomplete / highlighting / line numbers
+Add 'Java' 'C#' and 'Python' support(Document - add Constructor, add/put/get,toJSON,parse)
 
 
 Java Version
