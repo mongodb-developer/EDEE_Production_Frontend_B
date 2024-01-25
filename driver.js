@@ -18,7 +18,20 @@ class Document {
   }
 }
 
+/**
+ * MongoDB Driver Starting Class representing a connection to MongoDB
+ * Handles any required conneciton pooling and shoudl be created only once
+ * and persisted. Will not actually connect until the first information is needed from
+ * the server and will automatically manage failover if a server is unavailable.
+ */
 class MongoClient {
+  /**
+   * Constructor - takes a MongoDB URI
+   * Supported URI Format is mongodb+srv://USERNAME:PASSWORD@...
+   * The part after ... should be a DNS name and options but is ignored in the simulato.
+   * In the simulator you can make up a unique username and password for yourself, minimum 6 characters for each.
+   * @param {string} URI MongoDB Connection Details
+   */
   constructor(URI) {
     this.connected = false;
     this.lastError = "";
@@ -30,18 +43,31 @@ class MongoClient {
     }
   }
 
-  //Hello is used by a driver to learn about the server - it's available even without auth u
+  /**
+   * Requests information about the connected cluster
+   * @returns server status information
+   */
   async hello() {
     if (!(await this.connect())) throw new Error(this.lastError);
     const rval = await this.user.functions.hello();
     return rval;
   }
+
+  /**
+   * Lists databases that exist on the server
+   * @returns Array of database names as strings
+   */
   async listDatabaseNames() {
     if (!(await this.connect())) throw new Error(this.lastError);
     const rval = await this.user.functions.listDatabaseNames();
     return rval.result;
   }
 
+  /**
+   *
+   * @param {String} dbName
+   * @returns a MongoDatabase Object representing a database you want to work with
+   */
   getDatabase(dbName) {
     const db = new MongoDatabase(dbName, this);
     return db;
@@ -62,7 +88,7 @@ class MongoClient {
     const realmApp = new Realm.App({ id: "mongodb-qdthj" });
     const credential = Realm.Credentials.emailPassword(
       this.userName,
-      this.passWord,
+      this.passWord
     );
     try {
       this.user = await realmApp.logIn(credential);
@@ -90,42 +116,63 @@ class MongoClient {
     }
   }
 }
+
+/**
+ * Class representing a MongoDB Database with methods to interact with it.
+ */
 class MongoDatabase {
   constructor(dbName, client) {
     this.mongoClient = client;
     this.dbName = dbName;
   }
 
+  /**
+   *
+   * @param {String} collNamne
+   * @returns a MongoCollection Object representing a MongoDB colleciton you want to work with
+   */
   getCollection(collName) {
     const coll = new MongoCollection(collName, this.dbName, this.mongoClient);
     return coll;
   }
-
+  /**
+   * List all existing collections in this database.
+   * @returns Array of collection names as Strings.
+   */
   async listCollectionNames() {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     const rval = await this.mongoClient.user.functions.listCollectionNames(
-      this.dbName,
+      this.dbName
     );
     return rval.result;
   }
-
+  /**
+   * Drop (Remove) this database and all collections inside it.
+   * @returns Object showing success or failure
+   */
   async drop() {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     const rval = await this.mongoClient.user.functions.dropDatabase(
-      this.dbName,
+      this.dbName
     );
     return rval;
   }
-
+  /**
+   * Create a new Colleciton in this database - only required when passing additional options like
+   * timeSeries or validator
+   * @param {String} collName
+   * @param {Object} options
+   * @returns  Object showing success or failure
+   */
   async createCollection(collName, options) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     const rval = await this.mongoClient.user.functions.createCollection(
       this.dbName,
       collName,
-      options,
+      options
     );
     if (rval.result.ok == false) {
       throw new Error(JSON.stringify(rval));
@@ -134,6 +181,10 @@ class MongoDatabase {
   }
 }
 
+/**
+ * Class representing a MongoDB Collection with methods to interact with it.
+ */
+
 class MongoCollection {
   constructor(collName, dbName, mongoClient) {
     this.collName = collName;
@@ -141,6 +192,12 @@ class MongoCollection {
     this.mongoClient = mongoClient;
   }
 
+/**
+ * Define an Atlas Search index.
+ * @param {String} name 
+ * @param {Object} definition 
+ * @returns  Object showing success or failure
+ */
   async createSearchIndex(name, definition) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -148,7 +205,7 @@ class MongoCollection {
       this.dbName,
       this.collName,
       name,
-      definition,
+      definition
     );
     if (rval.error) {
       throw new Error(rval.error);
@@ -160,20 +217,28 @@ class MongoCollection {
     return { ok: rval.ok, indexesCreated: rval.indexesCreated };
   }
 
+  /**
+ * Drop an Atlas Search index.
+ * @param {String} name 
+ * @returns  Object showing success or failure
+ */
   async dropSearchIndex(index) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     const rval = await this.mongoClient.user.functions.dropSearchIndex(
       this.dbName,
       this.collName,
-      index,
+      index
     );
     if (!rval.ok) {
       throw new Error(JSON.stringify(rval));
     }
     return rval;
   }
-
+  /**
+ * List all Atlas Search indexes on this collection.
+ * @returns  Array of Atlas Search index definition Objects
+ */
   async listSearchIndexes() {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -183,14 +248,19 @@ class MongoCollection {
     const rval = await this.mongoClient.user.functions.aggregate(
       this.dbName,
       this.collName,
-      pipeline,
+      pipeline
     );
     for (let i of rval.result) {
       delete i.statusDetail; // TMI
     }
     return rval.result;
   }
-
+/**
+ * Define a MongoDB Database BTree index.
+ * @param {String} name 
+ * @param {Object} definition 
+ * @returns  Object showing success or failure
+ */
   async createIndex(name, definition) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -198,7 +268,7 @@ class MongoCollection {
       this.dbName,
       this.collName,
       name,
-      definition,
+      definition
     );
     if (rval.error) {
       throw new Error(rval.error);
@@ -207,6 +277,11 @@ class MongoCollection {
     return { numIndexesBefore, numIndexesAfter, note };
   }
 
+  /**
+ * Define a MongoDB Database BTree index.
+ * @param {String} name 
+ * @returns  Object showing success or failure
+ */
   async dropIndex(index) {
     console.log(index);
     if (!(await this.mongoClient.connect()))
@@ -214,7 +289,7 @@ class MongoCollection {
     const rval = await this.mongoClient.user.functions.dropIndex(
       this.dbName,
       this.collName,
-      index,
+      index
     );
     if (rval.result.ok) {
       console.log(rval);
@@ -223,36 +298,47 @@ class MongoCollection {
     return { ok: 0, error: rval.result.error };
   }
 
+  /**
+ * List all Atlas Search indexes on this collection.
+ * @returns  Array of MongoDB Database BTree index definition Objects
+ */
   async listIndexes(name, definition) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     const rval = await this.mongoClient.user.functions.listIndexes(
       this.dbName,
-      this.collName,
+      this.collName
     );
     if (rval.error) {
       throw new Error(rval.error);
     }
     return rval.cursor?.firstBatch;
   }
-
+/**
+ * Drop this colleciton and all non search indexes
+ * @returns Object showing success or failure
+ */
   async drop() {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     const rval = await this.mongoClient.user.functions.dropCollection(
       this.dbName,
-      this.collName,
+      this.collName
     );
     return { ok: 1 };
   }
-
+/**
+ * Add a single Document (Object) to this collection.
+ * @param {Object} document 
+ * @returns Object showing sucess or failure and the primary key (_id) of the object added.
+ */
   async insertOne(document) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     const rval = await this.mongoClient.user.functions.insert(
       this.dbName,
       this.collName,
-      [document],
+      [document]
     );
 
     if (rval.error) {
@@ -263,6 +349,11 @@ class MongoCollection {
 
     return rval;
   }
+/**
+ * Add multiple Documents (Objects) to this collection.
+ * @param {Object[]} document 
+ * @returns Object showing sucess or failure and the primary keys (_id) of all the object added.
+ */
 
   async insertMany(documents) {
     if (!(await this.mongoClient.connect()))
@@ -270,23 +361,36 @@ class MongoCollection {
     const rval = await this.mongoClient.user.functions.insert(
       this.dbName,
       this.collName,
-      documents,
+      documents
     );
     return rval;
   }
 
+  /**
+   * Create a Cursor to define a search and set the filter and projection parameters
+   * This does not execute the search until you start to itterate the cursor.
+   * @param {Object} query 
+   * @param {Object} projection 
+   * @returns MongoCursor - used to access the results
+   */
   find(query, projection) {
     const findCursor = new MongoCursor(
       "FIND",
       this.mongoClient,
       this.dbName,
-      this.collName,
+      this.collName
     );
     findCursor._query = query;
     findCursor._projection = projection;
     return findCursor;
   }
 
+  /**
+   * Immediately execute the query specified and return the first document found.
+   * @param {Object} query 
+   * @param {Object} projection 
+   * @returns Document Object
+   */
   async findOne(query, projection) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -297,13 +401,22 @@ class MongoCollection {
       query,
       projection,
       1,
-      0,
+      0
     );
     console.log(rval);
     if (rval.result && rval.result.length > 0) return rval.result[0];
     return null;
   }
 
+  /**
+   * Update a single document identified by the query according to the supplied updates then 
+   * return either the document before(default) or after those changes. options is used to specify
+   * whather before or after as well as projection and sort order to apply and whther to upsert.
+   * @param {Object} query 
+   * @param {Object} updates 
+   * @param {Object options 
+   * @returns Document updated or null
+   */
   async findOneAndUpdate(query, updates, options) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -313,11 +426,18 @@ class MongoCollection {
       this.collName,
       query,
       updates,
-      options,
+      options
     );
     return rval;
   }
 
+  /**
+   * Apply the updates specified to all documents matching query.
+   * @param {Object} query 
+   * @param {Object} updates 
+   * @param {Object} options 
+   * @returns Object showing how many were found and updated
+   */
   async updateMany(query, updates, options) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -328,10 +448,20 @@ class MongoCollection {
       query,
       updates,
       false,
-      options,
+      options
     );
     return rval;
   }
+
+
+  /**
+   * Apply the updates specified to the first document matching query.
+   * @param {Object} query 
+   * @param {Object} updates 
+   * @param {Object} options 
+   * @returns Object showing how many were found and updated
+   */
+
   async updateOne(query, updates, options) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -342,22 +472,31 @@ class MongoCollection {
       query,
       updates,
       true,
-      options,
+      options
     );
     return rval;
   }
 
+   /**
+   * Delete all documents matching query.
+   * @param {Object} query 
+   * @returns ject showing how many were found and deleted
+   */
   async deleteMany(query) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     const rval = await this.mongoClient.user.functions.delete(
       this.dbName,
       this.collName,
-      query,
+      query
     );
     return rval;
   }
-
+   /**
+   * Delete first document matching query found.
+   * @param {Object} query 
+   * @returns Object showing how many were found and deleted
+   */
   async deleteOne(query) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -366,20 +505,32 @@ class MongoCollection {
       this.dbName,
       this.collName,
       query,
-      true,
+      true
     );
     return rval;
   }
+
+  /**
+   * Create a cursor to execute and return results form an aggregation pipeline.
+   * @param {Object[]} pipeline 
+   * @returns MongoCursor with results
+   */
   aggregate(pipeline) {
     const aggCursor = new MongoCursor(
       "AGGREGATE",
       this.mongoClient,
       this.dbName,
-      this.collName,
+      this.collName
     );
     aggCursor._pipeline = pipeline;
     return aggCursor;
   }
+
+  /**
+   * Count how many documents match query without returning them
+   * @param {Object} query 
+   * @returns number of matching documents
+   */
 
   async countDocuments(query) {
     if (!(await this.mongoClient.connect()))
@@ -388,12 +539,17 @@ class MongoCollection {
     const rval = await this.mongoClient.user.functions.count(
       this.dbName,
       this.collName,
-      query,
+      query
     );
     return rval.result;
   }
 }
 
+/**
+ * MongoCursor represents a connection to a query against the server
+ * cursors come from calling find() or aggregate and allow you to set further 
+ * parameters before itterating over them or retrieving them as an array
+ */
 class MongoCursor {
   constructor(cursorType, mongoClient, dbName, collName) {
     this._cursorType = cursorType;
@@ -411,26 +567,43 @@ class MongoCursor {
     this._sort = null;
   }
 
-  sort(x) {
-    if (typeof x != "object") {
-      throw new Error("sort function takes an object not a " + typeof x);
+  /**
+   * Specify the order you wiush to return sorted results.
+   * @param {Object} order 
+   * @returns This MongoCursor to allow chaining
+   */
+  sort(order) {
+    if (typeof order != "object") {
+      throw new Error("sort function takes an object not a " + typeof order);
     }
-    this._sort = x;
+    this._sort = order;
     return this;
   }
 
-  skip(x) {
-    if (x < 0) x = 0;
-    this._skip = x;
+  /**
+   * Ignore the fist x records found, default is 0
+   * @param {number} nToSkip
+   * @returns This MongoCursor for chaining
+   */
+  skip(nToSkip) {
+    if (nToSkip < 0) nToSkip = 0;
+    this._skip = nToSkip;
+    return this;
+  }
+  /**
+   * Specify maximum number of documents to return.
+   * Default is 30 and Maximum 10,000 in simulator
+   * 
+   * @param {number} nToReturn 
+   * @returns This MongoCursor for chaining
+   */
+  limit(nToReturn) {
+    if (nToReturn > 10000) nToReturn = 10000;
+    if (nToReturn < 0) nToReturn= 0;
+    this._limit = nToReturn;
     return this;
   }
 
-  limit(x) {
-    if (x > 10000) x = 10000;
-    if (x < 0) x = 0;
-    this._limit = x;
-    return this;
-  }
 
   [Symbol.asyncIterator]() {
     let cursor = this;
@@ -445,6 +618,10 @@ class MongoCursor {
     };
   }
 
+  /**
+   * Gets next Document from cursor or null if no documents remain.
+   * @returns Document
+   */
   async next() {
     if (this._exhausted) {
       return null;
@@ -467,6 +644,11 @@ class MongoCursor {
     this._position++;
     return doc;
   }
+
+  /**
+   * Get All documents in cursor as a single Array
+   * @returns [Document]
+   */
 
   async toArray() {
     if (this._exhausted) {
@@ -503,7 +685,7 @@ class MongoCursor {
       this._projection,
       this._limit,
       this._skip,
-      this._sort,
+      this._sort
     );
 
     this._position = 0;
@@ -516,7 +698,7 @@ class MongoCursor {
     this._results = await this.mongoClient.user.functions.aggregate(
       this.dbName,
       this.collName,
-      this._pipeline,
+      this._pipeline
     );
 
     this._position = 0;

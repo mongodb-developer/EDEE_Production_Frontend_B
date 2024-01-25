@@ -80,8 +80,19 @@ function cleanCode(sourcecode) {
   return sourcecode;
 }
 
+/**
+ * system level operations, principally to get environment variables
+ * 
+ */
 const system = {
   // name: name of the variable stored in the environment
+  /**
+   * Retrieve an Environment variable or reuqst a value for it if it does not exist
+   * in this browser. Use secure to not display it for example when setting a password.
+   * @param {String} name 
+   * @param {Boolean} secure 
+   * @returns String
+   */
   getenv: function (name, secure = false) {
     let rval = localStorage.getItem(name);
     if (rval == null || rval == undefined) {
@@ -100,7 +111,10 @@ const system = {
     }
     return rval;
   },
-
+  /**
+   * Unset an environment variable prompting it to be requested again
+   * @param {String} name 
+   */
   clearenv: function (name) {
     localStorage.removeItem(name);
   },

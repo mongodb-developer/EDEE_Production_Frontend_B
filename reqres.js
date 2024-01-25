@@ -1,14 +1,35 @@
+/**
+ * Class representing a request to the HTTP endpoint
+ * Similar to Request in Express or SparkJava
+ * no methods, just public members
+ */
+
 class SimRequest {
   constructor() {
     this._method = "GET";
+    /**
+     * The Query part of the URL use .get('paramater')
+     */
     this.query = {};
+    /**
+     * The URL path broken into an array of strings
+     */
     this.params = [];
+     /**
+     * The URL as a String
+     */
     this.path = "";
     this.protocol = "https";
+    /**
+     * The Body of a POST request as a string - parse to Objects as needed
+     */
     this.body = undefined;
     function octet() {
       return `${Math.floor(Math.random() * 180) + 11}`;
     }
+    /**
+     * A Fake IP address
+     */
     this.sourceIp = octet() + "." + octet() + "." + octet() + "." + octet();
   }
 
@@ -26,8 +47,12 @@ class SimRequest {
     return this;
   }
 }
+/**
+ * Class representing a request to the HTTP endpoint
+ * Similar to Response in Express or SparkJava
+ * no methods, just public members
+ */
 
-// Based on Express Response
 
 class SimResponse {
   constructor() {
@@ -36,6 +61,11 @@ class SimResponse {
     this._headers = { "Content-Type": "application/json" };
   }
 
+  /**
+   * Set the HTTP Status 200,201,400 etc.
+   * @param {number} val HTTP Status code
+   * @returns this SimResponse object to allow chaining
+   */
   status(val) {
     this._status = val;
     return this;
@@ -57,6 +87,11 @@ class SimResponse {
     return this.send(data);
   }
 
+  /**
+   * The data to return to the caller as a String or Object
+   * @param {String|Object} data 
+   * @returns this Response object for chaining
+   */
   send(data) {
     if (data instanceof Promise) {
       this._status = 500;
