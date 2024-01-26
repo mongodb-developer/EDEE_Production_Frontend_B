@@ -8,7 +8,7 @@ async function callVirtualEndpoint(url, verb) {
   if (useACE) {
     source = _code.getValue();
   }
-  console.log("I AM HERE");
+
   source = cleanCode(source);
 
   //Detect if code changed
@@ -73,16 +73,16 @@ async function callVirtualEndpoint(url, verb) {
     res.status(404);
     res.send(`Not Found handler ${fName}`);
   }
-  console.log(res);
+
   return res;
 }
 
 function cleanCode(sourcecode) {
-  console.log("Cleaning Code");
+
   sourcecode = sourcecode.replaceAll("const ", "var ");
   sourcecode = sourcecode.replaceAll("let ", "var ");
   sourcecode = sourcecode.replaceAll("console", "cons0le");
-  console.log(sourcecode);
+
   return sourcecode;
 }
 
@@ -99,20 +99,20 @@ const system = {
    * @param {Boolean} secure
    * @returns String
    */
-  getenv: function (name, secure = false) {
+  getenv: async function (name, secure = false) {
     let rval = localStorage.getItem(name);
     if (rval == null || rval == undefined) {
-      rval = modal.prompt(
+      rval = await modal.prompt(
         `This is stored in the browser so 
             DO NOT ENTER A REAL PASSWORD.`,
         `Please enter a value for "${name}".`,
         secure
       );
       if (rval == null) return "";
-      if (rval.length < 6)
+     /* if (rval.length < 6)
         throw new Error(
           "Usernames and passwords must be at least 6 characters long in this environment."
-        );
+        );*/
       localStorage.setItem(name, rval);
     }
     return rval;

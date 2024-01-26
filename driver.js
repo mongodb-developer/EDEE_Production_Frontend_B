@@ -77,10 +77,18 @@ class MongoClient {
     if (this.connected) {
       return true;
     }
+
+  
     //TODO error message
     if (this.userName == null || !this.passWord == null) {
       this.lastError = "Invalid Credentials Supplied";
       return false;
+    }
+
+    if (this.userName.length < 6 || this.passWord.length < 6) {
+      localStorage.clear();
+      oldCode=null; //Redo initWebService
+      throw new Error("Usernames and Passwords must both be at least 6 characters long");
     }
 
     //This is weirdly critical as JSFiddle clears the session cookies each time
