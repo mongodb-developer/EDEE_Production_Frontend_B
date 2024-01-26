@@ -1,6 +1,7 @@
 let code, response, endpointName, databox, infobox;
 let codeChanged;
 const useACE = true;
+let _saveFileName = null;
 
 const serviceHostname = "https://hostname:5500/service/";
 async function onLoad() {
@@ -10,7 +11,7 @@ async function onLoad() {
     editor.session.setMode("ace/mode/javascript");
     editor.setOptions({
       fontFamily: "Source Code Pro",
-      fontSize: "12pt"
+      fontSize: "12pt",
     });
 
     document.getElementById("codediv").style.display = "none";
@@ -61,6 +62,26 @@ async function onLoad() {
   // loader commented out, we can add it in the future if that's needed
   // loader = document.getElementById("loader");
   // loader.style.visibility = "hidden";
+}
+
+function loadLocalCode(filePath) {
+  let reader = new FileReader(); // no arguments
+  reader.readAsText(filePath);
+
+  _output.innerText = "";
+  _postdata.innerText = "";
+
+  reader.onload = function () {
+    if (useACE) {
+      _code.setValue(reader.result, -1);
+    } else {
+      _code.innerText = reader.result;
+    }
+  };
+
+  reader.onerror = function () {
+    alert(reader.error);
+  };
 }
 
 function insertTextAtCursor(text) {
@@ -119,15 +140,14 @@ async function loadTemplateCode(fname) {
   let response = await fetch(`${url}.js`);
   if (response.status == 200) {
     if (useACE) {
-      _code.setValue(await response.text(),-1);
-   
+      _code.setValue(await response.text(), -1);
     } else {
       _code.innerText = await response.text();
     }
   } else {
     //We dont really care if it's missing
     if (useACE) {
-      _code.setValue("// EXAMPLE CODE MISSING - Is URL Correct",-1);
+      _code.setValue("// EXAMPLE CODE MISSING - Is URL Correct", -1);
     } else {
       _code.innerText = "// EXAMPLE CODE MISSING - Is URL Correct";
     }
@@ -149,9 +169,33 @@ async function loadTemplateCode(fname) {
 }
 
 function saveToClipboard() {
-  if(useACE) {
+  if (useACE) {
     navigator.clipboard.writeText(_code.getValue());
   } else {
     navigator.clipboard.writeText(_code.innerText);
   }
+}
+
+function saveCode() {
+  let data = "";
+  if (useACE) {
+    data = _code.getValue();
+  } else {
+    data = _code.innerText;
+  }
+  if (_saveFileName == null) {
+    _saveFileName = prompt("Please enter a filename");
+  }
+
+  var file = new Blob([data], { type: "application/javascript" });
+  var a = document.createElement("a");
+  var url = URL.createObjectURL(file);
+  a.href = url;
+  a.download = _saveFileName;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function () {
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }, 0);
 }
