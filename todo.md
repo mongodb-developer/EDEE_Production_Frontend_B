@@ -26,13 +26,11 @@ __Docs and Examples__
 After MVP
 =====
 
-
-STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony from Commands
-
-Add Transactions
+Allow Save to anywhere ?
+Add Transaction Support
 Add explain()
 
-Add Load and Save (TO DB? Locally?)
+STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony from Commands
 Add 'Java' 'C#' and 'Python' support(Document - add Constructor, add/put/get,toJSON,parse)
 
 
