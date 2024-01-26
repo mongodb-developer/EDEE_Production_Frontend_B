@@ -28,7 +28,7 @@ class SimRequest {
       return `${Math.floor(Math.random() * 180) + 11}`;
     }
     /**
-     * A Fake IP address
+     * A Fake IP address.
      */
     this.sourceIp = octet() + "." + octet() + "." + octet() + "." + octet();
   }
