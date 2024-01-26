@@ -15,6 +15,10 @@ const mongo_query_operators = [
   "nor",
   "exists",
   "elemMatch",
+  "expr",
+  "jsonSchema",
+  "size",
+  "type",
 ];
 
 for (let op of mongo_query_operators) {

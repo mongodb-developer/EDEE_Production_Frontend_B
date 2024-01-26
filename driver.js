@@ -6,17 +6,7 @@
    or java or python or dozens of other languages  not from browser JS,
    you use it to write the services you call fron the browser. */
 
-/* TODO _ Make this multiple files */
 
-class Document {
-  set(key, value) {
-    this[key] = value;
-  }
-
-  get(key) {
-    return this[key];
-  }
-}
 
 /**
  * MongoDB Driver Starting Class representing a connection to MongoDB
