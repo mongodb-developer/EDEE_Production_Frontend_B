@@ -99,6 +99,7 @@ function messageBox(str) {
 }
 
 async function callService(method) {
+  cons0le.contents=""
   try {
     // loader.style.visibility = "visible";
     _output.innerText = "";
@@ -106,7 +107,14 @@ async function callService(method) {
 
     const response = await callVirtualEndpoint(fullURL, method);
 
-    let renderOut = "";
+    let renderOut = ""
+    if(cons0le.contents)
+    {
+      renderOut += "------- Console ----------\n"
+      renderOut += cons0le.contents;
+      renderOut += "\n--------------------------\n\n"
+    }
+
     renderOut += `"StatusCode": ${response._status}\n`;
     for (const key in response._headers) {
       renderOut += `"${key}": ${response._headers[key]}\n\n`;

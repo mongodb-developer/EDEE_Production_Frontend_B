@@ -1,16 +1,19 @@
 let syntaxOKFlag, syntaxErrorMessage;
-let oldCode = null
+let oldCode = null;
+
 async function callVirtualEndpoint(url, verb) {
   const res = new SimResponse();
 
   let source = _code.innerText;
-    if(useACE) {
-      source = _code.getValue()
-    }
-    source = cleanCode(source);
-  
-    //Detect if code changed
-  codeChanged = (oldCode != source);
+  if (useACE) {
+    source = _code.getValue();
+  }
+  console.log("I AM HERE");
+  source = cleanCode(source);
+
+  //Detect if code changed
+  codeChanged = oldCode != source;
+
   oldCode = source;
 
   if (codeChanged) {
@@ -19,7 +22,7 @@ async function callVirtualEndpoint(url, verb) {
     const codehost = document.createElement("script");
     codehost.id = "codehost";
     document.body.appendChild(codehost);
-    
+
     window.addEventListener("error", (event) => {
       console.log(event);
       syntaxOKFlag = false;
@@ -61,9 +64,9 @@ async function callVirtualEndpoint(url, verb) {
       await window[fName](req, res);
     } catch (e) {
       res.status(500);
-      var line = e.stack.split('\n')[1].trim();
-      line = line.replace('<anonymous>:','')
-      console.log(line)
+      var line = e.stack.split("\n")[1].trim();
+      line = line.replace("<anonymous>:", "");
+      console.log(line);
       res.send(`Server Error ocurred: ${e.message} ${line}`);
     }
   } else {
@@ -75,22 +78,25 @@ async function callVirtualEndpoint(url, verb) {
 }
 
 function cleanCode(sourcecode) {
+  console.log("Cleaning Code");
   sourcecode = sourcecode.replaceAll("const ", "var ");
   sourcecode = sourcecode.replaceAll("let ", "var ");
+  sourcecode = sourcecode.replaceAll("console", "cons0le");
+  console.log(sourcecode);
   return sourcecode;
 }
 
 /**
  * system level operations, principally to get environment variables
- * 
+ *
  */
 const system = {
   // name: name of the variable stored in the environment
   /**
    * Retrieve an Environment variable or reuqst a value for it if it does not exist
    * in this browser. Use secure to not display it for example when setting a password.
-   * @param {String} name 
-   * @param {Boolean} secure 
+   * @param {String} name
+   * @param {Boolean} secure
    * @returns String
    */
   getenv: function (name, secure = false) {
@@ -100,12 +106,12 @@ const system = {
         `This is stored in the browser so 
             DO NOT ENTER A REAL PASSWORD.`,
         `Please enter a value for "${name}".`,
-        secure,
+        secure
       );
       if (rval == null) return "";
       if (rval.length < 6)
         throw new Error(
-          "Usernames and passwords must be at least 6 characters long in this environment.",
+          "Usernames and passwords must be at least 6 characters long in this environment."
         );
       localStorage.setItem(name, rval);
     }
@@ -113,9 +119,33 @@ const system = {
   },
   /**
    * Unset an environment variable prompting it to be requested again
-   * @param {String} name 
+   * @param {String} name
    */
   clearenv: function (name) {
     localStorage.removeItem(name);
+  },
+};
+
+const cons0le = {
+  contents: "",
+
+  log: function () {
+    for (arg of arguments) {
+      if (typeof arg === "string" || arg instanceof String) {
+        cons0le.contents += arg;
+      } else {
+        cons0le.contents += EJSON.stringify(arg);
+      }
+    }
+  },
+  error: function () {
+    cons0le.contents += "ERROR: "
+    for (arg of arguments) {
+      if (typeof arg === "string" || arg instanceof String) {
+        cons0le.contents += arg;
+      } else {
+        cons0le.contents += EJSON.stringify(arg);
+      }
+    }
   },
 };
