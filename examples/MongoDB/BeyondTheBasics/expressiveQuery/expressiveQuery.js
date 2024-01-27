@@ -5,7 +5,7 @@ async function get_Query(req, res) {
   var query = {};
   var projection = {};
 
-  // Cheapest price for 4 guests including cleaning fees
+  // find prices for 4 guests <$100
 
   totalPrice = { $add: ["$price", "$cleaning_fee"] };
   query.$expr = { $lt: [totalPrice, 100] };
