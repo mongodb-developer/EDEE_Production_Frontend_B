@@ -4,11 +4,13 @@ const STATUS_NEW = "1 - New",
   STATUS_ASSIGNED = "2 - Assigned",
   STATUS_DONE = "3 - Complete";
 
-// This service is a Task  queue
+// This service is a Task queue you call it to request a task be allocated to a user
 // You can add a new Task with post_Task and list them  with get_Task
-// You need to add post_Assign?user=Name - which will find any task that is not assigned and
-// Assign it to that user, changing the status to STATUS_ASSIGNED.
-// A task can be (re)assigned if it is NEW or has been Assigned for more than 1 minute (Abandoned)
+//
+// You need to add post_Assign?user=Name - which will find a one task and 
+// assign it to that user, changing the status to STATUS_ASSIGNED.
+// A task can be assigned if it is NEW or has been Assigned for more than 1 minute (Abandoned)
+// Abandoned tasks must be allocated rather than new ones if any exist.
 
 async function post_Assign(req, res) {
   (assignedTo = req.query.get("user")), (assignedTask = null);
