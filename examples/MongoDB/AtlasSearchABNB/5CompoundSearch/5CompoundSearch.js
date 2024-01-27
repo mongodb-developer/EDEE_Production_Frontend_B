@@ -27,7 +27,7 @@ async function get_AtlasSearch(req, res) {
     $search: {
       compound: {
         must: [mustMatchQueryTerm], //All must be true
-        should: [holds5To10], // One must be true
+        should: [holds5To10], // Optional - but adds to score
       },
     },
   };
