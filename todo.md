@@ -30,6 +30,8 @@ Allow Save to anywhere ?
 Add Transaction Support
 Add explain()
 
+Pre-parse code (need to scope varaibles) - auto populate Get/Put and endpoints
+
 STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony from Commands
 Add 'Java' 'C#' and 'Python' support(Document - add Constructor, add/put/get,toJSON,parse)
 
