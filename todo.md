@@ -26,6 +26,9 @@ __Docs and Examples__
 After MVP
 =====
 
+Strip out useACE
+Add a view Sample Data (Maybe custom buttons)
+
 Allow Save to anywhere ?
 Add Transaction Support
 Add explain()

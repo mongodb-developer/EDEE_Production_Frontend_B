@@ -4,16 +4,12 @@ let oldCode = null;
 async function callVirtualEndpoint(url, verb) {
   const res = new SimResponse();
 
-  let source = _code.innerText;
-  if (useACE) {
-    source = _code.getValue();
-  }
+  let source =  _code.getValue();
+  
 
   source = cleanCode(source);
-
   //Detect if code changed
   codeChanged = oldCode != source;
-
   oldCode = source;
 
   if (codeChanged) {
@@ -79,10 +75,16 @@ async function callVirtualEndpoint(url, verb) {
 
 function cleanCode(sourcecode) {
 
-  sourcecode = sourcecode.replaceAll("const ", "var ");
+  // A few Bodges to JS - const fails if we already declared
+  // Also replace with out hacked console.
+  //Keep line lengths the same
+
+  sourcecode = sourcecode.replaceAll("const ", "var  ");
   sourcecode = sourcecode.replaceAll("let ", "var ");
   sourcecode = sourcecode.replaceAll("console", "cons0le");
-
+  const classAsVar = /(?<=\s+)class\s+([A-Za-z0-9_]*)/;
+  sourcecode = sourcecode.replace(classAsVar,"var $1 = class $1")
+  // sourcecode = MagicJava.JStoJava(sourcecode);
   return sourcecode;
 }
 

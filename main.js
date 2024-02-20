@@ -1,25 +1,22 @@
 let code, response, endpointName, databox, infobox;
 let codeChanged;
-const useACE = true;
+
 let _saveFileName = null;
 
 const serviceHostname = "https://hostname:5500/service/";
-async function onLoad() {
-  if (useACE) {
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/cobalt");
-    editor.session.setMode("ace/mode/javascript");
-    editor.setOptions({
-      fontFamily: "Source Code Pro",
-      fontSize: "12pt",
-    });
 
-    document.getElementById("codediv").style.display = "none";
-    _code = editor; // Changed for ACE
-  } else {
-    document.getElementById("editor").style.display = "none";
-    _code = document.getElementById("codediv");
-  }
+async function onLoad() {
+  var editor = ace.edit("editor");
+  editor.setTheme("ace/theme/cobalt");
+  editor.session.setMode("ace/mode/javascript");
+  editor.setOptions({
+    fontFamily: "Source Code Pro",
+    fontSize: "12pt",
+    useWorker: false // Hide syntax errors in editor
+  });
+
+  _code = editor; // Changed for ACE
+
   _output = document.getElementById("response");
   _postdata = document.getElementById("postdata");
   endpointName = document.getElementById("endpoint");
@@ -37,16 +34,6 @@ async function onLoad() {
       document.title = myURL.searchParams.get("src").split("_").join("/");
     }
   }
-
-  _code.onkeydown = function (e) {
-    codeChanged = true;
-    if (useACE == false && e.key == "Tab") {
-      console.log("TAB");
-      insertTextAtCursor("    ");
-      e.preventDefault();
-    }
-  };
-  // messageBox("Hi - I'm for debugging and things");
 
   // Sometimes we want to hide the GET or POST buttons
   if (myURL.searchParams && myURL.searchParams.get("hideGETbutton")) {
@@ -72,11 +59,7 @@ function loadLocalCode(filePath) {
   _postdata.innerText = "";
 
   reader.onload = function () {
-    if (useACE) {
-      _code.setValue(reader.result, -1);
-    } else {
-      _code.innerText = reader.result;
-    }
+    _code.setValue(reader.result, -1);
   };
 
   reader.onerror = function () {
@@ -99,7 +82,7 @@ function messageBox(str) {
 }
 
 async function callService(method) {
-  cons0le.contents=""
+  cons0le.contents = "";
   try {
     // loader.style.visibility = "visible";
     _output.innerText = "";
@@ -107,12 +90,11 @@ async function callService(method) {
 
     const response = await callVirtualEndpoint(fullURL, method);
 
-    let renderOut = ""
-    if(cons0le.contents)
-    {
-      renderOut += "------- Console ----------\n"
+    let renderOut = "";
+    if (cons0le.contents) {
+      renderOut += "------- Console ----------\n";
       renderOut += cons0le.contents;
-      renderOut += "\n--------------------------\n\n"
+      renderOut += "\n--------------------------\n\n";
     }
 
     renderOut += `"StatusCode": ${response._status}\n`;
@@ -147,18 +129,11 @@ async function loadTemplateCode(fname) {
 
   let response = await fetch(`${url}.js`);
   if (response.status == 200) {
-    if (useACE) {
-      _code.setValue(await response.text(), -1);
-    } else {
-      _code.innerText = await response.text();
-    }
+    _code.setValue(await response.text(), -1);
   } else {
-    //We dont really care if it's missing
-    if (useACE) {
-      _code.setValue("// EXAMPLE CODE MISSING - Is URL Correct", -1);
-    } else {
-      _code.innerText = "// EXAMPLE CODE MISSING - Is URL Correct";
-    }
+    //We don't really care if it's missing
+
+    _code.setValue("// EXAMPLE CODE MISSING - Is URL Correct", -1);
   }
 
   response = await fetch(`${url}.json`);
@@ -177,20 +152,14 @@ async function loadTemplateCode(fname) {
 }
 
 function saveToClipboard() {
-  if (useACE) {
-    navigator.clipboard.writeText(_code.getValue());
-  } else {
-    navigator.clipboard.writeText(_code.innerText);
-  }
+  navigator.clipboard.writeText(_code.getValue());
 }
 
 function saveCode() {
   let data = "";
-  if (useACE) {
-    data = _code.getValue();
-  } else {
-    data = _code.innerText;
-  }
+
+  data = _code.getValue();
+
   if (_saveFileName == null) {
     _saveFileName = prompt("Please enter a filename");
   }

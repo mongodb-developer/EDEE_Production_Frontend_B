@@ -29,21 +29,12 @@
             <a class="menu" onclick="saveCode()">Save</a>
             <a class="menu" onclick="_saveFileName=null;saveCode()">Save As</a>
             <input style="display:none" onchange="loadLocalCode(this.files[0])" class="loadbutton" id="uploadCode" type="file" />
+   
 
         </div>
         <div id="infobox" class="infobox"></div>
         <div class="flex-container">
-            <!-- Code Editor -->
-            <div id="codediv" contenteditable class="code">
-           
-// get_XXXX or post_XXXX define Get and Post endpoints
-
-function get_Hello(req, res) {
-    res.status(200);
-    res.send({ msg : "Hello " + req.query.get("name") 
-                        + " try looking at the examples."})
-}
-            </div>
+         
             <!-- New Editor -->
             <div id="editor">
            

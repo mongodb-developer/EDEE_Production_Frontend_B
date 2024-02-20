@@ -167,3 +167,36 @@ function JAVATest() {
   console.log(c.isEmpty())*/
   console.log("--------------------");
 }
+
+
+//This aims to make Java esque code work and also retain line numbering
+class MagicJava {
+  static JStoJava(javacode) {
+    // Drop imports and packages
+    javacode = javacode.replace(/^\s*package/gm,"//     ");
+    javacode = javacode.replace(/^\s*import/gm,"//     ");
+
+    
+    return javacode;
+/* THis is all very experiemental */   
+
+    // Any variable declared by type becomes var - lets try this without a list of types first
+    const allDataTypes = /^\s*(?!class)[A-Za-z0-9_<>]+\s(?=\s*[A-Za-z0-9_]+\s)/gm;
+    javacode = javacode.replace(allDataTypes,"var ");
+
+    // Identify functions and make them all async
+    const functionDefinition = /^\s*(?!class)[A-Za-z0-9_<>]+\s(?=\s*[A-Za-z0-9_]+\()/gm;
+    javacode = javacode.replace(functionDefinition,"async function ");
+
+    //Function Argument types
+ 
+    console.log(javacode);
+    const functionArgs = /(?<=[\(,]\s*)[A-Za-z_]*\s(?=\s*[A-Za-z_])/gm;
+    javacode = javacode.replace(functionArgs,"");
+
+
+
+    console.log(javacode);
+    return javacode;
+  }
+}
