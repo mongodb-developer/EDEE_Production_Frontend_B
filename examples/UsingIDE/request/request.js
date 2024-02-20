@@ -1,20 +1,20 @@
-// get_XXXX or post_XXXX define Get and Post endpoints
+
+// POST endpoint is passed the post data in body
 
 function post_Echo(req, res) {
-  //Default Content-Type is application/json
 
   var bodyString = req.body;
+  // JSON, EJSON  or Document object can parse JSON data to object
   var bodyObj = JSON.parse(bodyString);
-
   res.status(200);
   res.send({ echo: bodyObj });
 }
 
 function get_Echo(req, res) {
-  //Default Content-Type is application/json
+
+  //req.query contains values from the URL
 
   var value = req.query.get("value");
-
   res.status(200);
   res.send({ echo: value });
 }

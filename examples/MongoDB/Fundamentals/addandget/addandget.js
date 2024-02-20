@@ -20,7 +20,7 @@ async function post_Claim(req, res) {
 }
 
 async function get_Claim(req, res) {
-  query = new Document();
+  query = {};
   if (req.query.get("id")) {
     query._id = req.query.get("id");
     // Needs Typed

@@ -11,8 +11,7 @@ async function onLoad() {
   editor.session.setMode("ace/mode/javascript");
   editor.setOptions({
     fontFamily: "Source Code Pro",
-    fontSize: "12pt",
-    useWorker: false // Hide syntax errors in editor
+    fontSize: "12pt"
   });
 
   _code = editor; // Changed for ACE

@@ -39,7 +39,7 @@ async function post_Highscores(req, res) {
 
   var players = JSON.parse(req.body);
   for (var player of players) {
-    var doc = new Document();
+    var doc = {};
     for (field of schema) {
       doc[field] = player[field];
     }
@@ -61,7 +61,7 @@ async function get_Highscores(req, res) {
     res.status(200);
     res.send({ nDocs: count });
   } else {
-    var query = new Document();
+    var query = {};
     //query.country = "Greece"
     var cursor = collection.find(query);
     var data = await cursor.toArray();

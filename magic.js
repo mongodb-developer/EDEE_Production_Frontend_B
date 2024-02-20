@@ -82,7 +82,7 @@ function cleanCode(sourcecode) {
   sourcecode = sourcecode.replaceAll("const ", "var  ");
   sourcecode = sourcecode.replaceAll("let ", "var ");
   sourcecode = sourcecode.replaceAll("console", "cons0le");
-  const classAsVar = /(?<=\s+)class\s+([A-Za-z0-9_]*)/;
+  const classAsVar = /^(?<=\s+)class\s+([A-Za-z0-9_]*)/mg;
   sourcecode = sourcecode.replace(classAsVar,"var $1 = class $1")
   // sourcecode = MagicJava.JStoJava(sourcecode);
   return sourcecode;

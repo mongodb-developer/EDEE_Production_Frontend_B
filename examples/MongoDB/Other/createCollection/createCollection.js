@@ -25,7 +25,7 @@ async function get_Collections(req, res) {
 }
 
 async function listNamespaces() {
-  nameSpaces = new Document();
+  nameSpaces = {};
 
   var databaseNames = await mongoClient.listDatabaseNames();
   for (var dbName of databaseNames) {

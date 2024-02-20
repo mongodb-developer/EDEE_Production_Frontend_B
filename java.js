@@ -1,4 +1,7 @@
 class Document {
+
+  static class = "Document";
+
   static parse(ejson) {
     const parsed = EJSON.parse(ejson);
     return new Document(parsed);
@@ -47,6 +50,12 @@ class Document {
     if (this[key] != undefined) return this[key];
     else if (defaultValue == undefined) return null;
     else return defaultValue;
+  }
+
+  //TODO - add typing
+  getList(key) {
+    const val = this[key];
+    return val;
   }
 
   getBoolean(key, defaultValue) {

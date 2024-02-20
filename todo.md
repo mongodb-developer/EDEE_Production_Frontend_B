@@ -43,6 +43,5 @@ Java Version
 ------------
 
 Remove await and async
-Add Document() or even BSONDocument()
 Add Filters and similar
 Add types
