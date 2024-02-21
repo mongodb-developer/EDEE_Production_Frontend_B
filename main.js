@@ -148,6 +148,32 @@ async function loadTemplateCode(fname) {
   } else {
     endpointName.innerText = "";
   }
+
+  response = await fetch(`${url}.buttons`);
+  if (response.status == 200) {
+    buttons = await response.text();
+    const buttonData = JSON.parse(buttons);
+    for( let button in buttonData) {
+      container = document.getElementById("buttons");
+      newButton = document.createElement("button");
+      newButton.innerText=button
+      newButton.addEventListener("click", () => { showInfo(buttonData[button])}, false);
+      newButton.classList.add("button");
+
+      container.appendChild(newButton);
+      //<button class="button" onclick="callService('GET')" id="callServiceGET"> GET </button>
+    }
+  } 
+}
+
+// This can get more fancy over time if needs be
+async function showInfo(file)
+{
+  const url = "examples/" + parts.join("/") + "/";
+  const response = await fetch(url + file);
+  if (response.status == 200) {
+    _output.innerText = r = await response.text();
+  } 
 }
 
 function saveToClipboard() {

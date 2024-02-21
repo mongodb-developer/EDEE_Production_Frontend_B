@@ -4,7 +4,7 @@ var listingsCollection;
 // Find out what Cheap, Medium and Expensive AirBNB means
 
 async function get_Cohorts(req, res) {
-  // Calcualte the total price for 3 nights
+  // Calculate the total price for 3 nights
   var priceFor3Days = { $add: ["$cleaning_fee", { $multiply: ["$price", 3] }] };
 
   var output = {};
