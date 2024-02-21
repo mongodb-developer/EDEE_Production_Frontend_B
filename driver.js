@@ -645,6 +645,23 @@ class MongoCursor {
 
   /**
    * Get All documents in cursor as a single Array
+   * @returns Cursors
+   */
+
+  async into(array){
+    if(!Array.isArray(array)) {
+      throw new Error("into requires an array like object")
+    }
+    array.size=0;
+    const results = await this.toArray();
+
+    array.push.apply(array,results);
+
+    return this
+  }
+
+  /**
+   * Get All documents in cursor as a single Array
    * @returns [Document]
    */
 
@@ -673,7 +690,7 @@ class MongoCursor {
   }
 
   async runFind() {
-    console.log(this.mongoClient);
+  
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     this._results = await this.mongoClient.user.functions.find(

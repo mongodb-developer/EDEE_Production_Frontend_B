@@ -3,8 +3,18 @@
 var mongoClient = null;
 var claimsCollection;
 
-// This is the Dynamic / Document style of using MongoDB using the
-// Document() class - versus POJO seen later.
+// Using public members just to keep it small - In java these have Types
+class Claimant {
+  user;
+  contact;
+  email;
+}
+
+class Claim {
+   claimNumber;
+   policyNumber;
+   claimant
+}
 
 async function post_Claim(req, res) {
   // The Document (HashMap<String,Object>) class includes an
@@ -37,18 +47,16 @@ async function post_Claim(req, res) {
 }
 
 async function get_Claim(req, res) {
-  var query = Filters.empty();
   if (req.query.get("id")) {
-    query = Filters.eq("_id", req.query.get("id"));
-    // Needs Typed to ObjectID to work
-    // query = Filters.eq("_id", new ObjectId(req.query.get("id")))
-    
+    query = eq("_id", req.query.get("id"));
+    /*  Needs Typed to ObjectID to work
+     * query._id = new ObjectId(req.query.get("id"))
+     */
   }
 
   var iterable = claimsCollection.find(query);
-  var claims = new ArrayList();
-  await iterable.into(claims);
-
+  var results = new ArrayList();
+  await iterable.into(results);
   res.status(200);
   res.send(claims);
 }
