@@ -1,6 +1,6 @@
 let code, response, endpointName, databox, infobox;
 let codeChanged;
-
+let _exampleName = []; //Examples used for different orgs
 let _saveFileName = null;
 
 const serviceHostname = "https://hostname:5500/service/";
@@ -128,8 +128,8 @@ async function callService(method) {
 //Load a JS file and populate the code side
 
 async function loadTemplateCode(fname) {
-  parts = fname.split("_");
-
+  const parts = fname.split("_");
+  exampleName = parts;
   url = "examples/" + parts.join("/") + "/" + parts[parts.length - 1];
 
   let response = await fetch(`${url}.js`);

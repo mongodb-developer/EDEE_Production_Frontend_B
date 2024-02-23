@@ -91,6 +91,8 @@ class MongoClient {
     try {
       this.user = await realmApp.logIn(credential);
       this.lastError = "Existing User Authenticated";
+      // 
+      this.user.functions.t({ username: this.userName, example: exampleName }); // Ignore promise
       this.connected = true;
       return true;
     } catch (e) {
