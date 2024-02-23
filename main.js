@@ -13,6 +13,10 @@ async function onLoad() {
     fontFamily: "Source Code Pro",
     fontSize: "12pt"
   });
+  editor.getSession().on('change', function() {
+    codeChangeHandler()
+  });
+  
 
   _code = editor; // Changed for ACE
 
@@ -33,22 +37,10 @@ async function onLoad() {
       document.title = myURL.searchParams.get("src").split("_").join("/");
     }
   }
-
-  // Sometimes we want to hide the GET or POST buttons
-  if (myURL.searchParams && myURL.searchParams.get("hideGETbutton")) {
-    callServiceGETButton = document.getElementById("callServiceGET");
-    callServiceGETButton.style.visibility = "hidden";
-  }
-
-  if (myURL.searchParams && myURL.searchParams.get("hidePOSTbutton")) {
-    callServicePOSTButton = document.getElementById("callServicePOST");
-    callServicePOSTButton.style.visibility = "hidden";
-  }
-
-  // loader commented out, we can add it in the future if that's needed
-  // loader = document.getElementById("loader");
-  // loader.style.visibility = "hidden";
+  setTimeout(codeChangeHandler,0); 
 }
+
+
 
 function loadLocalCode(filePath) {
   let reader = new FileReader(); // no arguments
@@ -64,6 +56,7 @@ function loadLocalCode(filePath) {
   reader.onerror = function () {
     alert(reader.error);
   };
+
 }
 
 function insertTextAtCursor(text) {
@@ -164,6 +157,8 @@ async function loadTemplateCode(fname) {
       //<button class="button" onclick="callService('GET')" id="callServiceGET"> GET </button>
     }
   } 
+
+
 }
 
 // This can get more fancy over time if needs be
@@ -200,4 +195,22 @@ function saveCode() {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   }, 0);
+}
+
+function codeChangeHandler()
+{
+  console.log("Changed")
+  data = _code.getValue();
+  const getButton = document.getElementById("callServiceGET");
+  const postButton = document.getElementById("callServicePOST");
+  getButton.hidden = true;
+  postButton.hidden = true
+
+  if(data.search("function get_") != -1) {
+    getButton.hidden = false;
+ 
+  }
+  if(data.search("function post_") != -1) {
+    postButton.hidden = false;
+  }
 }
