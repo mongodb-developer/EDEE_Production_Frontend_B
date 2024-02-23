@@ -16,11 +16,22 @@ async function onLoad() {
   editor.getSession().on('change', function() {
     codeChangeHandler()
   });
-  
 
-  _code = editor; // Changed for ACE
+  var outputFormatted = ace.edit("response");
+  outputFormatted.setTheme("ace/theme/eclipse");
+  outputFormatted.setOption("highlightActiveLine", false)
+  outputFormatted.renderer.setShowGutter(false);
+  outputFormatted.session.setMode("ace/mode/json");
+  outputFormatted.setReadOnly(true);
+  outputFormatted.setOptions({
+    fontFamily: "Source Code Pro",
+    fontSize: "12pt"
+  });
 
-  _output = document.getElementById("response");
+  _code = editor; 
+  //_output = document.getElementById("response");
+  _output = outputFormatted
+
   _postdata = document.getElementById("postdata");
   endpointName = document.getElementById("endpoint");
   document.getElementById("url").innerText = serviceHostname;
@@ -46,7 +57,9 @@ function loadLocalCode(filePath) {
   let reader = new FileReader(); // no arguments
   reader.readAsText(filePath);
 
-  _output.innerText = "";
+  //_output.innerText = "";
+  _output.setValue("",-1);
+
   _postdata.innerText = "";
 
   reader.onload = function () {
@@ -77,7 +90,7 @@ async function callService(method) {
   cons0le.contents = "";
   try {
     // loader.style.visibility = "visible";
-    _output.innerText = "";
+    _output.setValue("",-1);
     const fullURL = serviceHostname + endpointName.innerText;
 
     const response = await callVirtualEndpoint(fullURL, method);
@@ -103,7 +116,7 @@ async function callService(method) {
       renderOut += JSON.stringify(response._data, null, 2);
     }
 
-    _output.innerText = renderOut;
+    _output.setValue(renderOut,-1);
   } catch (error) {
     console.error(error);
     messageBox(error); // Fatal problem
@@ -167,7 +180,7 @@ async function showInfo(file)
   const url = "examples/" + parts.join("/") + "/";
   const response = await fetch(url + file);
   if (response.status == 200) {
-    _output.innerText = r = await response.text();
+    _output.setValue(r = await response.text(),-1)
   } 
 }
 
