@@ -19,7 +19,7 @@ async function get_Movies(req, res) {
   var query = {};
   query.title = req.query.get("title");
 
-  explainPlan = await collection.find(query).explain('executionStats');
+  explainPlan = await collection.find(query).explain();
 
   res.status(200);
   res.send(explainPlan);

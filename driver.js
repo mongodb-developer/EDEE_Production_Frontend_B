@@ -189,7 +189,9 @@ class MongoCollection {
     this.collName = collName;
     this.dbName = dbName;
     this.mongoClient = mongoClient;
+
   }
+
 
   /**
    * Define an Atlas Search index.
@@ -379,6 +381,7 @@ class MongoCollection {
       this.dbName,
       this.collName
     );
+    if(this.explainer != null) { findCursor.explainer = this.explainer}
     findCursor._query = query;
     findCursor._projection = projection;
     return findCursor;
@@ -596,11 +599,10 @@ class MongoCursor {
         this._sort,
         explainType
       );
-        console.log(rval)
       return rval;
-    } else {
-      return NULL; //Aggregation TODO
-    }
+    } 
+    return { error: "Explain in aggregation is not supported in the driver emulator yet."}
+    
   }
   /**
    * Ignore the fist x records found, default is 0
@@ -721,6 +723,8 @@ class MongoCursor {
   async runFind() {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+
+
     this._results = await this.mongoClient.user.functions.find(
       this.dbName,
       this.collName,
