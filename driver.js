@@ -13,6 +13,9 @@
  * the server and will automatically manage failover if a server is unavailable.
  */
 class MongoClient {
+
+  static _serverLatency = -1;
+  static _nServerCalls = 0;
   /**
    * Constructor - takes a MongoDB URI
    * Supported URI Format is mongodb+srv://USERNAME:PASSWORD@...
@@ -22,6 +25,7 @@ class MongoClient {
    */
   constructor(URI) {
     this.connected = false;
+
     this.lastError = "";
     const regEx = /^mongodb\+srv:\/\/(.*?):(.*?)@/;
     const getCreds = URI.match(regEx);
@@ -38,6 +42,7 @@ class MongoClient {
   async hello() {
     if (!(await this.connect())) throw new Error(this.lastError);
     const rval = await this.user.functions.hello();
+    MongoClient._nServerCalls++;
     return rval;
   }
 
@@ -48,6 +53,7 @@ class MongoClient {
   async listDatabaseNames() {
     if (!(await this.connect())) throw new Error(this.lastError);
     const rval = await this.user.functions.listDatabaseNames();
+    MongoClient._nServerCalls++;
     return rval.result;
   }
 
@@ -89,9 +95,20 @@ class MongoClient {
     );
     try {
       this.user = await realmApp.logIn(credential);
+      MongoClient._nServerCalls++;
       this.lastError = "Existing User Authenticated";
-      //
+      // Measure server latency
+
       this.user.functions.t({ username: this.userName, example: exampleName }); // Ignore promise
+      if (MongoClient._serverLatency == -1) {
+        const startTime = Date.now();
+        await this.user.functions.ping();
+        const endTime = Date.now();
+
+        MongoClient._serverLatency = endTime - startTime;
+        console.log("Server Latency for Emulator is " + MongoClient._serverLatency + "ms");
+      }
+
       this.connected = true;
       return true;
     } catch (e) {
@@ -141,6 +158,7 @@ class MongoDatabase {
   async listCollectionNames() {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.listCollectionNames(
       this.dbName
     );
@@ -153,6 +171,7 @@ class MongoDatabase {
   async drop() {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.dropDatabase(
       this.dbName
     );
@@ -168,6 +187,7 @@ class MongoDatabase {
   async createCollection(collName, options) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.createCollection(
       this.dbName,
       collName,
@@ -189,9 +209,7 @@ class MongoCollection {
     this.collName = collName;
     this.dbName = dbName;
     this.mongoClient = mongoClient;
-
   }
-
 
   /**
    * Define an Atlas Search index.
@@ -202,6 +220,7 @@ class MongoCollection {
   async createSearchIndex(name, definition) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.createSearchIndex(
       this.dbName,
       this.collName,
@@ -226,6 +245,7 @@ class MongoCollection {
   async dropSearchIndex(index) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.dropSearchIndex(
       this.dbName,
       this.collName,
@@ -245,7 +265,7 @@ class MongoCollection {
       throw new Error(this.mongoClient.lastError);
 
     const pipeline = [{ $listSearchIndexes: {} }];
-
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.aggregate(
       this.dbName,
       this.collName,
@@ -265,6 +285,7 @@ class MongoCollection {
   async createIndex(name, definition) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.createIndex(
       this.dbName,
       this.collName,
@@ -287,6 +308,7 @@ class MongoCollection {
     console.log(index);
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.dropIndex(
       this.dbName,
       this.collName,
@@ -306,6 +328,7 @@ class MongoCollection {
   async listIndexes(name, definition) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.listIndexes(
       this.dbName,
       this.collName
@@ -322,6 +345,7 @@ class MongoCollection {
   async drop() {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.dropCollection(
       this.dbName,
       this.collName
@@ -336,6 +360,7 @@ class MongoCollection {
   async insertOne(document) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.insert(
       this.dbName,
       this.collName,
@@ -359,6 +384,7 @@ class MongoCollection {
   async insertMany(documents) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.insert(
       this.dbName,
       this.collName,
@@ -381,7 +407,9 @@ class MongoCollection {
       this.dbName,
       this.collName
     );
-    if(this.explainer != null) { findCursor.explainer = this.explainer}
+    if (this.explainer != null) {
+      findCursor.explainer = this.explainer;
+    }
     findCursor._query = query;
     findCursor._projection = projection;
     return findCursor;
@@ -396,7 +424,7 @@ class MongoCollection {
   async findOne(query, projection) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
-
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.find(
       this.dbName,
       this.collName,
@@ -422,7 +450,7 @@ class MongoCollection {
   async findOneAndUpdate(query, updates, options) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
-
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.findOneAndUpdate(
       this.dbName,
       this.collName,
@@ -443,7 +471,7 @@ class MongoCollection {
   async updateMany(query, updates, options) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
-
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.update(
       this.dbName,
       this.collName,
@@ -466,7 +494,7 @@ class MongoCollection {
   async updateOne(query, updates, options) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
-
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.update(
       this.dbName,
       this.collName,
@@ -486,6 +514,7 @@ class MongoCollection {
   async deleteMany(query) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.delete(
       this.dbName,
       this.collName,
@@ -501,7 +530,7 @@ class MongoCollection {
   async deleteOne(query) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
-
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.delete(
       this.dbName,
       this.collName,
@@ -536,7 +565,7 @@ class MongoCollection {
   async countDocuments(query) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
-
+    MongoClient._nServerCalls++;
     const rval = await this.mongoClient.user.functions.count(
       this.dbName,
       this.collName,
@@ -589,6 +618,7 @@ class MongoCursor {
       throw new Error(this.mongoClient.lastError);
 
     if (this._cursorType == "FIND") {
+      MongoClient._nServerCalls++;
       const rval = await this.mongoClient.user.functions.explain_find(
         this.dbName,
         this.collName,
@@ -600,9 +630,11 @@ class MongoCursor {
         explainType
       );
       return rval;
-    } 
-    return { error: "Explain in aggregation is not supported in the driver emulator yet."}
-    
+    }
+    return {
+      error:
+        "Explain in aggregation is not supported in the driver emulator yet.",
+    };
   }
   /**
    * Ignore the fist x records found, default is 0
@@ -724,7 +756,7 @@ class MongoCursor {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
 
-
+    MongoClient._nServerCalls++;
     this._results = await this.mongoClient.user.functions.find(
       this.dbName,
       this.collName,
@@ -741,7 +773,8 @@ class MongoCursor {
   async runAgg() {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
-    console.log(this._pipeline);
+
+    MongoClient._nServerCalls++;
     this._results = await this.mongoClient.user.functions.aggregate(
       this.dbName,
       this.collName,

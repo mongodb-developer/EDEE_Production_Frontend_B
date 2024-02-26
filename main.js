@@ -92,16 +92,19 @@ async function callService(method) {
     // loader.style.visibility = "visible";
     _output.setValue("",-1);
     const fullURL = serviceHostname + endpointName.innerText;
-
+    MongoClient._nServerCalls=0; 
+    const startTime = Date.now();
     const response = await callVirtualEndpoint(fullURL, method);
+    const endTime = Date.now();
 
     let renderOut = "";
+    renderOut += `"Time taken": ${(endTime - startTime) - (MongoClient._serverLatency * MongoClient._nServerCalls)}ms\n`
     if (cons0le.contents) {
       renderOut += "------- Console ----------\n";
       renderOut += cons0le.contents;
       renderOut += "\n--------------------------\n\n";
     }
-
+    
     renderOut += `"StatusCode": ${response._status}\n`;
     for (const key in response._headers) {
       renderOut += `"${key}": ${response._headers[key]}\n\n`;
