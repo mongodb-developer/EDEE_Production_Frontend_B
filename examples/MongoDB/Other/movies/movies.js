@@ -19,7 +19,7 @@ async function get_Movies(req, res) {
   var query = {};
   query.title = req.query.get("title");
 
-  explain = collection.find(query);
+  cursor = collection.find(query);
   results = await cursor.toArray();
 
   res.status(200);
