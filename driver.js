@@ -6,8 +6,6 @@
    or java or python or dozens of other languages  not from browser JS,
    you use it to write the services you call fron the browser. */
 
-
-
 /**
  * MongoDB Driver Starting Class representing a connection to MongoDB
  * Handles any required conneciton pooling and shoudl be created only once
@@ -68,7 +66,6 @@ class MongoClient {
       return true;
     }
 
-  
     //TODO error message
     if (this.userName == null || !this.passWord == null) {
       this.lastError = "Invalid Credentials Supplied";
@@ -77,8 +74,10 @@ class MongoClient {
 
     if (this.userName.length < 6 || this.passWord.length < 6) {
       localStorage.clear();
-      oldCode=null; //Redo initWebService
-      throw new Error("Usernames and Passwords must both be at least 6 characters long");
+      oldCode = null; //Redo initWebService
+      throw new Error(
+        "Usernames and Passwords must both be at least 6 characters long"
+      );
     }
 
     //This is weirdly critical as JSFiddle clears the session cookies each time
@@ -91,7 +90,7 @@ class MongoClient {
     try {
       this.user = await realmApp.logIn(credential);
       this.lastError = "Existing User Authenticated";
-      // 
+      //
       this.user.functions.t({ username: this.userName, example: exampleName }); // Ignore promise
       this.connected = true;
       return true;
@@ -192,12 +191,12 @@ class MongoCollection {
     this.mongoClient = mongoClient;
   }
 
-/**
- * Define an Atlas Search index.
- * @param {String} name 
- * @param {Object} definition 
- * @returns  Object showing success or failure
- */
+  /**
+   * Define an Atlas Search index.
+   * @param {String} name
+   * @param {Object} definition
+   * @returns  Object showing success or failure
+   */
   async createSearchIndex(name, definition) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -218,10 +217,10 @@ class MongoCollection {
   }
 
   /**
- * Drop an Atlas Search index.
- * @param {String} name 
- * @returns  Object showing success or failure
- */
+   * Drop an Atlas Search index.
+   * @param {String} name
+   * @returns  Object showing success or failure
+   */
   async dropSearchIndex(index) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -236,9 +235,9 @@ class MongoCollection {
     return rval;
   }
   /**
- * List all Atlas Search indexes on this collection.
- * @returns  Array of Atlas Search index definition Objects
- */
+   * List all Atlas Search indexes on this collection.
+   * @returns  Array of Atlas Search index definition Objects
+   */
   async listSearchIndexes() {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -255,12 +254,12 @@ class MongoCollection {
     }
     return rval.result;
   }
-/**
- * Define a MongoDB Database BTree index.
- * @param {String} name 
- * @param {Object} definition 
- * @returns  Object showing success or failure
- */
+  /**
+   * Define a MongoDB Database BTree index.
+   * @param {String} name
+   * @param {Object} definition
+   * @returns  Object showing success or failure
+   */
   async createIndex(name, definition) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -278,10 +277,10 @@ class MongoCollection {
   }
 
   /**
- * Define a MongoDB Database BTree index.
- * @param {String} name 
- * @returns  Object showing success or failure
- */
+   * Define a MongoDB Database BTree index.
+   * @param {String} name
+   * @returns  Object showing success or failure
+   */
   async dropIndex(index) {
     console.log(index);
     if (!(await this.mongoClient.connect()))
@@ -299,9 +298,9 @@ class MongoCollection {
   }
 
   /**
- * List all Atlas Search indexes on this collection.
- * @returns  Array of MongoDB Database BTree index definition Objects
- */
+   * List all Atlas Search indexes on this collection.
+   * @returns  Array of MongoDB Database BTree index definition Objects
+   */
   async listIndexes(name, definition) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -314,10 +313,10 @@ class MongoCollection {
     }
     return rval.cursor?.firstBatch;
   }
-/**
- * Drop this colleciton and all non search indexes
- * @returns Object showing success or failure
- */
+  /**
+   * Drop this colleciton and all non search indexes
+   * @returns Object showing success or failure
+   */
   async drop() {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -327,11 +326,11 @@ class MongoCollection {
     );
     return { ok: 1 };
   }
-/**
- * Add a single Document (Object) to this collection.
- * @param {Object} document 
- * @returns Object showing sucess or failure and the primary key (_id) of the object added.
- */
+  /**
+   * Add a single Document (Object) to this collection.
+   * @param {Object} document
+   * @returns Object showing sucess or failure and the primary key (_id) of the object added.
+   */
   async insertOne(document) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
@@ -349,11 +348,11 @@ class MongoCollection {
 
     return rval;
   }
-/**
- * Add multiple Documents (Objects) to this collection.
- * @param {Object[]} document 
- * @returns Object showing sucess or failure and the primary keys (_id) of all the object added.
- */
+  /**
+   * Add multiple Documents (Objects) to this collection.
+   * @param {Object[]} document
+   * @returns Object showing sucess or failure and the primary keys (_id) of all the object added.
+   */
 
   async insertMany(documents) {
     if (!(await this.mongoClient.connect()))
@@ -369,8 +368,8 @@ class MongoCollection {
   /**
    * Create a Cursor to define a search and set the filter and projection parameters
    * This does not execute the search until you start to itterate the cursor.
-   * @param {Object} query 
-   * @param {Object} projection 
+   * @param {Object} query
+   * @param {Object} projection
    * @returns MongoCursor - used to access the results
    */
   find(query, projection) {
@@ -387,8 +386,8 @@ class MongoCollection {
 
   /**
    * Immediately execute the query specified and return the first document found.
-   * @param {Object} query 
-   * @param {Object} projection 
+   * @param {Object} query
+   * @param {Object} projection
    * @returns Document Object
    */
   async findOne(query, projection) {
@@ -409,12 +408,12 @@ class MongoCollection {
   }
 
   /**
-   * Update a single document identified by the query according to the supplied updates then 
+   * Update a single document identified by the query according to the supplied updates then
    * return either the document before(default) or after those changes. options is used to specify
    * whather before or after as well as projection and sort order to apply and whther to upsert.
-   * @param {Object} query 
-   * @param {Object} updates 
-   * @param {Object options 
+   * @param {Object} query
+   * @param {Object} updates
+   * @param {Object options
    * @returns Document updated or null
    */
   async findOneAndUpdate(query, updates, options) {
@@ -433,9 +432,9 @@ class MongoCollection {
 
   /**
    * Apply the updates specified to all documents matching query.
-   * @param {Object} query 
-   * @param {Object} updates 
-   * @param {Object} options 
+   * @param {Object} query
+   * @param {Object} updates
+   * @param {Object} options
    * @returns Object showing how many were found and updated
    */
   async updateMany(query, updates, options) {
@@ -453,12 +452,11 @@ class MongoCollection {
     return rval;
   }
 
-
   /**
    * Apply the updates specified to the first document matching query.
-   * @param {Object} query 
-   * @param {Object} updates 
-   * @param {Object} options 
+   * @param {Object} query
+   * @param {Object} updates
+   * @param {Object} options
    * @returns Object showing how many were found and updated
    */
 
@@ -477,9 +475,9 @@ class MongoCollection {
     return rval;
   }
 
-   /**
+  /**
    * Delete all documents matching query.
-   * @param {Object} query 
+   * @param {Object} query
    * @returns ject showing how many were found and deleted
    */
   async deleteMany(query) {
@@ -492,9 +490,9 @@ class MongoCollection {
     );
     return rval;
   }
-   /**
+  /**
    * Delete first document matching query found.
-   * @param {Object} query 
+   * @param {Object} query
    * @returns Object showing how many were found and deleted
    */
   async deleteOne(query) {
@@ -512,7 +510,7 @@ class MongoCollection {
 
   /**
    * Create a cursor to execute and return results form an aggregation pipeline.
-   * @param {Object[]} pipeline 
+   * @param {Object[]} pipeline
    * @returns MongoCursor with results
    */
   aggregate(pipeline) {
@@ -528,7 +526,7 @@ class MongoCollection {
 
   /**
    * Count how many documents match query without returning them
-   * @param {Object} query 
+   * @param {Object} query
    * @returns number of matching documents
    */
 
@@ -547,7 +545,7 @@ class MongoCollection {
 
 /**
  * MongoCursor represents a connection to a query against the server
- * cursors come from calling find() or aggregate and allow you to set further 
+ * cursors come from calling find() or aggregate and allow you to set further
  * parameters before itterating over them or retrieving them as an array
  */
 class MongoCursor {
@@ -569,7 +567,7 @@ class MongoCursor {
 
   /**
    * Specify the order you wiush to return sorted results.
-   * @param {Object} order 
+   * @param {Object} order
    * @returns This MongoCursor to allow chaining
    */
   sort(order) {
@@ -580,6 +578,30 @@ class MongoCursor {
     return this;
   }
 
+  /***
+   * Return a document with an explain plan for this operation
+   */
+  async explain(explainType) {
+    if (!(await this.mongoClient.connect()))
+      throw new Error(this.mongoClient.lastError);
+
+    if (this._cursorType == "FIND") {
+      const rval = await this.mongoClient.user.functions.explain_find(
+        this.dbName,
+        this.collName,
+        this._query,
+        this._projection,
+        this._limit,
+        this._skip,
+        this._sort,
+        explainType
+      );
+        console.log(rval)
+      return rval;
+    } else {
+      return NULL; //Aggregation TODO
+    }
+  }
   /**
    * Ignore the fist x records found, default is 0
    * @param {number} nToSkip
@@ -593,17 +615,16 @@ class MongoCursor {
   /**
    * Specify maximum number of documents to return.
    * Default is 30 and Maximum 10,000 in simulator
-   * 
-   * @param {number} nToReturn 
+   *
+   * @param {number} nToReturn
    * @returns This MongoCursor for chaining
    */
   limit(nToReturn) {
     if (nToReturn > 10000) nToReturn = 10000;
-    if (nToReturn < 0) nToReturn= 0;
+    if (nToReturn < 0) nToReturn = 0;
     this._limit = nToReturn;
     return this;
   }
-
 
   [Symbol.asyncIterator]() {
     let cursor = this;
@@ -650,16 +671,22 @@ class MongoCursor {
    * @returns Cursors
    */
 
-  async into(array){
-    if(!Array.isArray(array)) {
-      throw new Error("into requires an array like object")
+  async into(array) {
+    if (!Array.isArray(array)) {
+      throw new Error("into requires an array like object");
     }
-    array.size=0;
-    const results = await this.toArray();
 
-    array.push.apply(array,results);
+    if (this._exhausted) {
+      throw new Error("Cursor Exhausted");
+      return null;
+    } else {
+      array.size = 0;
+      const results = await this.toArray();
 
-    return this
+      array.push.apply(array, results);
+      this._exhausted = true;
+      return this;
+    }
   }
 
   /**
@@ -692,7 +719,6 @@ class MongoCursor {
   }
 
   async runFind() {
-  
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     this._results = await this.mongoClient.user.functions.find(

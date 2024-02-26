@@ -212,7 +212,7 @@ function saveCode() {
 
 function codeChangeHandler()
 {
-  console.log("Changed")
+
   data = _code.getValue();
   const getButton = document.getElementById("callServiceGET");
   const postButton = document.getElementById("callServicePOST");
