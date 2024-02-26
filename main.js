@@ -98,11 +98,11 @@ async function callService(method) {
     const endTime = Date.now();
 
     let renderOut = "";
-    let timeToShow = (endTime - startTime) - (MongoClient._serverLatency * MongoClient._nServerCalls);
+    let timeToShow = Math.floor((endTime - startTime) - (MongoClient._serverLatency * MongoClient._nServerCalls));
     if (timeToShow<1) timeToShow=1; 
     console.log(`Actual time ${endTime - startTime}, serverLatency ${MongoClient._serverLatency}, serverCalls: ${MongoClient._nServerCalls}`)
    
-    renderOut += `"Time taken": ${timeToShow}ms\n`
+    renderOut += `"ResponseTime": ${timeToShow}ms\n`
     if (cons0le.contents) {
       renderOut += "------- Console ----------\n";
       renderOut += cons0le.contents;
