@@ -102,10 +102,12 @@ class MongoClient {
       this.user.functions.t({ username: this.userName, example: exampleName }); // Ignore promise
       if (MongoClient._serverLatency == -1) {
         const startTime = Date.now();
+        for(let x=0;x<3;x++){
         await this.user.functions.ping();
+        }
         const endTime = Date.now();
 
-        MongoClient._serverLatency = endTime - startTime;
+        MongoClient._serverLatency = (endTime - startTime)/3;
         console.log("Server Latency for Emulator is " + MongoClient._serverLatency + "ms");
       }
 

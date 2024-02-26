@@ -9,7 +9,9 @@ async function callVirtualEndpoint(url, verb) {
 
   source = cleanCode(source);
   //Detect if code changed
-  codeChanged = oldCode != source;
+  if(codeChanged == false) {
+    codeChanged = oldCode != source;
+  }
   oldCode = source;
 
   if (codeChanged) {
