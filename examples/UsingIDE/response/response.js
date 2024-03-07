@@ -1,5 +1,5 @@
 // Simple serverless functions
-// get_XXXX or post_XXXX define Get and Post endpoints
+// get_XXXX or post_XXXX define GET and POST endpoints
 
 function get_Hello(req, res) {
   //HTTP Status code

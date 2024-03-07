@@ -3,7 +3,7 @@ let codeChanged;
 let _exampleName = []; //Examples used for different orgs
 let _saveFileName = null;
 
-const serviceHostname = "https://edee.mongo.com/";
+const serviceHostname = "https://edee.mongo.com/v1/";
 
 async function onLoad() {
 
