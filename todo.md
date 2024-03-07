@@ -1,5 +1,7 @@
 
 Make Examples consistent
+   declare variables with var 
+   
 Add Automated test for all examples
 Allow Save not just Download
 Add Transactions

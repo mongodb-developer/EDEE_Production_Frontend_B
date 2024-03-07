@@ -2,33 +2,30 @@ var mongoClient = null;
 var listingsCollection;
 
 // Challenge: Can you modify this to find the cheapest House 
-// in Canada with a pool? What suburb is it in?
+// in Canada with a pool (under amenities) ? What suburb is it in?
 
-// Hint - set projection to {} to see all the fields.
-
-async function get_Query(req, res) {
+async function get_PropertyDetails(req, res) {
   var query = {};
-  var projection = {};
 
-  projection.summary = true;
-  projection.beds = true;
-  projection.property_type = true;
-  projection["address.market"] = true;
-  projection.price = true;
-
+  
   // 5 Bedrooms or more in Turkey
-  query.beds = { $gt : 5 }; 
+  query.beds = { $gte : 5 }; 
   query["address.country"] = "Turkey";
 
+  var projection = { summary: true, beds: true,
+    property_type: true, "address.market": true, price: true};
+
+  // 1 and -1 or constants from driver
   var sortOrder = { price: -1 };
 
   var cursor = listingsCollection
     .find(query, projection)
     .limit(10)
     .sort(sortOrder);
-  var claims = await cursor.toArray();
+
+  var properties = await cursor.toArray();
   res.status(200);
-  res.send(claims);
+  res.send(properties);
 }
 
 async function initWebService() {

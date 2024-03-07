@@ -83,12 +83,12 @@ function cleanCode(sourcecode) {
 
   sourcecode = sourcecode.replaceAll("const ", "var  ");
   sourcecode = sourcecode.replaceAll("let ", "var ");
-  sourcecode = sourcecode.replaceAll("console", "cons0le");
-  sourcecode = sourcecode.replaceAll("System.out.println", "cons0le.log");
-  sourcecode = sourcecode.replaceAll("System.err.println", "cons0le.log");
-  sourcecode = sourcecode.replaceAll("logger.info", "cons0le.log");
-  sourcecode = sourcecode.replaceAll("logger.warn", "cons0le.log");
-  sourcecode = sourcecode.replaceAll("logger.debug", "cons0le.log");
+  sourcecode = sourcecode.replaceAll("console", "conso1e");
+  sourcecode = sourcecode.replaceAll("System.out.println", "conso1e.log");
+  sourcecode = sourcecode.replaceAll("System.err.println", "conso1e.log");
+  sourcecode = sourcecode.replaceAll("logger.info", "conso1e.log");
+  sourcecode = sourcecode.replaceAll("logger.warn", "conso1e.log");
+  sourcecode = sourcecode.replaceAll("logger.debug", "conso1e.log");
   const classAsVar = /^(?<=\s+)class\s+([A-Za-z0-9_]*)/mg;
   sourcecode = sourcecode.replace(classAsVar,"var $1 = class $1")
   sourcecode = MagicJava.JStoJava(sourcecode);
@@ -135,25 +135,25 @@ const system = {
   },
 };
 
-const cons0le = {
+const conso1e = {
   contents: "",
 
   log: function () {
     for (arg of arguments) {
       if (typeof arg === "string" || arg instanceof String) {
-        cons0le.contents += arg;
+        conso1e.contents += arg;
       } else {
-        cons0le.contents += EJSON.stringify(arg);
+        conso1e.contents += EJSON.stringify(arg);
       }
     }
   },
   error: function () {
-    cons0le.contents += "ERROR: "
+    conso1e.contents += "ERROR: "
     for (arg of arguments) {
       if (typeof arg === "string" || arg instanceof String) {
-        cons0le.contents += arg;
+        conso1e.contents += arg;
       } else {
-        cons0le.contents += EJSON.stringify(arg);
+        conso1e.contents += EJSON.stringify(arg);
       }
     }
   },

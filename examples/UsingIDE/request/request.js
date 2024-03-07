@@ -2,9 +2,9 @@
 // POST endpoint is passed the post data in body
 
 function post_Echo(req, res) {
-
+  // Request body (POST DATA) is a string.
   var bodyString = req.body;
-  // JSON, EJSON  or Document object can parse JSON data to object
+  // JSON, EJSON  or Document classes can parse JSON data to object
   var bodyObj = JSON.parse(bodyString);
   res.status(200);
   res.send({ echo: bodyObj });

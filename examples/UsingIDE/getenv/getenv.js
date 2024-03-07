@@ -1,12 +1,14 @@
 var some_value = 0;
 
-// fuctions that interact with UI or Database need to be
-// declared as async , calls as await
+// functions that interact with UI or Database need to be
+// declared as async and calls as await
 
-// getenv(X) will request a value for X the first time
+// getenv("name") retrieves an environment variable. The first time
+// you do so it will ask you to enter a value for it.
+//clearenv("name") deletes it.
 
 async function initWebService() {
-  await system.clearenv("SOME_VAR");
+  // system.clearenv("SOME_VAR");
   some_value = await system.getenv("SOME_VAR");
 }
 

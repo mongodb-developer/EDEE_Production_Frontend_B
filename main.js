@@ -9,7 +9,7 @@ async function onLoad() {
 
   // If we supplied an org name in the URL then write that to Localstorage
   const myURL = new URL(window.location);
-  console.log(myURL);
+
   if (myURL.searchParams && myURL.searchParams.get("org")) {
     localStorage.setItem("organization", myURL.searchParams.get("org"));
   }
@@ -22,7 +22,7 @@ async function onLoad() {
 
 
   var editor = ace.edit("editor");
-  editor.setTheme("ace/theme/cobalt");
+  editor.setTheme("ace/theme/monokai");
   editor.session.setMode("ace/mode/javascript");
   editor.setOptions({
     fontFamily: "Source Code Pro",
@@ -102,7 +102,7 @@ function messageBox(str) {
 }
 
 async function callService(method) {
-  cons0le.contents = "";
+  conso1e.contents = "";
   try {
     // loader.style.visibility = "visible";
     _output.setValue("",-1);
@@ -112,18 +112,19 @@ async function callService(method) {
     const response = await callVirtualEndpoint(fullURL, method);
     const endTime = Date.now();
 
-    let renderOut = "";
     let timeToShow = Math.floor((endTime - startTime) - (MongoClient._serverLatency * MongoClient._nServerCalls));
     if (timeToShow<1) timeToShow=1; 
-    console.log(`Actual time ${endTime - startTime}, serverLatency ${MongoClient._serverLatency}, serverCalls: ${MongoClient._nServerCalls}`)
    
-    renderOut += `"ResponseTime": ${timeToShow}ms\n`
-    if (cons0le.contents) {
-      renderOut += "------- Console ----------\n";
-      renderOut += cons0le.contents;
-      renderOut += "\n--------------------------\n\n";
+    let renderOut = "";
+
+    if (conso1e.contents) {
+      renderOut += "-------------------------- Console --------------------------\n";
+      renderOut += conso1e.contents;
+      renderOut += "\n-------------------------------------------------------------\n\n";
     }
-    
+    renderOut += `\n"ResponseTime": ${timeToShow}ms\n`
+
+
     renderOut += `"StatusCode": ${response._status}\n`;
     for (const key in response._headers) {
       renderOut += `"${key}": ${response._headers[key]}\n\n`;
@@ -151,7 +152,7 @@ async function callService(method) {
 
 async function loadTemplateCode(fname) {
   const parts = fname.split("_");
-  exampleName = parts;
+  _exampleName = parts;
   url = "examples/" + parts.join("/") + "/" + parts[parts.length - 1];
 
   let response = await fetch(`${url}.js`);
@@ -199,7 +200,7 @@ async function loadTemplateCode(fname) {
 // This can get more fancy over time if needs be
 async function showInfo(file)
 {
-  const url = "examples/" + parts.join("/") + "/";
+  const url = "examples/" + _exampleName.join("/") + "/";
   const response = await fetch(url + file);
   if (response.status == 200) {
     _output.setValue(r = await response.text(),-1)

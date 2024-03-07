@@ -7,13 +7,14 @@ const STATUS_NEW = "1 - New",
 // This service is a Task queue you call it to request a task be allocated to a user
 // You can add a new Task with post_Task and list them  with get_Task
 //
-// You need to add post_Assign?user=Name - which will find a one task and 
+// You need to add post_Assign?user=Name - which will find a one task and
 // assign it to that user, changing the status to STATUS_ASSIGNED.
 // A task can be assigned if it is NEW or has been Assigned for more than 1 minute (Abandoned)
 // Abandoned tasks must be allocated rather than new ones if any exist.
 
 async function post_Assign(req, res) {
-  (assignedTo = req.query.get("user")), (assignedTask = null);
+  var assignedTo = req.query.get("user");
+  var assignedTask = null;
   if (!assignedTo) {
     res.status(400);
     res.send({ error: "No user specified" });
@@ -25,6 +26,7 @@ async function post_Assign(req, res) {
   // Answer here you may need { $or : [ {query1}, {query2} ]}
 
   // findOneAndUpdate returns the document after updating
+  
   options = { returnNewDocument: true };
   assignedTask = await taskCollection.findOneAndUpdate(
     assignableTasks,
@@ -45,8 +47,7 @@ async function get_Task(req, res) {
 //Only add a view to the viewIp list if there are fewer than 8 things in the list already.
 
 async function post_Task(req, res) {
-  const description =
-    "This doesn't matter in this exercise but you would send it to the API";
+  const description = "Work needing done.";
   newTask = {
     date: new Date(),
     status: STATUS_NEW,

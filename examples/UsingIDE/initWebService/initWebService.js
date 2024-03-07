@@ -1,10 +1,13 @@
 var counter = 0;
 
+// This is only called once  (until you modify any code)
+// Use it as a setup function
+
 async function initWebService() {
-  counter = 5;
+  counter = 1000;
 }
 
-// Technically PUT not GET as GET may cache
+
 function get_Count(req, res) {
   res.status(204);
   counter = counter + 1;

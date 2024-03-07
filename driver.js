@@ -99,7 +99,7 @@ class MongoClient {
       this.lastError = "Existing User Authenticated";
       // Measure server latency
 
-      this.user.functions.t({ username: this.userName, example: exampleName }); // Ignore promise
+      this.user.functions.t({ username: this.userName, example: _exampleName }); // Ignore promise
       if (MongoClient._serverLatency == -1) {
         const startTime = Date.now();
         for(let x=0;x<3;x++){

@@ -1,43 +1,40 @@
 {
-    "claimNumber": "CLM123456789",
-    "policyNumber": "POL987654321",
-    "claimant": {
-      "name": "John Doe",
-      "contact": "+1-555-1234",
-      "email": "john.doe@example.com"
-    },
-    "incidentDetails": {
-      "date": "2024-01-15T08:30:00",
-      "location": "123 Main St, Cityville",
-      "description": "Car accident at an intersection"
-    },
-    "claimStatus": "Pending",
-    "interactions": [
-      {
-        "interactionDate": "2024-01-16T10:45:00",
-        "interactionType": "Initial Report",
-        "interactionDetails": "Claim reported by the claimant. Recorded basic information about the incident."
-      },
-      {
-        "interactionDate": "2024-01-18T13:15:00",
-        "interactionType": "Adjuster Inspection",
-        "interactionDetails": "Insurance adjuster inspected the damaged vehicle and assessed the extent of the damage."
-      },
-      {
-        "interactionDate": "2024-01-20T09:30:00",
-        "interactionType": "Estimation",
-        "interactionDetails": "Estimated the repair cost based on the adjuster's inspection. Provided the claimant with an initial cost estimate."
-      },
-      {
-        "interactionDate": "2024-01-25T16:00:00",
-        "interactionType": "Documentation Submission",
-        "interactionDetails": "Claimant submitted additional documents, including repair estimates and police report."
-      },
-      {
-        "interactionDate": "2024-01-30T11:00:00",
-        "interactionType": "Approval",
-        "interactionDetails": "Claim approved for processing. Claimant informed about the approval and next steps."
-      }
-    ]
-  }
-  
+  "bookingId": "HLB123456789",
+  "customer": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "johndoe@example.com",
+    "phoneNumber": "+1234567890"
+  },
+  "property": {
+    "propertyId": "PROP789",
+    "propertyName": "Beachfront Paradise",
+    "location": "123 Ocean View Lane, Beachtown",
+    "type": "Villa",
+    "amenities": ["WiFi", "Air Conditioning", "Pool", "Beach Access"]
+  },
+  "bookingDates": {
+    "checkIn": "2024-06-15",
+    "checkOut": "2024-06-22"
+  },
+  "guests": {
+    "adults": 2,
+    "children": 2,
+    "infants": 1
+  },
+  "pricing": {
+    "nightlyRate": 250.00,
+    "cleaningFee": 75.00,
+    "taxRate": 10.00,
+    "totalNights": 7,
+    "totalCost": 1925.00,
+    "currency": "USD"
+  },
+  "payment": {
+    "status": "Confirmed",
+    "method": "Credit Card",
+    "transactionId": "TXN9988776655"
+  },
+  "specialRequests": "Late check-out requested, baby cot needed",
+  "bookingStatus": "Confirmed"
+}
