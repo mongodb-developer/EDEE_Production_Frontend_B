@@ -1,40 +1,30 @@
 var mongoClient = null;
 var collection;
 
-// to do Facet search we need a new index that supports facets:
-// Here is that pre-created index JSON definition:
-
-// {
-//   "mappings": {
-//     "dynamic": true,
-//     "fields": {
-//       "address": {
-//         "fields": {
-//           "country": {  "type": "stringFacet" }
-//         },
-//         "type": "document"
-//       },
-//       "property_type": {
-//         "type": "stringFacet"
-//       }
-//     }
-//   }
-// }
 
 //Change to show countries
 
-async function get_AtlasSearch(req, res) {
-  var rval = {};
-
+async function get_AmenitiesByCountry(req, res) {
+  
+  //This field must be indexed as a facet
+  
+  var fieldToFacet = "address.country"; // "property_type"
+  
+  var amenity = req.params[3];
+  console.log("Seeing what countries have " + amenity)
+  
   searchOperation = [
     {
       $searchMeta: {
         index: "airbnbFacetIndex",
         facet: {
+         operator : {
+             text : { path: "amenities", query: amenity }
+          },
           facets: {
-            typeFacet: {
+            perCountry: {
               type: "string",
-              path: "property_type",
+              path: fieldToFacet,
             },
           },
         },
@@ -42,10 +32,10 @@ async function get_AtlasSearch(req, res) {
     },
   ];
 
-  searchResultsCursor = collection.aggregate(searchOperation);
-  rval.searchResult = await searchResultsCursor.toArray();
+  var searchResultsCursor = collection.aggregate(searchOperation);
+  var searchResult = await searchResultsCursor.toArray();
   res.status(201);
-  res.send(rval);
+  res.send(searchResult);
 }
 
 // Connect to MongoDB Atlas

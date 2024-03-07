@@ -4,27 +4,31 @@ var collection;
 // ℹ️ we use range to get rentals for a group of 5 to 10 people
 
 async function get_AtlasSearch(req, res) {
-  var rval = {};
-
   var path = "accommodates";
+  var maxPeople = 10;
+  var minPeople = 5;
 
-  searchOperation = {
+
+  var searchOperation = {
     $search: {
       range: {
         path: path,
-        gte: 5,
-        lte: 10,
+        gte: minPeople,
+        lte: maxPeople,
       },
     },
   };
 
-  //We use aggregations $project for $search
-  projection = { $project: { accommodates: 1, name: 1, "address.market": 1 } };
+  
+  var projection = { $project: { accommodates: 1, name: 1, "address.market": 1 } };
 
-  searchResultsCursor = collection.aggregate([searchOperation, projection]);
-  rval.searchResult = await searchResultsCursor.toArray();
+  // $search is used as the first stage to the $aggregate command
+  // We are using $project to remove some fields we don;t want
+
+  var searchResultsCursor = collection.aggregate([searchOperation, projection]);
+  var searchResult = await searchResultsCursor.toArray();
   res.status(201);
-  res.send(rval);
+  res.send(searchResult);
 }
 
 // Connect to MongoDB Atlas

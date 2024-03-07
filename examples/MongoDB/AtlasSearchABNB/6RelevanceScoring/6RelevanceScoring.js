@@ -4,53 +4,30 @@ var collection;
 // ℹ️ we can see the relevance score of each search
 
 async function get_AtlasSearch(req, res) {
-  var rval = {};
-
   var queryTerm = req.query.get("queryTerm");
 
-  var mustMatchQueryTerm = {
-    text: {
-      query: queryTerm,
-      path: "description",
-    },
-  };
+  var queryTermInDescription = { text: {query: queryTerm, path: "description" }};
+  var holds5To10 = {range: { path: "accommodates", gt: 5, lt: 10} };
 
-  var holds5To10 = {
-    range: {
-      path: "accommodates",
-      gt: 5,
-      lt: 10,
-    },
-  };
-
-  var searchOperation = {
-    $search: {
+  var searchOperation = { $search: {
       compound: {
-        must: [mustMatchQueryTerm], //All must be true
+        must: [queryTermInDescription], //All must be true
         should: [holds5To10], // One must be true
-      },
-    },
-  };
+      }
+  }};
 
   // Basic list of fields we want to see
-  fieldsToProject = {
-    accommodates: 1,
-    description: 1,
-    name: 1,
-    "address.market": 1,
-  };
+  var fieldsToProject = { accommodates: 1, description: 1, name: 1, "address.market": 1,  };
 
-  //Add $meta value to get the score
+  //Add $meta: "searchScore" to the projection get the score
   fieldsToProject.score = { $meta: "searchScore" };
 
-  projection = {
-    $project: fieldsToProject,
-  };
+  var projection = {  $project: fieldsToProject };
 
-  searchResultsCursor = collection.aggregate([searchOperation, projection]);
-  rval.searchResult = await searchResultsCursor.toArray();
+  var searchResultsCursor = collection.aggregate([searchOperation, projection]);
+  var searchResult = await searchResultsCursor.toArray();
   res.status(201);
-  res.send(rval);
+  res.send(searchResult);
 }
 
 // Connect to MongoDB Atlas

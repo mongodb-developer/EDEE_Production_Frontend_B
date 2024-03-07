@@ -4,29 +4,32 @@ var collection;
 // ℹ️ searching rentals, here we're just searching in the "summary" field of each document
 
 async function get_AtlasSearch(req, res) {
-  var rval = {};
-
   var queryTerm = req.query.get("queryTerm");
-
   var path = "summary"; // here we search just in one field
 
-  // ℹ️ if you want to seach in all fields at the same time, use the wildcard
+  // ℹ️ if you want to search in all fields rather than named fields
+  // you can use a wildcard
   // path = { wildcard : "* "}
 
-  searchOperation = [
-    {
-      $search: {
-        index: "default", // If default we dont explicitly need to specfy it
-        text: { query: queryTerm, path: path },
-      },
+  var searchOperation = {
+    $search: {
+      index: "default", // If default we don't explicitly need to specify it
+      text: { query: queryTerm, path: path },
     },
-  ];
+  };
 
-  searchResultsCursor = collection.aggregate(searchOperation);
-  rval.searchResult = await searchResultsCursor.toArray();
+  var projection = {
+    $project: {
+      amenities: false,  images: false, availability: false,
+      review_scores: false, host: false, reviews: false  },
+  };
+  // $search is used as the first stage to the $aggregate command
+  // We are using $project to remove some fields we don;t want
 
+  var searchResultsCursor = collection.aggregate([searchOperation, projection]);
+  var searchResult = await searchResultsCursor.toArray();
   res.status(201);
-  res.send(rval);
+  res.send(searchResult);
 }
 
 // Connect to MongoDB Atlas
@@ -35,7 +38,7 @@ async function initWebService() {
   var passWord = await system.getenv("MONGO_PASSWORD", true);
 
   mongoClient = new MongoClient(
-    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net",
+    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net"
   );
   collection = mongoClient
     .getDatabase("sample_airbnb")

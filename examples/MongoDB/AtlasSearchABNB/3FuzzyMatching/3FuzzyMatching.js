@@ -5,27 +5,34 @@ var collection;
 // try with: "niu york", "bouston", etc.
 
 async function get_AtlasSearch(req, res) {
-  var rval = {};
-
   var queryTerm = req.query.get("queryTerm");
   var path = { wildcard: "*" };
 
-  searchOperation = {
+  var searchOperation = {
     $search: {
       text: {
         query: queryTerm,
         path: path,
         fuzzy: {
           maxEdits: 2, //Allow for some changes
-        },
-      },
-    },
+        }
+      }
+    }
   };
 
-  searchResultsCursor = collection.aggregate([searchOperation]);
-  rval.searchResult = await searchResultsCursor.toArray();
+  var projection = {
+    $project: {
+      amenities: false,  images: false, availability: false,
+      review_scores: false, host: false, reviews: false  },
+  };
+
+  // $search is used as the first stage to the $aggregate command
+  // We are using $project to remove some fields we don;t want
+
+  var searchResultsCursor = collection.aggregate([searchOperation, projection]);
+  var searchResult = await searchResultsCursor.toArray();
   res.status(201);
-  res.send(rval);
+  res.send(searchResult);
 }
 
 // Connect to MongoDB Atlas
@@ -34,7 +41,7 @@ async function initWebService() {
   var passWord = await system.getenv("MONGO_PASSWORD", true);
 
   mongoClient = new MongoClient(
-    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net",
+    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net"
   );
   collection = mongoClient
     .getDatabase("sample_airbnb")

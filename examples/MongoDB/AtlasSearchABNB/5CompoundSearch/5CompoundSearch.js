@@ -1,14 +1,12 @@
 var mongoClient = null;
 var collection;
 
-// ℹ️ we can compound operators in a single search
+// ℹ️ we can use multiple operators in a single search with compound
 
 async function get_AtlasSearch(req, res) {
-  var rval = {};
-
   var queryTerm = req.query.get("queryTerm");
 
-  var mustMatchQueryTerm = {
+  var queryTermInDescription = {
     text: {
       query: queryTerm,
       path: "description",
@@ -18,24 +16,27 @@ async function get_AtlasSearch(req, res) {
   var holds5To10 = {
     range: {
       path: "accommodates",
-      gt: 5,
-      lt: 10,
+      gte: 5,
+      lte: 10,
     },
   };
 
   var searchOperation = {
     $search: {
       compound: {
-        must: [mustMatchQueryTerm], //All must be true
-        should: [holds5To10], // Optional - but adds to score
+        must: [queryTermInDescription], //All must be true
+        should: [holds5To10], // Optional - but adds to scoring, or can require N entries to match
       },
     },
   };
 
-  searchResultsCursor = collection.aggregate([searchOperation]);
-  rval.searchResult = await searchResultsCursor.toArray();
+  var projection = { $project: { accommodates: 1, name: 1, description: 1, "address.market": 1 } };
+
+
+  var searchResultsCursor = collection.aggregate([searchOperation,projection]);
+  var searchResult = await searchResultsCursor.toArray();
   res.status(201);
-  res.send(rval);
+  res.send(searchResult);
 }
 
 // Connect to MongoDB Atlas

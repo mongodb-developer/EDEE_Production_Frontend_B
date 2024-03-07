@@ -1,7 +1,7 @@
 // Create a Search Index
 
 var mongoClient = null;
-var collection;
+var listingsCollection;
 
 // ℹ️ create a Search Index - this will fail on sample_AirBNB as it's read only
 // But it already exists on the data.
@@ -16,14 +16,14 @@ async function post_AtlasSearch(req, res) {
 
   try {
     // delete the index if exists - will fail on Read only data
-    rval.drop = await collection.dropSearchIndex({ name: indexName });
+    rval.drop = await listingsCollection.dropSearchIndex({ name: indexName });
   } catch (e) {
     rval.drop = e.message;
   }
 
   try {
     // ℹ️ create the new Search index - will fail on Read only data
-    rval.index = await collection.createSearchIndex(indexName, indexDefinition);
+    rval.index = await listingsCollection.createSearchIndex(indexName, indexDefinition);
   } catch (e) {
     rval.index = e.message;
   }
@@ -37,7 +37,7 @@ async function post_AtlasSearch(req, res) {
 async function get_AtlasSearch(req, res) {
   var rval = {};
 
-  rval.searchIndexes = await collection.listSearchIndexes();
+  rval.searchIndexes = await listingsCollection.listSearchIndexes();
 
   res.status(201);
   res.send(rval);
@@ -51,7 +51,7 @@ async function initWebService() {
   mongoClient = new MongoClient(
     "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net",
   );
-  collection = mongoClient
+  listingsCollection = mongoClient
     .getDatabase("sample_airbnb")
     .getCollection("listingsAndReviews");
 }
