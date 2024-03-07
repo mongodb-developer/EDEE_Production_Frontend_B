@@ -3,9 +3,24 @@ let codeChanged;
 let _exampleName = []; //Examples used for different orgs
 let _saveFileName = null;
 
-const serviceHostname = "https://hostname:5500/service/";
+const serviceHostname = "https://edee.mongo.com/";
 
 async function onLoad() {
+
+  // If we supplied an org name in the URL then write that to Localstorage
+  const myURL = new URL(window.location);
+  console.log(myURL);
+  if (myURL.searchParams && myURL.searchParams.get("org")) {
+    localStorage.setItem("organization", myURL.searchParams.get("org"));
+  }
+  // If an org name is in LocalStorage then use it to set the examples page
+  // This lets us have different examples based on the last link you used with org
+
+  if( localStorage.getItem("organization") &&  document.getElementById("exampleLink")) {
+    document.getElementById("exampleLink").href = `examples/${localStorage.getItem("organization")}.html`
+  }
+
+
   var editor = ace.edit("editor");
   editor.setTheme("ace/theme/cobalt");
   editor.session.setMode("ace/mode/javascript");
@@ -39,7 +54,7 @@ async function onLoad() {
 
   // we can feed index.html with a different src file each time
   // we extract the code and put it in the code element
-  const myURL = new URL(window.location);
+
   if (myURL.searchParams && myURL.searchParams.get("src")) {
     await loadTemplateCode(myURL.searchParams.get("src"));
     if (myURL.searchParams.get("title")) {
