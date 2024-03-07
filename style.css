@@ -224,13 +224,14 @@ menu.a:active {
 
 }
 
+
 .path {
   display: inline-block;
   font-family: 'Source Code Pro', monospace;
   background: white;
   color: black;
   margin: 0em;
-
+  outline: 1px solid darkgray;
   padding: 0em;
 
 }
@@ -238,6 +239,7 @@ menu.a:active {
 .staticpath {
   margin-left: 1em;
   margin-right: 0em;
+  outline: 0px solid transparent;
 }
 
 .postdata {

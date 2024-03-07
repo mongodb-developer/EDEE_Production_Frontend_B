@@ -1,9 +1,10 @@
-// Simple serverless functions
+// Serverless web service hosting.
 // get_XXXX or post_XXXX define GET and POST endpoints
 
+// Both get passed a Request and a Response Object
+
 function get_Hello(req, res) {
-  //HTTP Status code
   res.status(200);
-  //Send takes a String or an Object
-  res.send({ msg: "Hello" });
+  res.send({ msg : "Hello " + req.query.get("name") 
+                      + " try looking at the examples."})
 }

@@ -1,47 +1,20 @@
 
-~~Add Sort~~
-~~Add dropCollection~~
-~~Add list Collections/Databases (client.listDatabaseNames())~~
-~~BSON Types~~
-~~add Drop database~~
-~~Add createIndex ~~
-~~EJSON support~~
-~~upsert!~~
-~~dropDatabase~~
-~~listIndexes~~
-~~dropIndex~~
-~~createSearchIndex~~
-~~listSearchIndexes~~
-~~dropSearchIndex~~
-~~expression builders for $gt,$lt etc~~
-~~findOneAndUpdate~~ /findOneAndDelete/FindOneAndReplace - not advised ususally.
-
-~~Documentation For Driver and Framework~~
-Possibly an 'Info' For each exercise
+Make Examples consistent
+Add Automated test for all examples
+Allow Save not just Download
+Add Transactions
+Review Driver return / exception format
+If possible make Endpoint a Dropdown (Parse code)
+Add Java type Helpers/Builders for QUery, Update, Etc
+Add POJO/POCO Examples? (SpringBoot examples?)
 
 
-
-__Docs and Examples__
-
-After MVP
+Backlog
 =====
 
-Strip out useACE
-Add a view Sample Data (Maybe custom buttons)
 
-Allow Save to anywhere ?
-Add Transaction Support
-Add explain()
 
-Pre-parse code (need to scope varaibles) - auto populate Get/Put and endpoints
-
-STANDARDISE FUNCTION RETURN - ERROR, OK - Explicit data ony from Commands
 Add 'Java' 'C#' and 'Python' support(Document - add Constructor, add/put/get,toJSON,parse)
-
-
-Java Version
-------------
-
 Remove await and async
 Add Filters and similar
 Add types
