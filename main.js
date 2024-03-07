@@ -22,7 +22,7 @@ async function onLoad() {
 
 
   var editor = ace.edit("editor");
-  editor.setTheme("ace/theme/monokai");
+  editor.setTheme("ace/theme/pastel_on_dark");
   editor.session.setMode("ace/mode/javascript");
   editor.setOptions({
     fontFamily: "Source Code Pro",
