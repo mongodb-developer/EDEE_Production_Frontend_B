@@ -1,39 +1,38 @@
 var mongoClient = null;
 var listingsCollection;
 
-// Create a dashboard showing each country with the top 3 markets (towns)
-// in that country ordered by number of properties
-// For each market show the number of beds and the average basic price per bed
-// Order the countries by the number of beds in those top three markets
 
 async function get_Dashboard(req, res) {
-  // Group by country and market
-  var groupByCountryAndMarket = {};
 
-  var pricePerBed = {};
+  // Change to Group by country + market(Town)
+  
+  var groupByCountryAndMarket = { $group: { _id : {}, total: {$count:{}} }};
 
-  // Group by country taking topN
+  // Compute 
+  var pricePerBed = { $set : {} };
 
-  var groupByCountry = {};
+  // Then Group by country taking $topN values
 
-  // Add a sum to sort by
+  var groupByCountry = { $group : {} };
 
-  var addSumOfBeds = {};
+  // Add a sum of beds to sort by
+
+  var addSumOfBeds = { $set: {} };
 
   // Sort by totalBeds
-  var sortByTotalBeds = {};
+  var sortByTotalBeds = { $sort : {} };
 
-  //Remove extra
+  //Remove extra fields and clean up output
 
-  var tidyUp = {};
+  var tidyUp = { $set: {} }; // or $project
 
   var pipeline = [
     groupByCountryAndMarket,
-    pricePerBed,
-    groupByCountry,
-    addSumOfBeds,
-    sortByTotalBeds,
-    tidyUp,
+    // pricePerBed,
+    // groupByCountry,
+    // addSumOfBeds,
+    // sortByTotalBeds,
+    // tidyUp,
   ];
 
   var cursor = listingsCollection.aggregate(pipeline);

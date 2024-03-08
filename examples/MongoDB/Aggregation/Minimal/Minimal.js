@@ -1,7 +1,10 @@
 var mongoClient = null;
 var listingsCollection;
 
-// Find which countries have the largest number of beds per room
+// Properties in the USA with a pool most expensive first.
+// $match, $sort and $project stages are the same as a find()
+// In this case aggregation isn't needed but you might start
+// with a $match for a more useful aggregation.
 
 async function get_Properties(req, res) {
   var query = { "address.country": "United States", amenities: "Pool" };

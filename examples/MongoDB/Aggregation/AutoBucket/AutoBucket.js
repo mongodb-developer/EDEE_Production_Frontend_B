@@ -1,23 +1,28 @@
 var mongoClient = null;
 var listingsCollection;
 
-// Find out what Cheap, Medium and Expensive AirBNB means
+// Find out what Cheap, Medium and Expensive means in 
+// Terms of AyrBNB Prices - compute the price for 3 days
+// Add a cleaning fee then break into 3 categories
 
 async function get_Cohorts(req, res) {
   // Calculate the total price for 3 nights
   var priceFor3Days = { $add: ["$cleaning_fee", { $multiply: ["$price", 3] }] };
 
-  var output = {};
-  output.totalProperties = { $count: {} };
-  output.averageBeds = { $avg: "$beds" };
-
-  output.totalWithPool = {
+  var outputSpec = {};
+  outputSpec.totalProperties = { $count: {} };
+  outputSpec.averageBeds = { $avg: "$beds" };
+  outputSpec.totalWithPool = {
     $sum: { $cond: { if: { $in: ["Pool", "$amenities"] }, then: 1, else: 0 } },
   };
+  outputSpec.medianPrice = { $median:  {input: priceFor3Days, method: "approximate" }};
 
-  var cohortDefinition = { groupBy: priceFor3Days, buckets: 3, output: output };
+  // 3 Groups, Based on price, output as specified.
+  var cohortDefinition = { groupBy: priceFor3Days, buckets: 3, output: outputSpec };
 
   var bucketAutoStage = { $bucketAuto: cohortDefinition };
+
+  // For each cohort , compute the percentage that have a pool
 
   percentWithPool = {
     $set: {
@@ -27,7 +32,8 @@ async function get_Cohorts(req, res) {
     },
   };
 
-  var renameId = { $set: { price: "$_id", _id: "$$REMOVE" } };
+  // Rename the groupBy _id field to priceRange
+  var renameId = { $set: { priceRange: "$_id", _id: "$$REMOVE" } };
   var pipeline = [bucketAutoStage, percentWithPool, renameId];
 
   var cursor = listingsCollection.aggregate(pipeline);

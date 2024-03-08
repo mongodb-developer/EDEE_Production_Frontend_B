@@ -4,18 +4,23 @@ var listingsCollection;
 // Find which countries have the largest number of beds per room
 
 async function get_Countries(req, res) {
-  groupBy = { _id: "$address.country" };
-  groupBy.nProperties = { $count: {} };
-  groupBy.totalBeds = { $sum: "$beds" };
-  groupBy.totalRooms = { $sum: "$bedrooms" };
-  groupStage = { $group: groupBy };
 
-  // Add Ave Bedds per Room after grouping
+  groupOp = {}
+  groupOp._id =  "$address.country" ; // _id is the expression to GROUP BY
+  groupOp.nProperties = { $count: {} };
+  groupOp.totalBeds = { $sum: "$beds" };
+  groupOp.totalRooms = { $sum: "$bedrooms" };
+
+  groupStage = { $group: groupOp };
+
+  // Add average beds per room field after grouping
   bedsPerRoomStage = {
     $set: { bedsPerRoom: { $divide: ["$totalBeds", "$totalRooms"] } },
   };
 
+  // Sort by that virtual field
   sortByBedsPerRoom = { $sort: { bedsPerRoom: -1 } };
+
   getTop5 = { $limit: 5 };
 
   var pipeline = [groupStage, bedsPerRoomStage, sortByBedsPerRoom, getTop5];

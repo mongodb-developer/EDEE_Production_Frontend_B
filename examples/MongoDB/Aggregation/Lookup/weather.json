@@ -1,0 +1,147 @@
+
+{
+    "_id": "Montreal",
+    "st": "x+48300-070800",
+    "ts": "2024-01-23T10:00:26.132Z",
+    "position": {
+      "type": "Point",
+      "coordinates": [
+        -70.8,
+        48.3
+      ]
+    },
+    "elevation": 9999,
+    "callLetters": "CGSB",
+    "qualityControlProcess": "V020",
+    "dataSource": "4",
+    "type": "FM-13",
+    "airTemperature": {
+      "value": -4.3,
+      "quality": "1"
+    },
+    "dewPoint": {
+      "value": 999.9,
+      "quality": "9"
+    },
+    "pressure": {
+      "value": 1001.4,
+      "quality": "1"
+    },
+    "wind": {
+      "direction": {
+        "angle": 60,
+        "quality": "1"
+      },
+      "type": "N",
+      "speed": {
+        "rate": 3.6,
+        "quality": "1"
+      }
+    },
+    "visibility": {
+      "distance": {
+        "value": 2000,
+        "quality": "1"
+      },
+      "variability": {
+        "value": "N",
+        "quality": "9"
+      }
+    },
+    "skyCondition": {
+      "ceilingHeight": {
+        "value": 420,
+        "quality": "1",
+        "determination": "C"
+      },
+      "cavok": "N"
+    },
+    "sections": [
+      "AG1",
+      "AY1",
+      "GF1",
+      "MD1",
+      "MW1",
+      "UA1"
+    ],
+    "precipitationEstimatedObservation": {
+      "discrepancy": "2",
+      "estimatedWaterDepth": 1
+    },
+    "pastWeatherObservationManual": [
+      {
+        "atmosphericCondition": {
+          "value": "7",
+          "quality": "1"
+        },
+        "period": {
+          "value": 6,
+          "quality": "1"
+        }
+      }
+    ],
+    "skyConditionObservation": {
+      "totalCoverage": {
+        "value": "08",
+        "opaque": "99",
+        "quality": "1"
+      },
+      "lowestCloudCoverage": {
+        "value": "08",
+        "quality": "1"
+      },
+      "lowCloudGenus": {
+        "value": "05",
+        "quality": "1"
+      },
+      "lowestCloudBaseHeight": {
+        "value": 450,
+        "quality": "1"
+      },
+      "midCloudGenus": {
+        "value": "99",
+        "quality": "9"
+      },
+      "highCloudGenus": {
+        "value": "99",
+        "quality": "9"
+      }
+    },
+    "atmosphericPressureChange": {
+      "tendency": {
+        "code": "6",
+        "quality": "1"
+      },
+      "quantity3Hours": {
+        "value": 1.4,
+        "quality": "1"
+      },
+      "quantity24Hours": {
+        "value": 99.9,
+        "quality": "9"
+      }
+    },
+    "presentWeatherObservationManual": [
+      {
+        "condition": "71",
+        "quality": "1"
+      }
+    ],
+    "waveMeasurement": {
+      "method": "I",
+      "waves": {
+        "period": 1,
+        "height": 4,
+        "quality": "9"
+      },
+      "seaState": {
+        "code": "99",
+        "quality": "9"
+      }
+    },
+    "distance": 375307.1155619597,
+    "location": [
+      -73.59111,
+      45.51889
+    ]
+  }

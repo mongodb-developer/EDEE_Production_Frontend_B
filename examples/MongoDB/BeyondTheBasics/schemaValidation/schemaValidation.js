@@ -1,6 +1,24 @@
 var mongoClient = null;
 var sales;
 
+// Try editing both the schema definition or the data and see how
+// writes fail if they don't match. 
+// This code is using JSON.parse rather then EJSON.parse or Document.parse()
+// So there is no way to express most data types - thus the code that converts
+// the date to an Explicit Date object
+
+properties = {};
+properties._id = { bsonType: "objectId" };
+properties.quantity = { bsonType: "int", minimum: 1 };
+properties.price = { bsonType: "double" };
+properties.date = { bsonType: "date" };
+jsonSchema = {
+  bsonType: "object",
+  required: ["_id", "quantity", "price", "date"],
+  properties: properties,
+};
+
+
 //Post the data -  If it doesn't match the description it will fail.
 async function post_Data(req, res) {
   doc = JSON.parse(req.body);
@@ -35,18 +53,6 @@ async function initWebService() {
   //Ignore failure if it already exists
 
   await sales.drop();
-
-  properties = {};
-  properties._id = { bsonType: "objectId" };
-  properties.quantity = { bsonType: "int", minimum: 1 };
-  properties.price = { bsonType: "double" };
-  properties.date = { bsonType: "date" };
-  jsonSchema = {
-    bsonType: "object",
-    required: ["_id", "quantity", "price", "date"],
-    properties: properties,
-  };
   validatorSpec = { $jsonSchema: jsonSchema };
-
   rval = await db.createCollection("sales", { validator: validatorSpec });
 }

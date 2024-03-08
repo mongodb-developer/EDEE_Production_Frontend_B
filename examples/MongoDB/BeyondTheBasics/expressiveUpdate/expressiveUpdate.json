@@ -1,42 +1,42 @@
 [
-    {
-      "name": "Machine1",
-      "measurements": [85, 92, 76, 68, 94, 79, 88, 72, 90, 81]
-    },
-    {
-      "name": "Machine2",
-      "measurements": [97, 55, 89, 78, 63, 91, 72, 84, 99, 60]
-    },
-    {
-      "name": "Machine3",
-      "measurements": [73, 88, 96, 52, 67, 81, 94, 79, 65, 70]
-    },
-    {
-      "name": "Machine4",
-      "measurements": [60, 85, 72, 94, 78, 91, 88, 57, 63, 99]
-    },
-    {
-      "name": "Machine5",
-      "measurements": [76, 90, 82, 69, 97, 54, 83, 72, 88, 95]
-    },
-    {
-      "name": "Machine6",
-      "measurements": [92, 75, 68, 87, 59, 80, 96, 63, 71, 84]
-    },
-    {
-      "name": "Machine7",
-      "measurements": [55, 82, 77, 94, 61, 89, 73, 68, 96, 80]
-    },
-    {
-      "name": "Machine8",
-      "measurements": [79, 94, 68, 87, 75, 59, 82, 96, 70, 88]
-    },
-    {
-      "name": "Machine9",
-      "measurements": [87, 61, 94, 78, 83, 70, 92, 55, 99, 74]
-    },
-    {
-      "name": "Machine10",
-      "measurements": [69, 80, 92, 57, 84, 76, 63, 95, 71, 88]
-    }
-  ]
+  {
+    "name": "New York",
+    "average_temperatures": [0, 1, 5, 11, 16, 21, 24, 23, 19, 14, 8, 3]
+  },
+  {
+    "name": "Los Angeles",
+    "average_temperatures": [14, 15, 15, 17, 18, 20, 22, 22, 21, 19, 16, 14]
+  },
+  {
+    "name": "London",
+    "average_temperatures": [4, 5, 7, 9, 13, 16, 18, 18, 15, 11, 7, 5]
+  },
+  {
+    "name": "Paris",
+    "average_temperatures": [5, 6, 9, 11, 15, 18, 20, 20, 17, 13, 9, 6]
+  },
+  {
+    "name": "Moscow",
+    "average_temperatures": [-6, -6, 0, 6, 13, 17, 19, 17, 12, 6, 0, -3]
+  },
+  {
+    "name": "Tokyo",
+    "average_temperatures": [5, 6, 9, 14, 19, 22, 25, 27, 23, 18, 12, 7]
+  },
+  {
+    "name": "Sydney",
+    "average_temperatures": [23, 23, 21, 19, 16, 13, 12, 13, 15, 18, 20, 22]
+  },
+  {
+    "name": "Cape Town",
+    "average_temperatures": [20, 20, 19, 16, 14, 12, 11, 12, 14, 16, 18, 20]
+  },
+  {
+    "name": "Cairo",
+    "average_temperatures": [14, 15, 17, 20, 23, 26, 28, 28, 26, 23, 20, 16]
+  },
+  {
+    "name": "São Paulo",
+    "average_temperatures": [22, 22, 21, 19, 16, 14, 14, 15, 17, 19, 20, 22]
+  }
+]

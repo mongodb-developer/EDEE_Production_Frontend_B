@@ -13,8 +13,8 @@ async function post_Sequence(req, res) {
   var options = { upsert: true, returnNewDocument: true };
 
   // Use findOneAndUpdate to Update and Get the before or after record
-  // If you duid update() then find() you might get a race condition and
-  // See it after another user has changed it again
+  // If you did update() then find() you might get a race condition and
+  // See value after another user has changed it again
 
   var rval = await sequenceCollection.findOneAndUpdate(
     query,

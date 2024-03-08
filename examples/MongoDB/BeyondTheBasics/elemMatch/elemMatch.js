@@ -4,13 +4,16 @@ var arrayExample;
 async function get_Data(req, res) {
   var query = {};
 
-  // WE WANT DOCUMENTS WITH SMALL CIRCLES
+  // WE WANT TO FETCH RECORDS WITH "SMALL CIRCLES"
 
-  // Uncomment to try
-  // query.components = { shape: "circle", size: "small" }; // Incorrect as not exact match
-  // query.components  = {$elemMatch: { shape: "circle", size: "small" }} ; //Correct - look for element
+  // Incorrect as this is matching whole object and none of the array elements match this
+  // query.components = { shape: "circle", size: "small" };
 
-  query = { "components.shape": "circle", "components.size": "large" }; // Returns circles if anything is small
+  // Correct - Match is an element matches the sub query
+  // query.components  = {$elemMatch: { shape: "circle", size: "small" }} ;
+
+  // Incorrect returns  record if any component is a circle and any is small
+  query = { "components.shape": "circle", "components.size": "large" };
 
   var result = await arrayExample.find(query).toArray();
   res.status(200);
@@ -18,9 +21,8 @@ async function get_Data(req, res) {
 }
 
 async function post_Data(req, res) {
-
-  nDocs = await arrayExample.countDocuments()
-  if (! nDocs ) {
+  nDocs = await arrayExample.countDocuments();
+  if (!nDocs) {
     docs = JSON.parse(req.body);
     rval = await arrayExample.insertMany(docs);
     res.status(201);
@@ -35,7 +37,7 @@ async function initWebService() {
   var userName = await system.getenv("MONGO_USERNAME");
   var passWord = await system.getenv("MONGO_PASSWORD", true);
   mongoClient = new MongoClient(
-    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net",
+    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net"
   );
   arrayExample = mongoClient.getDatabase("examples").getCollection("arrays");
 }

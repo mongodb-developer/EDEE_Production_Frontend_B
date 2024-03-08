@@ -4,12 +4,13 @@ var arrayExample;
 async function get_Data(req, res) {
   var query = {};
 
-  // WE WANT DOCUMENTS WITH SMALL CIRCLES
+  // Select document that have small circles
   specification = { shape: "circle", size: "small" };
   query.components = { $elemMatch: specification }; //Correct - look for element
 
   // Use an expression to project just those
-  // $elemMatch doesn't exist as an expression, have to use $filter
+  // $elemMatch doesn't exist as an expression,
+  // have to use $filter to make it only return the small circles
 
   smallCircles = {
     $and: [

@@ -435,7 +435,7 @@ class MongoCollection {
       1,
       0
     );
-    console.log(rval);
+    if(rval.error) throw new Error(rval.error);
     if (rval.result && rval.result.length > 0) return rval.result[0];
     return null;
   }

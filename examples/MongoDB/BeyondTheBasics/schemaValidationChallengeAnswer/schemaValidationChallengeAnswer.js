@@ -1,8 +1,24 @@
 var mongoClient = null;
 var sales;
 
-/* CHALLENGE: Make it so document must contain a total equal to quantity times price */
-/* Not having the field, or the wrong value will fail */
+properties = {};
+properties._id = { bsonType: "objectId" };
+properties.quantity = { bsonType: "int", minimum: 1 };
+properties.price = { bsonType: "double" };
+properties.total = { bsonType: "double" };
+properties.date = { bsonType: "date" };
+jsonSchema = {
+  bsonType: "object",
+  required: ["_id", "quantity", "price", "date", "total"],
+  properties: properties,
+};
+
+// This is the ANSWER part
+
+calcTotal = { $multiply: ["$price", "$quantity"] };
+checkTotal = { $eq: ["$total", calcTotal] };
+validatorSpec = { $jsonSchema: jsonSchema, $expr: checkTotal };
+
 
 //Post the data -  If it doesn't match the description it will fail.
 async function post_Data(req, res) {
@@ -32,27 +48,6 @@ async function initWebService() {
 
   db = mongoClient.getDatabase("examples");
   sales = db.getCollection("sales");
-
-  //Create the collection and apply validation
-  //Ignore failure if it already exists
-
   await sales.drop();
-
-  properties = {};
-  properties._id = { bsonType: "objectId" };
-  properties.quantity = { bsonType: "int", minimum: 1 };
-  properties.price = { bsonType: "double" };
-  properties.total = { bsonType: "double" };
-  properties.date = { bsonType: "date" };
-  jsonSchema = {
-    bsonType: "object",
-    required: ["_id", "quantity", "price", "date", "total"],
-    properties: properties,
-  };
-
-  calcTotal = { $multiply: ["$price", "$quantity"] };
-  checkTotal = { $eq: ["$total", calcTotal] };
-  validatorSpec = { $jsonSchema: jsonSchema, $expr: checkTotal };
-
   rval = await db.createCollection("sales", { validator: validatorSpec });
 }
