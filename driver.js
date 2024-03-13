@@ -352,7 +352,7 @@ class MongoCollection {
       this.dbName,
       this.collName
     );
-    return { ok: 1 };
+    return rval;
   }
   /**
    * Add a single Document (Object) to this collection.
