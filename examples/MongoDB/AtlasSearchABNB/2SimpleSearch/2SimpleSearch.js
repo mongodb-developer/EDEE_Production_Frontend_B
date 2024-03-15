@@ -9,7 +9,7 @@ async function get_AtlasSearch(req, res) {
 
   // ℹ️ if you want to search in all fields rather than named fields
   // you can use a wildcard
-  // path = { wildcard : "* "}
+  // path = { wildcard : "*"}
 
   var searchOperation = {
     $search: {
