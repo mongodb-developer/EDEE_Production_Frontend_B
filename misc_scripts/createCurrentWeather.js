@@ -20,8 +20,11 @@ var lookupPipeline = [
   { $limit: 1 },
 ];
 
+
 // db.listingsAndReviews.aggregate([groupByMarket])
 var db = db.getSiblingDB("sample_weatherdata");
+db.data.createIndex({position:"2dsphere"})
+db
 var lookupWeather = {
   $lookup: {
     from: "data",
