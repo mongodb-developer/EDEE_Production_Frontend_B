@@ -13,6 +13,9 @@
  * the server and will automatically manage failover if a server is unavailable.
  */
 class MongoClient {
+  toJSON() {
+    return { user: this.userName };
+  }
 
   static _serverLatency = -1;
   static _nServerCalls = 0;
@@ -33,6 +36,18 @@ class MongoClient {
       this.userName = getCreds[1];
       this.passWord = getCreds[2];
     }
+  }
+
+  /**
+   * Starts a new Causually Consistent session on the server and returns the handle
+   */
+
+  async startSession() {
+    if (!(await this.connect())) throw new Error(this.lastError);
+    const rval = await this.user.functions.startSession();
+    MongoClient._nServerCalls++;
+    //TODO - handle error better
+    return new ClientSession(rval.result, this);
   }
 
   /**
@@ -75,12 +90,14 @@ class MongoClient {
     //TODO error message
     if (this.userName == null || !this.passWord == null) {
       this.lastError = "Invalid Credentials Supplied";
+      delete this.passWord;
       return false;
     }
 
     if (this.userName.length < 6 || this.passWord.length < 6) {
       localStorage.clear();
       oldCode = null; //Redo initWebService
+      delete this.passWord;
       throw new Error(
         "Usernames and Passwords must both be at least 6 characters long"
       );
@@ -88,7 +105,7 @@ class MongoClient {
 
     //This is weirdly critical as JSFiddle clears the session cookies each time
     //So anonymous users aren't retained we also want to be able to get back to our data
-    const realmApp = new Realm.App({ id: __atlasappid  });
+    const realmApp = new Realm.App({ id: __atlasappid });
     const credential = Realm.Credentials.emailPassword(
       this.userName,
       this.passWord
@@ -97,25 +114,33 @@ class MongoClient {
       this.user = await realmApp.logIn(credential);
       MongoClient._nServerCalls++;
       this.lastError = "Existing User Authenticated";
+      delete this.passWord;
       // Measure server latency
-      const event = localStorage.getItem("organization") 
-      this.user.functions.t({ username: this.userName, example: _exampleName , event , site: __hostingsite}); // Ignore promise
+      const event = localStorage.getItem("organization");
+      this.user.functions.t({
+        username: this.userName,
+        example: _exampleName,
+        event,
+        site: __hostingsite,
+      }); // Ignore promise
       if (MongoClient._serverLatency == -1) {
         const startTime = Date.now();
-        for(let x=0;x<3;x++){
-        await this.user.functions.ping();
+        for (let x = 0; x < 3; x++) {
+          await this.user.functions.ping();
         }
         const endTime = Date.now();
 
-        MongoClient._serverLatency = (endTime - startTime)/3;
-        console.log("Server Latency for Emulator is " + MongoClient._serverLatency + "ms");
+        MongoClient._serverLatency = (endTime - startTime) / 3;
+        console.log(
+          "Server Latency for Emulator is " + MongoClient._serverLatency + "ms"
+        );
       }
 
       this.connected = true;
       return true;
     } catch (e) {
       console.log(e);
-      //On error try to regiuster as new user
+      //On error try to register as new user
       try {
         const deets = { email: this.userName, password: this.passWord };
         await realmApp.emailPasswordAuth.registerUser(deets);
@@ -123,10 +148,12 @@ class MongoClient {
         this.user = await realmApp.logIn(credential);
         this.lastError = "New User Created";
         this.connected = true;
+        delete this.passWord;
         return true;
       } catch (e) {
         this.lastError =
           "MongoDB Authentication fail: User exists but incorrect password";
+        delete this.passWord;
         localStorage.clear();
         codeChanged = true;
         return false;
@@ -341,7 +368,7 @@ class MongoCollection {
     return rval.cursor?.firstBatch;
   }
   /**
-   * Drop this colleciton and all non search indexes
+   * Drop this collection and all non search indexes
    * @returns Object showing success or failure
    */
   async drop() {
@@ -354,25 +381,37 @@ class MongoCollection {
     );
     return rval;
   }
+
+
+
   /**
    * Add a single Document (Object) to this collection.
    * @param {Object} document
-   * @returns Object showing sucess or failure and the primary key (_id) of the object added.
+   * @returns Object showing success or failure and the primary key (_id) of the object added.
    */
-  async insertOne(document) {
+  async insertOne(clientSession, document) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     MongoClient._nServerCalls++;
-    const rval = await this.mongoClient.user.functions.insert(
+    let rval = { error: " Unknown Error" };
+
+    if (clientSession instanceof ClientSession == false) {
+        document = clientSession; // We only had a documents
+        clientSession = null;
+        console.log("Insert without transaction")
+    }
+
+    rval = await this.mongoClient.user.functions.insert(
       this.dbName,
       this.collName,
-      [document]
+      [document],
+      clientSession?.sessionId
     );
 
+    console.log(rval);
+
     if (rval.error) {
-      let firstBracket = rval.error.indexOf("{");
-      let error = rval.error.substring(firstBracket, rval.error.length - 1);
-      throw new Error(JSON.stringify(EJSON.parse(error), null, 2));
+      throw new Error(rval.error);
     }
 
     return rval;
@@ -380,17 +419,24 @@ class MongoCollection {
   /**
    * Add multiple Documents (Objects) to this collection.
    * @param {Object[]} document
-   * @returns Object showing sucess or failure and the primary keys (_id) of all the object added.
+   * @returns Object showing success or failure and the primary keys (_id) of all the object added.
    */
 
-  async insertMany(documents) {
+  async insertMany(clientSession, documents) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     MongoClient._nServerCalls++;
+
+    if (clientSession instanceof ClientSession == false) {
+        documents = clientSession;
+        clientSession = null
+    }
+
     const rval = await this.mongoClient.user.functions.insert(
       this.dbName,
       this.collName,
-      documents
+      documents,
+      clientSession?.sessionId
     );
     return rval;
   }
@@ -402,12 +448,20 @@ class MongoCollection {
    * @param {Object} projection
    * @returns MongoCursor - used to access the results
    */
-  find(query, projection) {
+  find( findSession, query, projection) {
+
+    if (findSession instanceof ClientSession == false) {
+      projection = query
+      query = findSession;
+      findSession = null
+  }
+
     const findCursor = new MongoCursor(
       "FIND",
       this.mongoClient,
       this.dbName,
-      this.collName
+      this.collName,
+      findSession
     );
     if (this.explainer != null) {
       findCursor.explainer = this.explainer;
@@ -427,6 +481,7 @@ class MongoCollection {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     MongoClient._nServerCalls++;
+
     const rval = await this.mongoClient.user.functions.find(
       this.dbName,
       this.collName,
@@ -435,7 +490,7 @@ class MongoCollection {
       1,
       0
     );
-    if(rval.error) throw new Error(rval.error);
+    if (rval.error) throw new Error(rval.error);
     if (rval.result && rval.result.length > 0) return rval.result[0];
     return null;
   }
@@ -583,11 +638,12 @@ class MongoCollection {
  * parameters before itterating over them or retrieving them as an array
  */
 class MongoCursor {
-  constructor(cursorType, mongoClient, dbName, collName) {
+  constructor(cursorType, mongoClient, dbName, collName,findSession) {
     this._cursorType = cursorType;
     this.collName = collName;
     this.dbName = dbName;
     this.mongoClient = mongoClient;
+    this._clientSession = findSession;
     this._limit = 30;
     this._skip = 0;
     this._query = undefined;
@@ -766,7 +822,8 @@ class MongoCursor {
       this._projection,
       this._limit,
       this._skip,
-      this._sort
+      this._sort,
+      this._clientSession?.sessionId
     );
 
     this._position = 0;
@@ -785,4 +842,34 @@ class MongoCursor {
 
     this._position = 0;
   }
+}
+
+class ClientSession {
+
+  constructor(id, sessionMongoClient) {
+    this.sessionId = id;
+    this.sessionMongoClient = sessionMongoClient;
+  }
+
+  async startTransaction() {
+    // Unlike a real driver we have to call the server as that's where the real session is
+    const rval = await this.sessionMongoClient.user.functions.startTransaction(this.sessionId.id);
+    if (rval.result.error) { throw new Error(EJSON.stringify(rval.result)) }
+    return rval.result;
+  }
+
+  async commitTransaction() {
+    // Unlike a real driver we have to call the server as that's where the real session is
+    const rval = await this.sessionMongoClient.user.functions.endTransaction(this.sessionId.id, true);
+    if (rval.result.error) { throw new Error(EJSON.stringify(rval.result)) }
+    return rval.result;
+  }
+
+  async abortTransaction() {
+    // Unlike a real driver we have to call the server as that's where the real session is
+    const rval = await this.sessionMongoClient.user.functions.endTransaction(this.sessionId.id, false);
+    if (rval.result.error) { throw new Error(EJSON.stringify(rval.result)) }
+    return rval.result;
+  }
+
 }

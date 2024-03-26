@@ -53,12 +53,11 @@ async function callVirtualEndpoint(url, verb) {
   const fName = `${verb.toLowerCase()}_${req.params[2]}`;
   if (window[fName]) {
     try {
-      //TODO dont call if code not modified
+      //TODO don't call if code not modified
       if (codeChanged) {
         await window.initWebService?.(); // We are doing this each time although we wouldn't
         codeChanged = false;
       }
-
       await window[fName](req, res);
     } catch (e) {
       res.status(500);
@@ -112,8 +111,7 @@ const system = {
     let rval = localStorage.getItem(name);
     if (rval == null || rval == undefined) {
       rval = await modal.prompt(
-        `This is stored in the browser so 
-            DO NOT ENTER A REAL PASSWORD.`,
+        secure?`This password is stored in your browser. IMPORTANT: do not use a password you use for other sites.`:``,
         `Please enter a value for "${name}".`,
         secure
       );
