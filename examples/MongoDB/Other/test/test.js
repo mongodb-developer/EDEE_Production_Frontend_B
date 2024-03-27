@@ -21,16 +21,19 @@ async function post_Test(req, res) {
    let _id = 1;
   rval = {}
   try {
+    //If you drop a collection with an open transaction you need to wait for timeout
+    //We want to leave transactions open though and we cannot know what to drop easily
     rval.drop = await collection.drop()
     rval.insertOne = await collection.insertOne({ _id: _id++, msg: "Outside Transaction" })
     
     rval.insertMany = await collection.insertMany([{ _id: _id++, msg: "Outside Transaction" }, { _id: _id++, msg: "Outside Transaction" },{ _id: _id++, msg: "Outside Transaction" }])
-    rval.deleteOne = await collection.deleteOne({_id:1});
+    //rval.deleteOne = await collection.deleteOne({_id:1});
     clientSession = await mongoClient.startSession();
     clientSession.startTransaction(); //Does not need to call server so can be not async
-/*
+
     rval.insertOneTX = await collection.insertOne(clientSession, { _id: _id++, name: "In Txn" })
-    rval.insertOne = await collection.insertOne({ _id: _id++, msg: "Outside Transaction" })
+
+    /* rval.insertOne = await collection.insertOne({ _id: _id++, msg: "Outside Transaction" })
     
     rval.insertManyTX = await collection.insertMany(clientSession, [{ _id: _id++, name: "In Txn" }, { _id: _id++, name: "In Txn" }])
 
@@ -48,15 +51,17 @@ async function post_Test(req, res) {
     rval.deleteOneTX  = await collection.deleteOne(clientSession,{_id:2} );
     rval.deleteManyTX = await collection.deleteMany(clientSession,{});
     */
-    rval.findOneUpdate = await collection.findOneAndUpdate(clientSession,{_id:2},{$set:{findAndModify:true}},{returnNewDocument:true})
-
+    //     rval.findOneUpdate = await collection.findOneAndUpdate(clientSession,{_id:2},{$set:{findAndModify:true}},{returnNewDocument:true})
+    rval.agg = await collection.aggregate([]).toArray()
+    rval.aggTX = await collection.aggregate(clientSession,[]).toArray()
+    
     //Find outside transaction before commit
-    rval.find = await collection.find({}).toArray()
+    //rval.find = await collection.find({}).toArray()
     //Find inside the transaction before the commit
-    rval.findTX = await collection.find(clientSession, {}).toArray()
-    rval.commitTX = await clientSession.commitTransaction();
+    //rval.findTX = await collection.find(clientSession, {}).toArray()
+    rval.commitTX = await clientSession.commitTransaction(); // If we don't commit then drop hurts
     //Find outside transaction after commit
-    rval.findAfterTX = await collection.find({}).toArray()
+    //rval.findAfterTX = await collection.find({}).toArray()
     res.status(201);
     res.send({ rval });
   }

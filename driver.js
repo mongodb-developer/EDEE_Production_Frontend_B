@@ -484,10 +484,16 @@ class MongoCollection {
    * @param {Object} projection
    * @returns Document Object
    */
-  async findOne(query, projection) {
+  async findOne(clientSession, query, projection) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     MongoClient._nServerCalls++;
+
+    if (clientSession instanceof ClientSession == false) {
+      projection = query
+      query = clientSession;
+      clientSession = null
+    }
 
     const rval = await this.mongoClient.user.functions.find(
       this.dbName,
@@ -495,7 +501,9 @@ class MongoCollection {
       query,
       projection,
       1,
-      0
+      0,
+      null,
+      clientSession?.sessionId
     );
     if (rval.error) throw new Error(rval.error);
     if (rval.result && rval.result.length > 0) return rval.result[0];
@@ -692,12 +700,19 @@ class MongoCollection {
    * @param {Object[]} pipeline
    * @returns MongoCursor with results
    */
-  aggregate(pipeline) {
+  aggregate(clientSession,pipeline) {
+
+    if (clientSession instanceof ClientSession == false) {
+      pipeline = clientSession;
+      clientSession = null
+    }
+
     const aggCursor = new MongoCursor(
       "AGGREGATE",
       this.mongoClient,
       this.dbName,
-      this.collName
+      this.collName,
+      clientSession
     );
     aggCursor._pipeline = pipeline;
     return aggCursor;
@@ -927,7 +942,8 @@ class MongoCursor {
     this._results = await this.mongoClient.user.functions.aggregate(
       this.dbName,
       this.collName,
-      this._pipeline
+      this._pipeline,
+      this._clientSession?.sessionId
     );
 
     this._position = 0;
