@@ -26,7 +26,8 @@ async function post_Test(req, res) {
  // rval.push(await collection.insertMany( [{ _id:_id++, msg:"Outside Transaction"},{ _id:_id++, msg:"Outside Transaction"}]))
 
   clientSession = await mongoClient.startSession();
-  clientSession.startTransaction();
+  clientSession.startTransaction(); //Does not need to call server so can be not async
+  
   rval.push(await collection.insertOne(clientSession,{  _id:_id++, name: "In Txn" }))
 
  // rval.push(await collection.insertMany(clientSession,[{  _id:_id++, name: "In Txn" },{  _id:_id++, name: "In Txn" }]))

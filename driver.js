@@ -401,6 +401,10 @@ class MongoCollection {
         console.log("Insert without transaction")
     }
 
+    if(clientSession?.starting == true) {
+      clientSession.serverStartTransaction(); // We actually start the TXN on first write
+    }
+
     rval = await this.mongoClient.user.functions.insert(
       this.dbName,
       this.collName,
@@ -849,24 +853,38 @@ class ClientSession {
   constructor(id, sessionMongoClient) {
     this.sessionId = id;
     this.sessionMongoClient = sessionMongoClient;
+    this.starting = false;
+    this.inprogress = false;
   }
 
-  async startTransaction() {
-    // Unlike a real driver we have to call the server as that's where the real session is
+  startTransaction() {
+    if( this.starting  || this.inprogress) {
+      throw new Error("Transaction already in progress on session")
+    }
+    this.starting = true;
+    
+  }
+  async serverStartTransaction() {
+    this.starting = false;
     const rval = await this.sessionMongoClient.user.functions.startTransaction(this.sessionId.id);
     if (rval.result.error) { throw new Error(EJSON.stringify(rval.result)) }
-    return rval.result;
+    this.inprogress = true;
+    return true;
   }
 
   async commitTransaction() {
-    // Unlike a real driver we have to call the server as that's where the real session is
+    this.starting = false;
+    if(this.inprogress == false) return; //If we never did anything it's a NoOp
+    this.inprogress= false;
     const rval = await this.sessionMongoClient.user.functions.endTransaction(this.sessionId.id, true);
     if (rval.result.error) { throw new Error(EJSON.stringify(rval.result)) }
     return rval.result;
   }
 
   async abortTransaction() {
-    // Unlike a real driver we have to call the server as that's where the real session is
+    this.starting = false;
+    if(this.inprogress == false) return; //If we never did anything it's a NoOp
+    this.inprogress= false;
     const rval = await this.sessionMongoClient.user.functions.endTransaction(this.sessionId.id, false);
     if (rval.result.error) { throw new Error(EJSON.stringify(rval.result)) }
     return rval.result;
