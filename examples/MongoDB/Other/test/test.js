@@ -44,8 +44,11 @@ async function post_Test(req, res) {
 
     rval.updateOneTXUpsert = await collection.updateOne(clientSession, { _id: 50 }, { $set: { editInsideTransaction: true } },{upsert:true})
    */
+    /*
     rval.deleteOneTX  = await collection.deleteOne(clientSession,{_id:2} );
     rval.deleteManyTX = await collection.deleteMany(clientSession,{});
+    */
+    rval.findOneUpdate = await collection.findOneAndUpdate(clientSession,{_id:2},{$set:{findAndModify:true}},{returnNewDocument:true})
 
     //Find outside transaction before commit
     rval.find = await collection.find({}).toArray()

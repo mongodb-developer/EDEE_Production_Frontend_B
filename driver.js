@@ -4,11 +4,11 @@
    serverless functions you need to use a real driver for the
    next step beyond playing with this jsfiddle - which you will use from node
    or java or python or dozens of other languages  not from browser JS,
-   you use it to write the services you call fron the browser. */
+   you use it to write the services you call from the browser. */
 
 /**
  * MongoDB Driver Starting Class representing a connection to MongoDB
- * Handles any required conneciton pooling and shoudl be created only once
+ * Handles any required connection pooling and should be created only once
  * and persisted. Will not actually connect until the first information is needed from
  * the server and will automatically manage failover if a server is unavailable.
  */
@@ -280,7 +280,7 @@ class MongoCollection {
       this.collName,
       index
     );
-    
+
     if (!rval.ok) {
       throw new Error(JSON.stringify(rval));
     }
@@ -396,11 +396,11 @@ class MongoCollection {
     let rval = { error: " Unknown Error" };
 
     if (clientSession instanceof ClientSession == false) {
-        document = clientSession; // We only had a documents
-        clientSession = null;
+      document = clientSession; // We only had a documents
+      clientSession = null;
     }
 
-    if(clientSession?.starting == true) {
+    if (clientSession?.starting == true) {
       MongoClient._nServerCalls++;
       await clientSession.serverStartTransaction(); // We actually start the TXN on first write
     }
@@ -430,11 +430,11 @@ class MongoCollection {
     MongoClient._nServerCalls++;
 
     if (clientSession instanceof ClientSession == false) {
-        documents = clientSession;
-        clientSession = null
+      documents = clientSession;
+      clientSession = null
     }
 
-    if(clientSession?.starting == true) {
+    if (clientSession?.starting == true) {
       MongoClient._nServerCalls++;
       await clientSession.serverStartTransaction(); // We actually start the TXN on first write
     }
@@ -455,13 +455,13 @@ class MongoCollection {
    * @param {Object} projection
    * @returns MongoCursor - used to access the results
    */
-  find( findSession, query, projection) {
+  find(findSession, query, projection) {
 
     if (findSession instanceof ClientSession == false) {
       projection = query
       query = findSession;
       findSession = null
-  }
+    }
 
     const findCursor = new MongoCursor(
       "FIND",
@@ -511,16 +511,31 @@ class MongoCollection {
    * @param {Object options
    * @returns Document updated or null
    */
-  async findOneAndUpdate(query, updates, options) {
+  async findOneAndUpdate(clientSession, query, updates, options) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     MongoClient._nServerCalls++;
+
+
+    if (clientSession instanceof ClientSession == false) {
+      options = updates;
+      updates = query;
+      query = clientSession; // We only had a documents
+      clientSession = null;
+    }
+
+    if (clientSession?.starting == true) {
+      MongoClient._nServerCalls++;
+      await clientSession.serverStartTransaction(); // We actually start the TXN on first write
+    }
+
     const rval = await this.mongoClient.user.functions.findOneAndUpdate(
       this.dbName,
       this.collName,
       query,
       updates,
-      options
+      options,
+      clientSession?.sessionId
     );
     return rval;
   }
@@ -543,12 +558,12 @@ class MongoCollection {
       updates = query;
       query = clientSession; // We only had a documents
       clientSession = null;
-  }
+    }
 
-  if(clientSession?.starting == true) {
-    MongoClient._nServerCalls++;
-    await clientSession.serverStartTransaction(); // We actually start the TXN on first write
-  }
+    if (clientSession?.starting == true) {
+      MongoClient._nServerCalls++;
+      await clientSession.serverStartTransaction(); // We actually start the TXN on first write
+    }
 
     const rval = await this.mongoClient.user.functions.update(
       this.dbName,
@@ -575,7 +590,7 @@ class MongoCollection {
    * @returns Object showing how many were found and updated
    */
 
-  async updateOne(clientSession,query, updates, options) {
+  async updateOne(clientSession, query, updates, options) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     MongoClient._nServerCalls++;
@@ -586,14 +601,14 @@ class MongoCollection {
       updates = query;
       query = clientSession; // We only had a documents
       clientSession = null;
-  }
+    }
 
-  if(clientSession?.starting == true) {
-    MongoClient._nServerCalls++;
-    await clientSession.serverStartTransaction(); // We actually start the TXN on first write
-  }
+    if (clientSession?.starting == true) {
+      MongoClient._nServerCalls++;
+      await clientSession.serverStartTransaction(); // We actually start the TXN on first write
+    }
 
-  
+
     const rval = await this.mongoClient.user.functions.update(
       this.dbName,
       this.collName,
@@ -615,21 +630,21 @@ class MongoCollection {
    * @param {Object} query
    * @returns ject showing how many were found and deleted
    */
-  async deleteMany(clientSession,query) {
+  async deleteMany(clientSession, query) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     MongoClient._nServerCalls++;
 
-    
-    if (clientSession instanceof ClientSession == false) {
-      query = clientSession; 
-      clientSession = null;
-  }
 
-  if(clientSession?.starting == true) {
-    MongoClient._nServerCalls++;
-    await clientSession.serverStartTransaction(); // We actually start the TXN on first write
-  }
+    if (clientSession instanceof ClientSession == false) {
+      query = clientSession;
+      clientSession = null;
+    }
+
+    if (clientSession?.starting == true) {
+      MongoClient._nServerCalls++;
+      await clientSession.serverStartTransaction(); // We actually start the TXN on first write
+    }
 
     const rval = await this.mongoClient.user.functions.delete(
       this.dbName,
@@ -645,21 +660,21 @@ class MongoCollection {
    * @param {Object} query
    * @returns Object showing how many were found and deleted
    */
-  async deleteOne(clientSession,query) {
+  async deleteOne(clientSession, query) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     MongoClient._nServerCalls++;
 
 
     if (clientSession instanceof ClientSession == false) {
-      query = clientSession; 
+      query = clientSession;
       clientSession = null;
-  }
+    }
 
-  if(clientSession?.starting == true) {
-    MongoClient._nServerCalls++;
-    await clientSession.serverStartTransaction(); // We actually start the TXN on first write
-  }
+    if (clientSession?.starting == true) {
+      MongoClient._nServerCalls++;
+      await clientSession.serverStartTransaction(); // We actually start the TXN on first write
+    }
 
 
     const rval = await this.mongoClient.user.functions.delete(
@@ -713,7 +728,7 @@ class MongoCollection {
  * parameters before itterating over them or retrieving them as an array
  */
 class MongoCursor {
-  constructor(cursorType, mongoClient, dbName, collName,findSession) {
+  constructor(cursorType, mongoClient, dbName, collName, findSession) {
     this._cursorType = cursorType;
     this.collName = collName;
     this.dbName = dbName;
@@ -929,11 +944,11 @@ class ClientSession {
   }
 
   startTransaction() {
-    if( this.starting  || this.inprogress) {
+    if (this.starting || this.inprogress) {
       throw new Error("Transaction already in progress on session")
     }
     this.starting = true;
-    
+
   }
   async serverStartTransaction() {
     this.starting = false;
@@ -945,8 +960,8 @@ class ClientSession {
 
   async commitTransaction() {
     this.starting = false;
-    if(this.inprogress == false) return; //If we never did anything it's a NoOp
-    this.inprogress= false;
+    if (this.inprogress == false) return; //If we never did anything it's a NoOp
+    this.inprogress = false;
     const rval = await this.sessionMongoClient.user.functions.endTransaction(this.sessionId.id, true);
     if (rval.result.error) { throw new Error(EJSON.stringify(rval.result)) }
     return rval.result;
@@ -954,8 +969,8 @@ class ClientSession {
 
   async abortTransaction() {
     this.starting = false;
-    if(this.inprogress == false) return; //If we never did anything it's a NoOp
-    this.inprogress= false;
+    if (this.inprogress == false) return; //If we never did anything it's a NoOp
+    this.inprogress = false;
     const rval = await this.sessionMongoClient.user.functions.endTransaction(this.sessionId.id, false);
     if (rval.result.error) { throw new Error(EJSON.stringify(rval.result)) }
     return rval.result;
