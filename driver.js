@@ -280,10 +280,11 @@ class MongoCollection {
       this.collName,
       index
     );
+    
     if (!rval.ok) {
       throw new Error(JSON.stringify(rval));
     }
-    return rval;
+    return rval.result;
   }
   /**
    * List all Atlas Search indexes on this collection.
@@ -344,7 +345,6 @@ class MongoCollection {
       index
     );
     if (rval.result.ok) {
-      console.log(rval);
       return { ok: 1, nIndexesWas: rval.result.nIndexesWas };
     }
     return { ok: 0, error: rval.result.error };
@@ -379,7 +379,7 @@ class MongoCollection {
       this.dbName,
       this.collName
     );
-    return rval;
+    return rval.result;
   }
 
 
@@ -398,11 +398,11 @@ class MongoCollection {
     if (clientSession instanceof ClientSession == false) {
         document = clientSession; // We only had a documents
         clientSession = null;
-        console.log("Insert without transaction")
     }
 
     if(clientSession?.starting == true) {
-      clientSession.serverStartTransaction(); // We actually start the TXN on first write
+      MongoClient._nServerCalls++;
+      await clientSession.serverStartTransaction(); // We actually start the TXN on first write
     }
 
     rval = await this.mongoClient.user.functions.insert(
@@ -411,8 +411,6 @@ class MongoCollection {
       [document],
       clientSession?.sessionId
     );
-
-    console.log(rval);
 
     if (rval.error) {
       throw new Error(rval.error);
@@ -434,6 +432,11 @@ class MongoCollection {
     if (clientSession instanceof ClientSession == false) {
         documents = clientSession;
         clientSession = null
+    }
+
+    if(clientSession?.starting == true) {
+      MongoClient._nServerCalls++;
+      await clientSession.serverStartTransaction(); // We actually start the TXN on first write
     }
 
     const rval = await this.mongoClient.user.functions.insert(
@@ -529,18 +532,38 @@ class MongoCollection {
    * @param {Object} options
    * @returns Object showing how many were found and updated
    */
-  async updateMany(query, updates, options) {
+  async updateMany(clientSession, query, updates, options) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     MongoClient._nServerCalls++;
+
+
+    if (clientSession instanceof ClientSession == false) {
+      options = updates;
+      updates = query;
+      query = clientSession; // We only had a documents
+      clientSession = null;
+  }
+
+  if(clientSession?.starting == true) {
+    MongoClient._nServerCalls++;
+    await clientSession.serverStartTransaction(); // We actually start the TXN on first write
+  }
+
     const rval = await this.mongoClient.user.functions.update(
       this.dbName,
       this.collName,
       query,
       updates,
       false,
-      options
+      options,
+      clientSession?.sessionId
     );
+
+    if (rval.error) {
+      throw new Error("Database Error: " + rval.error);
+    }
+
     return rval;
   }
 
@@ -552,19 +575,39 @@ class MongoCollection {
    * @returns Object showing how many were found and updated
    */
 
-  async updateOne(query, updates, options) {
+  async updateOne(clientSession,query, updates, options) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     MongoClient._nServerCalls++;
+
+
+    if (clientSession instanceof ClientSession == false) {
+      options = updates;
+      updates = query;
+      query = clientSession; // We only had a documents
+      clientSession = null;
+  }
+
+  if(clientSession?.starting == true) {
+    MongoClient._nServerCalls++;
+    await clientSession.serverStartTransaction(); // We actually start the TXN on first write
+  }
+
+  
     const rval = await this.mongoClient.user.functions.update(
       this.dbName,
       this.collName,
       query,
       updates,
       true,
-      options
+      options,
+      clientSession?.sessionId
     );
-    return rval;
+
+    if (rval.error) {
+      throw new Error("Database Error: " + rval.error);
+    }
+    return rval.result;
   }
 
   /**
@@ -572,14 +615,28 @@ class MongoCollection {
    * @param {Object} query
    * @returns ject showing how many were found and deleted
    */
-  async deleteMany(query) {
+  async deleteMany(clientSession,query) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     MongoClient._nServerCalls++;
+
+    
+    if (clientSession instanceof ClientSession == false) {
+      query = clientSession; 
+      clientSession = null;
+  }
+
+  if(clientSession?.starting == true) {
+    MongoClient._nServerCalls++;
+    await clientSession.serverStartTransaction(); // We actually start the TXN on first write
+  }
+
     const rval = await this.mongoClient.user.functions.delete(
       this.dbName,
       this.collName,
-      query
+      query,
+      false,
+      clientSession?.sessionId
     );
     return rval;
   }
@@ -588,15 +645,29 @@ class MongoCollection {
    * @param {Object} query
    * @returns Object showing how many were found and deleted
    */
-  async deleteOne(query) {
+  async deleteOne(clientSession,query) {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
     MongoClient._nServerCalls++;
+
+
+    if (clientSession instanceof ClientSession == false) {
+      query = clientSession; 
+      clientSession = null;
+  }
+
+  if(clientSession?.starting == true) {
+    MongoClient._nServerCalls++;
+    await clientSession.serverStartTransaction(); // We actually start the TXN on first write
+  }
+
+
     const rval = await this.mongoClient.user.functions.delete(
       this.dbName,
       this.collName,
       query,
-      true
+      true,
+      clientSession?.sessionId
     );
     return rval;
   }
