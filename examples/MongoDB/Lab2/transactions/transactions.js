@@ -1,25 +1,36 @@
-// This is called once when the web service starts up
+
 var mongoClient = null;
-var db, collection;
+var collection;
 
 
 
-async function post_createIndex(req, res) {
-  var rval = null;
-  var requestObj = JSON.parse(req.body);
-  var db = mongoClient.getDatabase("game");
-  var collection = db.getCollection("highscores");
-  var indexDefinition = requestObj.definition;
-  var name = requestObj.name;
+async function post_txnDemo(req, res) {
+  const rval = {}
+  const x = new ObjectId() ;  // add a field to fetch the records by easily
 
-  await collection.insertOne({ Country: "China" });
-  var create = await collection.createIndex(name, indexDefinition);
-  var list = await collection.listIndexes();
-  var dropIndex = await collection.dropIndex(indexDefinition);
-  var list2 = await collection.listIndexes();
+  //Add a Document (updates work the same way)
+  await collection.insertOne({ msg: "Added outside Transaction", x:x})
+  
+  clientSession = await mongoClient.startSession();
+  clientSession.startTransaction();
 
-  res.status(201);
-  res.send({ create, list, dropIndex, list2 });
+  //Add one inside a transaction
+  await collection.insertOne(clientSession,{ msg: "Added in Transaction",x:x})
+
+  // Add one outside after the transaction has started
+  await collection.insertOne({ msg: "Added outside Transaction after transaction started",x:x})
+
+  // Query outside the transaction boundary - cannot see the one in the transaction
+  var outsideTransaction =  await collection.find( {x:x},{msg:1}).toArray()
+  // Query inside transaction boundary  - don't see the one added after start
+  var insideTransaction = await collection.find(clientSession, {x:x},{msg:1}).toArray()
+
+  await clientSession.commitTransaction();
+  // After commit both are visible.
+  var afterCommit =  await collection.find( {x:x}).toArray()
+
+  res.status(200);
+  res.send({outsideTransaction,insideTransaction,afterCommit});
 }
 
 async function initWebService() {
@@ -29,4 +40,9 @@ async function initWebService() {
   mongoClient = new MongoClient(
     "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net",
   );
+  collection = mongoClient.getDatabase("test").getCollection("txnExample")
+  // Uncomment the line below to restart - but if there is an open
+  // Transaction you will need to wait up to 30 seconds
+  // await collection.drop();
+
 }

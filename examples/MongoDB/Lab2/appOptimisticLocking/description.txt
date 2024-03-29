@@ -1,0 +1,10 @@
+This is the mechanism used by many ORM frameworks, the record contains a version field.
+Whenever the record is updated the version is incremented
+The Query to update it incudes the version that was read.
+
+This is simple but where there is contention needs the record to be 
+reread, changes reconciled and pushed back. It also would allow, for example
+two humans to spend time editing in a UI only for one persons changes to be 
+rejected - unlike the pessimistic model.
+
+With contention this can be 100s of times slower than simply using server update locking

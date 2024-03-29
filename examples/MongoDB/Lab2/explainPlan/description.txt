@@ -1,0 +1,14 @@
+This runs two queries on the same large data set.
+
+One has an index and one does not, they return
+almost the same number of documents.
+
+This time we use explain() which does not return results but gives
+lots of information about how the query is processed. 
+
+We are removing a few fields but you can see from this if an 
+index is used and in 'executionStats' how many how many indexKeys
+and documents were examined and how many documents returned.
+
+Ideally you do not ever look at more Documents or Keys than you 
+return, if these are higher consider improving the index.

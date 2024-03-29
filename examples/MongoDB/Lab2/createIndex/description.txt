@@ -1,0 +1,16 @@
+First run POST to CreateData to generate 10,000 documents with the structure
+
+{
+    colour: "Green",
+    size: "large",
+    shape: "triangle",
+    price: 532
+}
+
+Then Change the URL to 'Index'
+ - use POST to create index based on the POST data
+ - use GET to see the examinedplin plan for the query
+
+Edit the query and try different indexes to get perfect indexing,
+Try having two indexes on on colour and one on shape
+

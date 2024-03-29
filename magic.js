@@ -3,7 +3,6 @@ let oldCode = null;
 
 async function callVirtualEndpoint(url, verb) {
   const res = new SimResponse();
-
   let source =  _code.getValue();
   
 
@@ -53,6 +52,7 @@ async function callVirtualEndpoint(url, verb) {
   const fName = `${verb.toLowerCase()}_${req.params[2]}`;
   if (window[fName]) {
     try {
+      disableButtons(true);
       //TODO don't call if code not modified
       if (codeChanged) {
         await window.initWebService?.(); // We are doing this each time although we wouldn't
@@ -70,8 +70,16 @@ async function callVirtualEndpoint(url, verb) {
     res.status(404);
     res.send(`Not Found handler ${fName}`);
   }
-
+  disableButtons(false);
   return res;
+}
+
+function disableButtons( disabled) {
+  buttons = document.getElementsByClassName("button")
+  for (let button of buttons) {
+    button.disabled = disabled
+  }
+
 }
 
 function cleanCode(sourcecode) {

@@ -16,6 +16,10 @@ class MongoClient {
   toJSON() {
     return { user: this.userName };
   }
+  
+  getPingTime() {
+    return MongoClient._serverLatency;
+  }
 
   static _serverLatency = -1;
   static _nServerCalls = 0;
@@ -82,6 +86,13 @@ class MongoClient {
     return db;
   }
 
+  async ping()
+  {
+    if (!(await this.connect())) throw new Error(this.lastError);
+    const rval = await this.user.functions.ping();
+    return rval;
+  }
+
   async connect() {
     if (this.connected) {
       return true;
@@ -130,7 +141,7 @@ class MongoClient {
         }
         const endTime = Date.now();
 
-        MongoClient._serverLatency = (endTime - startTime) / 3;
+        MongoClient._serverLatency = Math.ceil((endTime - startTime) / 3);
         console.log(
           "Server Latency for Emulator is " + MongoClient._serverLatency + "ms"
         );
@@ -416,7 +427,7 @@ class MongoCollection {
       throw new Error(rval.error);
     }
 
-    return rval;
+    return rval.result;
   }
   /**
    * Add multiple Documents (Objects) to this collection.
@@ -445,7 +456,7 @@ class MongoCollection {
       documents,
       clientSession?.sessionId
     );
-    return rval;
+    return rval.result;
   }
 
   /**
@@ -493,6 +504,12 @@ class MongoCollection {
       projection = query
       query = clientSession;
       clientSession = null
+    }
+
+
+    if (clientSession?.starting == true) {
+      MongoClient._nServerCalls++;
+      await clientSession.serverStartTransaction(); // We actually start the TXN on first write
     }
 
     const rval = await this.mongoClient.user.functions.find(
@@ -587,7 +604,7 @@ class MongoCollection {
       throw new Error("Database Error: " + rval.error);
     }
 
-    return rval;
+    return rval.result;
   }
 
   /**
@@ -627,6 +644,7 @@ class MongoCollection {
       clientSession?.sessionId
     );
 
+    console.log(rval);
     if (rval.error) {
       throw new Error("Database Error: " + rval.error);
     }
@@ -661,7 +679,7 @@ class MongoCollection {
       false,
       clientSession?.sessionId
     );
-    return rval;
+    return rval.result;
   }
   /**
    * Delete first document matching query found.
@@ -692,7 +710,7 @@ class MongoCollection {
       true,
       clientSession?.sessionId
     );
-    return rval;
+    return rval.result;
   }
 
   /**
@@ -700,7 +718,7 @@ class MongoCollection {
    * @param {Object[]} pipeline
    * @returns MongoCursor with results
    */
-  aggregate(clientSession,pipeline) {
+  aggregate(clientSession, pipeline) {
 
     if (clientSession instanceof ClientSession == false) {
       pipeline = clientSession;
@@ -792,7 +810,7 @@ class MongoCursor {
         this._sort,
         explainType
       );
-      return rval;
+      return rval.result;
     }
     return {
       error:
@@ -919,6 +937,12 @@ class MongoCursor {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
 
+
+    if (this._clientSession?.starting == true) {
+      MongoClient._nServerCalls++;
+      await this._clientSession.serverStartTransaction(); // We actually start the TXN on first write
+    }
+
     MongoClient._nServerCalls++;
     this._results = await this.mongoClient.user.functions.find(
       this.dbName,
@@ -937,6 +961,11 @@ class MongoCursor {
   async runAgg() {
     if (!(await this.mongoClient.connect()))
       throw new Error(this.mongoClient.lastError);
+
+    if (this._clientSession?.starting == true) {
+      MongoClient._nServerCalls++;
+      await this._clientSession.serverStartTransaction(); // We actually start the TXN on first write
+    }
 
     MongoClient._nServerCalls++;
     this._results = await this.mongoClient.user.functions.aggregate(
