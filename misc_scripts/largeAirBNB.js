@@ -1,6 +1,6 @@
 var out = { $out: "largeCollection" }
 
-var addcounter = { $set : { copies : {$range: [ 0,20 ]}}}
+var addcounter = { $set : { copies : {$range: [ 0,10 ]}}}
 
 var duplicate = { $unwind : "$copies" }
 var tidy = { $unset : [ "_id","copies"]}

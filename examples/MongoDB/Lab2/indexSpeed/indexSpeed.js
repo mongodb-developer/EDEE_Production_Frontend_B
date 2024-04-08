@@ -7,7 +7,7 @@ var collection, msg;
 async function get_IndexDemo(req, res) {
 
 
-    var query = { beds: 5 };
+    var query = { beds: 11 };
     var projection = { _id: 1 };
     var rval = msg;
     
@@ -16,18 +16,18 @@ async function get_IndexDemo(req, res) {
 
     endTime = new Date()
     timeTaken = (endTime - startTime);
+    rval += "Times include server roundtrip time of approx " + mongoClient.getPingTime()+"ms\n";
+    rval += "Query " + JSON.stringify(query) +  " with index took approx " + timeTaken + " ms to find " + result + " records\n";
 
-    rval += "Query { beds : 5 } with index took approx " + timeTaken + " ms to find " + result + " records\n";
 
-
-    query = { bedrooms: 4 }
+    query = { bedrooms: 8 }
     startTime = new Date()
     result = await collection.countDocuments(query);
     endTime = new Date()
     timeTaken = (endTime - startTime);
 
 
-    rval += "Query { bedrooms : 4} without index took approx " + timeTaken + " ms to find " + result + " records\n";
+    rval += "Query " + JSON.stringify(query) + " with NO took approx " + timeTaken + " ms to find " + result + " records\n";
     res.header("Content-Type", "text/plain")
     res.header("Server-ping-time",mongoClient.getPingTime()+"ms (approx.)")
     res.send(rval);
