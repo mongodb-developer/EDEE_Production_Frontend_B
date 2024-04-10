@@ -1,0 +1,19 @@
+// To do Facet search we need a new index that supports facets:
+// Here is that pre-created index JSON definition:
+
+ {
+   "mappings": {
+     "dynamic": true,
+     "fields": {
+       "address": {
+         "fields": {
+           "country": {  "type": "stringFacet" }
+         },
+         "type": "document"
+      },
+       "property_type": {
+         "type": "stringFacet"
+       }
+     }
+   }
+}

@@ -2,6 +2,8 @@
 <html>
 
 <head>
+    <script src="appconfig.js"></script>
+    <script src="//ajaxorg.github.io/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://unpkg.com/realm-web/dist/bundle.iife.js"></script>
     <script src="modaldialog.js"></script>
     <script src="bson.js"></script>
@@ -10,7 +12,10 @@
     <script src="reqres.js"></script>
     <script src="driver.js"></script>
     <script src="helpers.js"></script>
+    <script src="java.js"></script>
     <link rel="stylesheet" href="style.css">
+
+   
    
 </head>
 
@@ -19,18 +24,29 @@
     <div class="sim-container">
         <!-- Menu Buttons -->
         <div class="menu-container"> 
-            <a class="menu" target="_blank" href="examples/examples.html">Examples</a>
+            <a class="menu" id="exampleLink" target="_blank" href="examples/devday.html">Labs and Examples</a>
             <a class="menu" href="docs/index.html">Documentation</a>
-            <a class="menu" onclick="saveToClipboard()">Save to Clipboard</a>
+            <a class="menu" onclick="document.getElementById('uploadCode').click()">Load</a>
+            <a class="menu" onclick="saveCode()">Save</a>
+            <a class="menu" onclick="_saveFileName=null;saveCode()">Save As</a>
+            <input style="display:none" onchange="loadLocalCode(this.files[0])" class="loadbutton" id="uploadCode" type="file" />
+   
+
         </div>
         <div id="infobox" class="infobox"></div>
         <div class="flex-container">
-            <!-- Code Editor -->
-            <div id="codediv" contenteditable class="code">
-               
+         
+            <!-- New Editor -->
+            <div id="editor">
+           
+// get_XXXX or post_XXXX define Get and Post endpoints
+// Both get passed a Request and a Response Object
+
 function get_Hello(req, res) {
     res.status(200);
-    res.send({ msg : "Hello " + req.query.get("name" )})
+    res.send({ msg : "Hello " + req.query.get("name") 
+                        + " try looking at the examples."})
+}
 
             </div>
             <!-- Endpoint URL output -->
@@ -45,8 +61,10 @@ function get_Hello(req, res) {
             </div>
             <!-- POST data output -->
             <div class="label">POST Data:</div>
-            <div class="postdata" contenteditable id="postdata"></div>
-            <div class="button-container">
+            <div class="postdata" contenteditable id="postdata">
+              
+            </div>
+            <div id="buttons" class="button-container">
                 <button class="button" onclick="callService('GET')" id="callServiceGET"> GET </button>
                 <button class="button" onclick="callService('POST')" id="callServicePOST"> POST </button>
                 <!-- loader commented out, we can add it in the future if that's needed -->

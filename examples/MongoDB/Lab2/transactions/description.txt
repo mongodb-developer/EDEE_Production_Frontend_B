@@ -1,0 +1,21 @@
+In this we add multiple documents, all have the same 
+value of the field 'x'
+
+We add one, then begin a logical session and 
+a transaction in that session
+
+We then add a document, as part of the transaction and another
+that is not part of it.
+
+When we query inside the transaction we see the first and 
+second documents but not the one added after the transaction 
+performed it's first operation.
+
+When we query outside We see the first and third but not the
+one uncommitted inside the transaction.
+
+Once we commit we see all three.
+
+If you want to restart you can uncomment the drop() - if you have
+an uncommitted transaction on the collection then the drop will
+wait for the open transaction to timeout (30s of no activity).

@@ -1,0 +1,77 @@
+var mongoClient = null;
+var collection;
+
+/* This collection has an index on  property_type,room_type,beds
+   But you can only use an index if the first field in the index the query */
+
+async function post_Index(req, res) {
+    const {name,definition} = JSON.parse(req.body)
+
+    var create = await collection.createIndex(name, definition);
+    var list = await collection.listIndexes();
+
+   // var drop = await collection.dropIndex(definition);
+
+   res.send({create,list})
+}
+
+//Test Queries with out indexes
+
+async function get_Index(req,res)
+{
+    var query = { colour : 'Red', shape: "square" }
+    fullExplain = await collection.find(query).limit(0).explain();
+    const { nReturned,executionTimeMillis,totalKeysExamined,totalDocsExamined,winningPlan} = fullExplain.executionStats
+    const importantStats ={nReturned,executionTimeMillis,totalKeysExamined,totalDocsExamined,winningPlan:fullExplain.queryPlanner.winningPlan} 
+    
+    res.send({importantStats,fullExplain})
+}
+
+//Create Sample Data
+async function post_CreateData(req, res) {
+    var dropResult = await collection.drop();
+    const nDocs = 10000;
+    var batch = [];
+
+    for (n=0;n<nDocs;n++) {
+       batch.push(createSampleDoc());
+       if( batch.length == 1000) {
+        await collection.insertMany(batch);
+        batch = []
+       }
+    }
+    //Any remaining
+    if(batch.length) await collection.insertMany(batch);
+    const loaded = await collection.countDocuments({});
+    res.send({ dropResult , loaded ,msg:"Now Change the URL to v1/Index"})
+}
+
+
+async function initWebService() {
+    var userName = await system.getenv("MONGO_USERNAME");
+    var passWord = await system.getenv("MONGO_PASSWORD", true);
+
+    mongoClient = new MongoClient(
+        "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net",
+    );
+    collection = mongoClient.getDatabase("test")
+        .getCollection("indexExamples")
+
+    msg = "Note: End to end times can vary greatly when many\npeople are using an unindexed query at the same time.\nThis is why indexes are vital for consistent performance.\nIn this case there is an index on beds but not on bedrooms\nWe use countDocuments so we don't have to count time fetching\nthe content back to the appserver\n\n"
+}
+
+
+
+function createSampleDoc() {
+    const doc = {}
+    doc.colour = choose(['Red', 'Orange', 'Yellow', 'Green', "Blue"])
+    doc.size = choose(['tiny', 'small', 'medium', 'large', 'huge'])
+    doc.shape = choose(['triangle', 'square', 'circle'])
+    doc.price = Math.floor(Math.random() * 1000);
+    return doc;
+}
+
+function choose(choices) {
+    var index = Math.floor(Math.random() * choices.length);
+    return choices[index];
+}

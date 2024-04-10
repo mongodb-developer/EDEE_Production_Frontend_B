@@ -1,136 +1,252 @@
+let code, response, endpointName, databox, infobox;
+let codeChanged;
+let _exampleName = []; //Examples used for different orgs
+let _saveFileName = null;
 
-let code, response, endpointName, databox, infobox
-let codeChanged
+const serviceHostname = "https://edee.mongodb.com/v1/";
 
-const serviceHostname = "https://hostname:5500/service/"
 async function onLoad() {
-    code = document.getElementById('codediv')
-    output = document.getElementById('response')
-    postdata = document.getElementById('postdata')
-    endpointName = document.getElementById('endpoint')
-    document.getElementById('url').innerText = serviceHostname;
-    codeChanged = true;
 
-    // we can feed index.html with a different src file each time
-    // we extract the code and put it in the code element
-    const myURL = new URL(window.location)
-    if (myURL.searchParams && myURL.searchParams.get("src")) {
-        await loadTemplateCode(myURL.searchParams.get("src"))
-        if (myURL.searchParams.get("title")) {
-            document.title = myURL.searchParams.get("title");
-        } else {
-            document.title = myURL.searchParams.get("src").split("_").join("/");
-        }
+  // If we supplied an org name in the URL then write that to Localstorage
+  const myURL = new URL(window.location);
+
+  if (myURL.searchParams && myURL.searchParams.get("org")) {
+    localStorage.setItem("organization", myURL.searchParams.get("org"));
+  }
+  // If an org name is in LocalStorage then use it to set the examples page
+  // This lets us have different examples based on the last link you used with org
+
+  if( localStorage.getItem("organization") &&  document.getElementById("exampleLink")) {
+    document.getElementById("exampleLink").href = `examples/${localStorage.getItem("organization")}.html`
+  }
+
+
+  var editor = ace.edit("editor");
+  editor.setTheme("ace/theme/pastel_on_dark");
+  editor.session.setMode("ace/mode/javascript");
+  editor.setOptions({
+    fontFamily: "Source Code Pro",
+    fontSize: "12pt"
+  });
+  editor.getSession().on('change', function() {
+    codeChangeHandler()
+  });
+
+  var outputFormatted = ace.edit("response");
+  outputFormatted.setTheme("ace/theme/eclipse");
+  outputFormatted.setOption("highlightActiveLine", false)
+  outputFormatted.renderer.setShowGutter(false);
+  outputFormatted.session.setMode("ace/mode/json");
+  outputFormatted.setReadOnly(true);
+  outputFormatted.setOptions({
+    fontFamily: "Source Code Pro",
+    fontSize: "12pt"
+  });
+
+  _code = editor; 
+  //_output = document.getElementById("response");
+  _output = outputFormatted
+
+  _postdata = document.getElementById("postdata");
+  endpointName = document.getElementById("endpoint");
+  document.getElementById("url").innerText = serviceHostname;
+  codeChanged = true;
+
+  // we can feed index.html with a different src file each time
+  // we extract the code and put it in the code element
+
+  if (myURL.searchParams && myURL.searchParams.get("src")) {
+    await loadTemplateCode(myURL.searchParams.get("src"));
+    if (myURL.searchParams.get("title")) {
+      document.title = myURL.searchParams.get("title");
+    } else {
+      document.title = myURL.searchParams.get("src").split("_").join("/");
     }
-
-   
-
-    code.onkeydown = function(e){
-        codeChanged = true;
-        if(e.key == 'Tab') {
-            console.log("TAB")
-            insertTextAtCursor("    ");
-            e.preventDefault();
-        }
-    }
-    // messageBox("Hi - I'm for debugging and things");
-
-    // Sometimes we want to hide the GET or POST buttons
-    if (myURL.searchParams && myURL.searchParams.get("hideGETbutton")) {
-        callServiceGETButton = document.getElementById('callServiceGET');
-        callServiceGETButton.style.visibility = "hidden";
-    }
-
-    if (myURL.searchParams && myURL.searchParams.get("hidePOSTbutton")) {
-        callServicePOSTButton = document.getElementById('callServicePOST');
-        callServicePOSTButton.style.visibility = "hidden";
-    }
-
-    // loader commented out, we can add it in the future if that's needed
-    // loader = document.getElementById("loader");
-    // loader.style.visibility = "hidden";
+  }
+  setTimeout(codeChangeHandler,0); 
 }
 
-function insertTextAtCursor(text)
-{
-    let selection = window.getSelection();
-    let range = selection.getRangeAt(0);
-    range.deleteContents();
-    let node = document.createTextNode(text);
-    range.insertNode(node);
 
-    selection.collapseToEnd();
+
+function loadLocalCode(filePath) {
+  let reader = new FileReader(); // no arguments
+  reader.readAsText(filePath);
+
+  //_output.innerText = "";
+  _output.setValue("",-1);
+
+  _postdata.innerText = "";
+
+  reader.onload = function () {
+    _code.setValue(reader.result, -1);
+  };
+
+  reader.onerror = function () {
+    alert(reader.error);
+  };
+
 }
 
+function insertTextAtCursor(text) {
+  let selection = window.getSelection();
+  let range = selection.getRangeAt(0);
+  range.deleteContents();
+  let node = document.createTextNode(text);
+  range.insertNode(node);
+
+  selection.collapseToEnd();
+}
 
 function messageBox(str) {
-    document.getElementById('infobox').innerText = str;
+  document.getElementById("infobox").innerText = str;
 }
 
 async function callService(method) {
-    try {
-        // loader.style.visibility = "visible";
-        output.innerText = ""
-        const fullURL = serviceHostname + endpointName.innerText
+  conso1e.contents = "";
+  try {
+    // loader.style.visibility = "visible";
+    _output.setValue("",-1);
+    const fullURL = serviceHostname + endpointName.innerText;
+    MongoClient._nServerCalls=0; 
+    const startTime = Date.now();
+    const response = await callVirtualEndpoint(fullURL, method);
+    const endTime = Date.now();
 
-        const response = await callVirtualEndpoint(fullURL, method)
+    let timeToShow = Math.floor((endTime - startTime) - (MongoClient._serverLatency * MongoClient._nServerCalls));
+    if (timeToShow<1) timeToShow=1; 
+   
+    let renderOut = "";
 
-
-        let renderOut = ""
-        renderOut += `"StatusCode": ${response._status}\n`
-        for (const key in response._headers) {
-            renderOut += `"${key}": ${response._headers[key]}\n\n`
-        }
-
-        if (typeof response._data === 'string' || response._data instanceof String) {
-            renderOut += `${response._data}`
-        } else {
-            renderOut += JSON.stringify(response._data, null, 2)
-        }
-
-        output.innerText = renderOut
+    if (conso1e.contents) {
+      renderOut += "-------------------------- Console --------------------------\n";
+      renderOut += conso1e.contents;
+      renderOut += "\n-------------------------------------------------------------\n\n";
     }
-    catch (error) {
-        console.error(error)
-        messageBox(error);
+    renderOut += `\n"ResponseTime": ${timeToShow}ms\n`
+
+
+    renderOut += `"StatusCode": ${response._status}\n`;
+    for (const key in response._headers) {
+      renderOut += `"${key}": ${response._headers[key]}\n\n`;
     }
-    finally {
-        // loader.style.visibility = "hidden";
+
+    if (
+      typeof response._data === "string" ||
+      response._data instanceof String
+    ) {
+      renderOut += `${response._data}`;
+    } else {
+      renderOut += JSON.stringify(response._data, null, 2);
     }
+
+    _output.setValue(renderOut,-1);
+  } catch (error) {
+    console.error(error);
+    messageBox(error); // Fatal problem
+  } finally {
+    // loader.style.visibility = "hidden";
+  }
 }
 
 //Load a JS file and populate the code side
 
 async function loadTemplateCode(fname) {
-    parts = fname.split("_")
+  const parts = fname.split("_");
+  _exampleName = parts;
+  url = "examples/" + parts.join("/") + "/" + parts[parts.length - 1];
 
-    url = "examples/" + parts.join("/") + "/" + parts[parts.length - 1]
+  let response = await fetch(`${url}.js`);
+  if (response.status == 200) {
+    _code.setValue(await response.text(), -1);
+  } else {
+    //We don't really care if it's missing
 
-    let response = await fetch(`${url}.js`)
-    if (response.status == 200) {
-        code.innerText = await response.text()
-    } else {
-        //We dont really care if it's missing
-        code.innerText = ""
+    _code.setValue("// EXAMPLE CODE MISSING - Is URL Correct", -1);
+  }
+
+  response = await fetch(`${url}.json`);
+  if (response.status == 200) {
+    _postdata.innerText = await response.text();
+  } else {
+    _postdata.innerText = "";
+  }
+
+  response = await fetch(`${url}.url`);
+  if (response.status == 200) {
+    endpointName.innerText = await response.text();
+  } else {
+    endpointName.innerText = "";
+  }
+
+  response = await fetch(`${url}.buttons`);
+  if (response.status == 200) {
+    buttons = await response.text();
+    const buttonData = JSON.parse(buttons);
+    for( let button in buttonData) {
+      container = document.getElementById("buttons");
+      newButton = document.createElement("button");
+      newButton.innerText=button
+      newButton.addEventListener("click", () => { showInfo(buttonData[button])}, false);
+      newButton.classList.add("button");
+
+      container.appendChild(newButton);
+      //<button class="button" onclick="callService('GET')" id="callServiceGET"> GET </button>
     }
+  } 
 
-    response = await fetch(`${url}.json`)
-    if (response.status == 200) {
-        postdata.innerText = await response.text()
-    } else {
-        postdata.innerText = ""
-    }
 
-    response = await fetch(`${url}.url`)
-    if (response.status == 200) {
-        endpointName.innerText = await response.text()
-    } else  {
-        endpointName.innerText = ""
-    }
 }
 
-function saveToClipboard()
+// This can get more fancy over time if needs be
+async function showInfo(file)
 {
-    navigator.clipboard.writeText(code.innerText);
+  const url = "examples/" + _exampleName.join("/") + "/";
+  const response = await fetch(url + file);
+  if (response.status == 200) {
+    _output.setValue(r = await response.text(),-1)
+  } 
 }
 
+function saveToClipboard() {
+  navigator.clipboard.writeText(_code.getValue());
+}
+
+function saveCode() {
+  let data = "";
+
+  data = _code.getValue();
+
+  if (_saveFileName == null) {
+    _saveFileName = prompt("Please enter a filename");
+  }
+
+  var file = new Blob([data], { type: "application/javascript" });
+  var a = document.createElement("a");
+  var url = URL.createObjectURL(file);
+  a.href = url;
+  a.download = _saveFileName;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function () {
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }, 0);
+}
+
+function codeChangeHandler()
+{
+
+  data = _code.getValue();
+  const getButton = document.getElementById("callServiceGET");
+  const postButton = document.getElementById("callServicePOST");
+  getButton.hidden = true;
+  postButton.hidden = true
+
+  if(data.search("function get_") != -1) {
+    getButton.hidden = false;
+ 
+  }
+  if(data.search("function post_") != -1) {
+    postButton.hidden = false;
+  }
+}
