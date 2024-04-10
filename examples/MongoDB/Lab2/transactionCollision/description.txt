@@ -1,26 +1,26 @@
-Once a transaction starts and performs it's first operation,
+Once a transaction starts and performs its first operation,
 it cannot see changes that happen in the database after that point.
 
-Equally - outside of that transaction, changes inside the transaction
+Equally - outside of that transaction, changes made inside the transaction
 cannot be seen.
 
-Because of this if any document is modified inside a transaction
+Because of this, if any document is modified inside a transaction,
 attempting to modify it outside a transaction, before the 
 transaction completes will wait for the transaction to complete.
 
 If a transaction tries to modify a document that has changed since
 the transaction started it will throw an exception like here and 
-need to be retried.
+need to be retried:
 
-Write conflict during plan execution and yielding is disabled.
-Please retry your operation or multi-document transaction. 
+  "Write conflict during plan execution and yielding is disabled.
+  Please retry your operation or multi-document transaction."
 
 Try moving the order round - this time the code will 
 hang for a long time as the update outside the transaction blocks.
 
 What happens if you do update1 after the commit?
 
-What if you do it before the transaction does it's first operation
+What if you do it before the transaction does its first operation
 between startTransaction and findOne?
 
 What if you have two sessions and two transactions?

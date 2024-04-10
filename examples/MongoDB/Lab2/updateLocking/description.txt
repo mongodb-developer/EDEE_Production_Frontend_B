@@ -5,13 +5,13 @@ Find-Lock-Verify-Update-Unlock
 
 The Verify checks that after locking the Query conditions still apply.
 
-In this example we use Promise.all to several operations in parallel
+In this example we use Promise.all to run several operations in parallel.
 
-We can see in the result the order they run in changes - and we will
+We can see in the results that the order they run in changes - and we will
 always have 5 updates.
 
 Uncomment the line to see what happens when we add a query clause to say
 an update only happens if the thread is higher than the last updating thread,
 
 This behavior, atomic, short server side write locking and the 
-very rich update syntax are a ey part of high performance MongoDB systems.
+very rich update syntax are a key part of high performance MongoDB systems.
