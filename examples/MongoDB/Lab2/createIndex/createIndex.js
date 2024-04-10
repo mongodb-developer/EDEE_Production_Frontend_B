@@ -34,7 +34,7 @@ async function post_CreateData(req, res) {
 
     for (n = 0; n < nDocs; n++) {
        batch.push(createSampleDoc());
-       if( batch.length === 1000) {
+       if( batch.length == 1000) {
         await collection.insertMany(batch);
         batch = [];
        }

@@ -14,7 +14,7 @@ async function get_EditableRecord(req, res) {
 
   updateResult = await collection.updateOne(checkNotLocked, takeLock, 
     { returnNewDocument: true });
-  if (updateResult.matchedCount === 1) {
+  if (updateResult.matchedCount == 1) {
     docToEdit = await collection.findOne({ _id: newDocId });
   } else {
     docToEdit = { error: "Already locked by someone else" };
@@ -33,7 +33,7 @@ async function post_EditableRecord(req, res) {
   updateResult = await collection.updateOne(query, update);
 
   var postUpdate = null;
-  if (updateResult.matchedCount === 1) {
+  if (updateResult.matchedCount == 1) {
     postUpdate = await collection.findOne({ _id: newDocId });
   } else {
     postUpdate = { error: "You did not have the lock for the docuement" };
