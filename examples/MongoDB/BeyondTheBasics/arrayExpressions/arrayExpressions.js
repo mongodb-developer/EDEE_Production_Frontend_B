@@ -6,9 +6,8 @@ async function get_Data(req, res) {
 
   // Select document that have small circles
   specification = { shape: "circle", size: "small" };
-  query.components = { $elemMatch: specification }; //Correct - look for element
+  query.components = { $elemMatch: specification };
 
-  // Use an expression to project just those
   // $elemMatch doesn't exist as an expression,
   // have to use $filter to make it only return the small circles
 
@@ -28,7 +27,7 @@ async function get_Data(req, res) {
 
 //Generate example data
 async function post_Data(req, res) {
-  if ((await arrayExample.countDocuments()) == 0) {
+  if ((await arrayExample.countDocuments()) != 10) {
     docs = JSON.parse(req.body);
     rval = await arrayExample.insertMany(docs);
     res.status(201);

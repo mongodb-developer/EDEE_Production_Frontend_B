@@ -16,12 +16,12 @@ async function get_Dashboard(req, res) {
     },
   };
 
+  // Calculate the price per bed
   var pricePerBed = {
     $set: { pricePerBed: { $divide: ["$totalPrice", "$nBeds"] } },
   };
 
-  // Group by country taking topN
-
+  // Group by country taking topN values
   var groupByCountry = {
     $group: {
       _id: "$_id.country",
@@ -39,15 +39,13 @@ async function get_Dashboard(req, res) {
     },
   };
 
-  // Add a sum to sort one
-
+  // Add a sum to sort by
   var addSumOfBeds = { $set: { totalBeds: { $sum: "$topMarkets.beds" } } };
 
   // Sort by totalBeds
   var sortByTotalBeds = { $sort: { totalBeds: -1 } };
 
-  //Remove extra
-
+  //Remove extra fields and clean up output
   var tidyUp = {
     $set: { Country: "$_id", _id: "$$REMOVE", totalBeds: "$$REMOVE" },
   };
