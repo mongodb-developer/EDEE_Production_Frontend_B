@@ -8,7 +8,6 @@ async function get_AtlasSearch(req, res) {
   var maxPeople = 10;
   var minPeople = 5;
 
-
   var searchOperation = {
     $search: {
       range: {
@@ -19,12 +18,11 @@ async function get_AtlasSearch(req, res) {
     },
   };
 
-  
-  var projection = { $project: { accommodates: 1, name: 1, "address.market": 1 } };
+  var projection = { $project: { 
+      accommodates: 1, name: 1, "address.market": 1 } };
 
-  // $search is used as the first stage to the $aggregate command
-  // We are using $project to remove some fields we don;t want
-
+  // $search is used as the first stage to the $aggregate command.
+  // We are using $project to remove some fields we don't want.
   var searchResultsCursor = collection.aggregate([searchOperation, projection]);
   var searchResult = await searchResultsCursor.toArray();
   res.status(201);

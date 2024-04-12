@@ -6,25 +6,28 @@ var collection;
 async function get_AtlasSearch(req, res) {
   var queryTerm = req.query.get("queryTerm");
 
-  var queryTermInDescription = { text: {query: queryTerm, path: "description" }};
+  var queryTermInDescription = { text: {query: queryTerm, 
+        path: "description" }};
   var holds5To10 = {range: { path: "accommodates", gt: 5, lt: 10} };
 
   var searchOperation = { $search: {
       compound: {
-        must: [queryTermInDescription], //All must be true
-        should: [holds5To10], // One must be true
+        must: [ queryTermInDescription ], //All must be true
+        should: [ holds5To10 ], // Influences relevnace score
       }
   }};
 
   // Basic list of fields we want to see
-  var fieldsToProject = { accommodates: 1, description: 1, name: 1, "address.market": 1,  };
+  var fieldsToProject = { 
+        accommodates: 1, description: 1, name: 1, "address.market": 1 };
 
-  //Add $meta: "searchScore" to the projection get the score
+  //Add $meta: "searchScore" to the projection to get the relevancy score
   fieldsToProject.score = { $meta: "searchScore" };
 
   var projection = {  $project: fieldsToProject };
 
-  var searchResultsCursor = collection.aggregate([searchOperation, projection]);
+  var searchResultsCursor = collection.aggregate(
+        [ searchOperation, projection ]);
   var searchResult = await searchResultsCursor.toArray();
   res.status(201);
   res.send(searchResult);

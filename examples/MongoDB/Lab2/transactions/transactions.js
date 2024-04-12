@@ -1,8 +1,5 @@
-
 var mongoClient = null;
 var collection;
-
-
 
 async function post_txnDemo(req, res) {
   const rval = {};

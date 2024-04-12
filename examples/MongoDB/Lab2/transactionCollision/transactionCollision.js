@@ -40,6 +40,6 @@ async function initWebService() {
   );
   collection = mongoClient.getDatabase("test").getCollection("txnExample")
   // Uncomment the line below to restart - but if there is an open
-  // Transaction you will need to wait up to 30 seconds
+  // transaction you will need to wait up to 30 seconds
   // await collection.drop();
 }
