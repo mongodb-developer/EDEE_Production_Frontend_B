@@ -14,7 +14,7 @@ async function get_AtlasSearch(req, res) {
         query: queryTerm,
         path: path,
         fuzzy: {
-          maxEdits: 2, //Allow for some changes
+          maxEdits: 2, //Allow for 2 typos
         }
       }
     }
@@ -23,12 +23,11 @@ async function get_AtlasSearch(req, res) {
   var projection = {
     $project: {
       amenities: false,  images: false, availability: false,
-      review_scores: false, host: false, reviews: false  },
+      review_scores: false, host: false, reviews: false },
   };
 
-  // $search is used as the first stage to the $aggregate command
-  // We are using $project to remove some fields we don;t want
-
+  // $search is used as the first stage to the $aggregate command.
+  // We are using $project to remove some fields we don't want.
   var searchResultsCursor = collection.aggregate([searchOperation, projection]);
   var searchResult = await searchResultsCursor.toArray();
   res.status(201);

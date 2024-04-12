@@ -51,7 +51,7 @@ async function initWebService() {
   );
   collection = mongoClient.getDatabase("test").getCollection("appLocks");
 
-  //Add a document
+  // Add a document
   newDocId = "abc123";
   lockId = "12345";
   await collection.drop();

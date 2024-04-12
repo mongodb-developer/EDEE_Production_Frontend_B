@@ -1,11 +1,9 @@
-// Create a Search Index
-
 var mongoClient = null;
 var listingsCollection;
 
-// ℹ️ create a Search Index - this will fail on sample_AirBNB as it's read only
-// But it already exists on the data.
-// but using the GET method you can have a peek at how the index is defined
+// ℹ️ Create a Search Index - this will fail on sample_AirBNB as it's read only.
+// But, the search indexes already exists. Using the GET method you can have a 
+// peek at how the index is defined
 
 async function post_AtlasSearch(req, res) {
   var rval = {};
@@ -15,15 +13,16 @@ async function post_AtlasSearch(req, res) {
   var indexDefinition = requestObj.index.definition;
 
   try {
-    // delete the index if exists - will fail on Read only data
+    // Delete the index if it exists - will fail on read-only data
     rval.drop = await listingsCollection.dropSearchIndex({ name: indexName });
   } catch (e) {
     rval.drop = e.message;
   }
 
   try {
-    // ℹ️ create the new Search index - will fail on Read only data
-    rval.index = await listingsCollection.createSearchIndex(indexName, indexDefinition);
+    // Create the new Search index - will fail on read-only data
+    rval.index = await listingsCollection.createSearchIndex(indexName,
+        indexDefinition);
   } catch (e) {
     rval.index = e.message;
   }

@@ -1,15 +1,12 @@
 var mongoClient = null;
 var collection;
 
-// ℹ️ searching rentals, here we're just searching in the "summary" field of each document
+// ℹ️ searching rentals, here we're just searching in the "summary" field of 
+// each document
 
 async function get_AtlasSearch(req, res) {
   var queryTerm = req.query.get("queryTerm");
   var path = "summary"; // here we search just in one field
-
-  // ℹ️ if you want to search in all fields rather than named fields
-  // you can use a wildcard
-  // path = { wildcard : "*"}
 
   var searchOperation = {
     $search: {
@@ -20,12 +17,12 @@ async function get_AtlasSearch(req, res) {
 
   var projection = {
     $project: {
-      amenities: false,  images: false, availability: false,
-      review_scores: false, host: false, reviews: false  },
+      amenities: false, images: false, availability: false,
+      review_scores: false, host: false, reviews: false },
   };
-  // $search is used as the first stage to the $aggregate command
-  // We are using $project to remove some fields we don;t want
-
+  
+  // $search is used as the first stage to the $aggregate command.
+  // We are using $project to remove some fields we don't want.
   var searchResultsCursor = collection.aggregate([searchOperation, projection]);
   var searchResult = await searchResultsCursor.toArray();
   res.status(201);

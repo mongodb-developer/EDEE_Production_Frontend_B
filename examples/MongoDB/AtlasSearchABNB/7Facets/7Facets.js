@@ -1,19 +1,16 @@
 var mongoClient = null;
 var collection;
 
-
-//Change to show countries
-
+// For each country, count how many properties have a pool
 async function get_AmenitiesByCountry(req, res) {
   
-  //This field must be indexed as a facet
-  
-  var fieldToFacet = "address.country"; // "property_type"
+  // This field must be indexed as a facet
+  var fieldToFacet = "address.country";
   
   var amenity = req.params[3];
-  console.log("Seeing what countries have " + amenity)
+  console.log("For each country, count how many properties have a " + amenity);
   
-  searchOperation = [
+  searchOperation = 
     {
       $searchMeta: {
         index: "airbnbFacetIndex",
@@ -29,10 +26,9 @@ async function get_AmenitiesByCountry(req, res) {
           },
         },
       },
-    },
-  ];
+    };
 
-  var searchResultsCursor = collection.aggregate(searchOperation);
+  var searchResultsCursor = collection.aggregate([ searchOperation ]);
   var searchResult = await searchResultsCursor.toArray();
   res.status(201);
   res.send(searchResult);
