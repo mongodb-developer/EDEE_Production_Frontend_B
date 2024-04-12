@@ -15,7 +15,8 @@ async function get_PropertyViews(req, res) {
 // increment the number of view by one.
 
 async function post_PropertyViews(req, res) {
-  var sourceIp = req.sourceIp; // Source of the requests (randomized in simulator)
+  var sourceIp = req.sourceIp; // Source of the requests
+                               // (randomized in simulator)
 
   propertyId = req.params[3];
   query = { _id: propertyId };

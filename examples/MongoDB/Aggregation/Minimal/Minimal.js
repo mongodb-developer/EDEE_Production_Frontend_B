@@ -4,7 +4,7 @@ var listingsCollection;
 // Properties in the USA with a pool most expensive first.
 // $match, $sort and $project stages are the same as a find()
 // In this case aggregation isn't needed but you might start
-// with a $match for a more useful aggregation.
+// with a $match in a more useful aggregation.
 
 async function get_Properties(req, res) {
   var query = { "address.country": "United States", amenities: "Pool" };
