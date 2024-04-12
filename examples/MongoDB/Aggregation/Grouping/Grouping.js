@@ -5,8 +5,8 @@ var listingsCollection;
 
 async function get_Countries(req, res) {
 
-  groupOp = {}
-  groupOp._id =  "$address.country" ; // _id is the expression to GROUP BY
+  groupOp = {};
+  groupOp._id =  "$address.country" ; // _id is the field to GROUP BY
   groupOp.nProperties = { $count: {} };
   groupOp.totalBeds = { $sum: "$beds" };
   groupOp.totalRooms = { $sum: "$bedrooms" };
@@ -18,7 +18,7 @@ async function get_Countries(req, res) {
     $set: { bedsPerRoom: { $divide: ["$totalBeds", "$totalRooms"] } },
   };
 
-  // Sort by that virtual field
+  // Sort by that new field
   sortByBedsPerRoom = { $sort: { bedsPerRoom: -1 } };
 
   getTop5 = { $limit: 5 };

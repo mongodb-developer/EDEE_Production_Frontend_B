@@ -4,26 +4,22 @@ var listingsCollection;
 
 async function get_Dashboard(req, res) {
 
-  // Change to Group by country + market(Town)
-  
-  var groupByCountryAndMarket = { $group: { _id : {}, total: {$count:{}} }};
+  // Change to Group by country + market (city)
+  var groupByCountryAndMarket = { $group: { _id : {}, total: { $count:{}}}};
 
-  // Compute 
+  // Calculate the price per bed 
   var pricePerBed = { $set : {} };
 
-  // Then Group by country taking $topN values
-
+  // Group by country taking $topN values
   var groupByCountry = { $group : {} };
 
   // Add a sum of beds to sort by
-
   var addSumOfBeds = { $set: {} };
 
   // Sort by totalBeds
   var sortByTotalBeds = { $sort : {} };
 
   //Remove extra fields and clean up output
-
   var tidyUp = { $set: {} }; // or $project
 
   var pipeline = [

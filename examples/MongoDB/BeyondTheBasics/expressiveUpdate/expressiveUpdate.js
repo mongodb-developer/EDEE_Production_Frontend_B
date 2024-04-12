@@ -1,24 +1,10 @@
 var mongoClient = null;
 var temperatureCollection;
 
-// User POST to Cities to load data, GET Cities to see data
-// Then Change URL and POST to AddSummary to update all the records expressively
-// Then GET Cities to see the change
-
-
-
-async function post_AddSummary(req, res) {
-  query = {}; // Match everything
-  summaryFields = {};
-  summaryFields.mean = { $avg: "$average_temperatures" };
-  summaryFields.max = { $max: "$average_temperatures" };
-  summaryFields.length = { $size: "$average_temperatures" };
-  expressiveUpdate = [{ $set: summaryFields }]; // An Array shows it's expressive
-
-  rval = await temperatureCollection.updateMany(query, expressiveUpdate);
-  res.status(200);
-  res.send(rval);
-}
+// User POSTs to Cities to load data, GET Cities to see data.
+// Then Change URL and POST to AddSummary to update all the records 
+// expressively.
+// Then GET Cities to see the changes.
 
 //Generate example data
 async function post_Cities(req, res) {
@@ -34,6 +20,19 @@ async function get_Cities(req, res) {
   var data = await temperatureCollection.find(query).toArray();
   res.status(200);
   res.send(data);
+}
+
+async function post_AddSummary(req, res) {
+  query = {}; // Match everything
+  summaryFields = {};
+  summaryFields.mean = { $avg: "$average_temperatures" };
+  summaryFields.max = { $max: "$average_temperatures" };
+  summaryFields.length = { $size: "$average_temperatures" };
+  expressiveUpdate = [{ $set: summaryFields }]; // An Array shows it's expressive
+
+  rval = await temperatureCollection.updateMany(query, expressiveUpdate);
+  res.status(200);
+  res.send(rval);
 }
 
 async function initWebService() {

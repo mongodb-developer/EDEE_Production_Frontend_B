@@ -12,7 +12,7 @@
       "_id": 2,
       "components": [
         {"shape": "square", "color": "purple", "size": "large"},
-        {"shape": "circle", "color": "orange", "size": "lerge"},
+        {"shape": "circle", "color": "orange", "size": "large"},
         {"shape": "rectangle", "color": "pink", "size": "medium"},
         {"shape": "triangle", "color": "brown", "size": "small"}
       ]

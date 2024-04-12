@@ -9,7 +9,7 @@ async function post_Sequence(req, res) {
 
   var query = { _id: sequenceName };
   var updateOps = { $inc: { count: 1 } };
-  // Can add projections and sort into options too
+  // Can add projections, sort, and options too
   var options = { upsert: true, returnNewDocument: true };
 
   // Use findOneAndUpdate to Update and Get the before or after record
