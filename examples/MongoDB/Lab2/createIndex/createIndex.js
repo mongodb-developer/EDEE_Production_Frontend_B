@@ -12,7 +12,7 @@ async function post_Index(req, res) {
    res.send({ create, list });
 }
 
-//Test Queries with out indexes
+// Test Queries with out indexes
 
 async function get_Index(req,res)
 {
@@ -26,7 +26,7 @@ async function get_Index(req,res)
     res.send({ importantStats, fullExplain });
 }
 
-//Create Sample Data
+// Create Sample Data
 async function post_CreateData(req, res) {
     var dropResult = await collection.drop();
     const nDocs = 10000;
@@ -40,12 +40,11 @@ async function post_CreateData(req, res) {
        }
     }
     
-    //Any remaining
+    // Any remaining
     if(batch.length) await collection.insertMany(batch);
     const loaded = await collection.countDocuments({});
     res.send({ dropResult, loaded, msg: "Now Change the URL to v1/Index"});
 }
-
 
 async function initWebService() {
     var userName = await system.getenv("MONGO_USERNAME");

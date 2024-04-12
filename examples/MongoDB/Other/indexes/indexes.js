@@ -1,31 +1,9 @@
-// This is called once when the web service starts up
 var mongoClient = null;
 var db, collection;
-
-async function initWebService() {
-  var userName = await system.getenv("MONGO_USERNAME");
-  var passWord = await system.getenv("MONGO_PASSWORD", true);
-
-  if (
-    userName == "" ||
-    userName == null ||
-    passWord == "" ||
-    passWord == null
-  ) {
-    alert("Please enter valid auth");
-    return;
-  }
-
-  mongoClient = new MongoClient(
-    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net",
-  );
-}
 
 async function post_createIndex(req, res) {
   var rval = null;
   var requestObj = JSON.parse(req.body);
-  var db = mongoClient.getDatabase("game");
-  var collection = db.getCollection("highscores");
   var indexDefinition = requestObj.definition;
   var name = requestObj.name;
 
@@ -37,4 +15,15 @@ async function post_createIndex(req, res) {
 
   res.status(201);
   res.send({ create, list, dropIndex, list2 });
+}
+
+async function initWebService() {
+  var userName = await system.getenv("MONGO_USERNAME");
+  var passWord = await system.getenv("MONGO_PASSWORD", true);
+
+  mongoClient = new MongoClient(
+    "mongodb+srv://" + userName + ":" + passWord + "@learn.mongodb.net",
+  );
+  db = mongoClient.getDatabase("game");
+  collection = db.getCollection("highscores");
 }

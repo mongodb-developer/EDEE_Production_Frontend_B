@@ -3,12 +3,12 @@ var collection;
 
 async function post_Update(req, res) {
 
-  //Add a document
+  // Add a document
   var insertResult = await collection.insertOne({ msg: "A doc", numUpdates: 0, 
       modifiedBy: [], lastModifiedBy: 0 });
   var newDocId = insertResult.insertedIds[0];
 
-  //Create 5 update Ops 
+  // Create 5 update Ops 
   var updateOps = [];
   for( let threadId = 1; threadId < 6; threadId++ ) {
     var query = { _id:  newDocId };
@@ -22,7 +22,7 @@ async function post_Update(req, res) {
     updateOps.push(collection.updateOne(query,updateOp));
   }
 
-  //Run slow ops in parallel with Promise.all
+  // Run slow ops in parallel with Promise.all
   var updateResults = await Promise.all(updateOps);
   
   finalForm = await collection.findOne({_id:newDocId});
@@ -39,6 +39,6 @@ async function initWebService() {
   );
   collection = mongoClient.getDatabase("test").getCollection("updateExample");
   // Uncomment the line below to restart - but if there is an open
-  // Transaction you will need to wait up to 30 seconds
+  // transaction you will need to wait up to 30 seconds
   // await collection.drop();
 }

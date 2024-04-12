@@ -1,4 +1,4 @@
 {
     "name"  : "CountryIndex",
-    "definition" : { "Country" : 1 }
+    "definition": { "Country": 1 }
 }
