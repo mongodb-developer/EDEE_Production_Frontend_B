@@ -4,14 +4,14 @@ an update to set a field on it to say it's being edited.
 In practice you would also add a timeout and information about the editor
 to prevent this being locked forever if a client dies.
 
-Use Get to lock the document - calling get multiple times will fail as it
-is already locked
+Use GET to lock the document - calling GET multiple times will fail as it
+is already locked.
 
-Use post to update and release the lock - if you post an it's not locked 
+Use POST to update and release the lock - if you POST an it's not locked 
 you will get an error.
 
 For simplicity we have hardcoded lockId but you could make it add a random one
-then edit the post data to prove it.
+then edit the POST data to prove it.
 
 How could you add a date so a lock expires after a set time and someone else
-can get the lock.
+can get the lock?

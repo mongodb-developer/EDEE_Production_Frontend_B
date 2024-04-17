@@ -4,13 +4,14 @@ var arrayExample;
 async function get_Data(req, res) {
   var query = {};
 
-  // WE WANT TO FETCH RECORDS WITH "SMALL CIRCLES"
+  // WE WANT TO FETCH RECORDS WITH "LARGE CIRCLES"
 
-  // Incorrect as this is matching whole object and none of the array elements match this
-  // query.components = { shape: "circle", size: "small" };
+  // Incorrect as this is matching whole object and none of the array elements
+  // eaxctly match this: 
+  // query.components = { shape: "circle", size: "large" };
 
   // Correct - Match is an element matches the sub query
-  // query.components  = {$elemMatch: { shape: "circle", size: "small" }} ;
+  // query.components  = { $elemMatch: { shape: "circle", size: "small" }} ;
 
   // Incorrect returns  record if any component is a circle and any is small
   query = { "components.shape": "circle", "components.size": "large" };

@@ -1,12 +1,14 @@
 // Create a web service to power a dashboard showing each country
-// Add  the top 3 markets (towns) in that country ordered by number of properties
-// For each market show the number of beds and the average basic price per bed
-// Order the countries by the number of beds in those top three markets
+// Add  the top 3 markets (towns) in that country ordered by number of 
+// properties. 
+// For each market show the number of beds and the average basic 
+// price per bed.
+// Order the countries by the number of beds in those top three markets.
 
 // Tackle these one at a time i.e. first get it to list Markets then group
 // them into countries - the code has hints.
-
-"topMarkets": [
+{
+  "topMarkets": [
     {
       "market": "New York",
       "beds": 916,

@@ -2,8 +2,8 @@ var mongoClient = null;
 var listingsCollection;
 
 // Find out what Cheap, Medium and Expensive means in 
-// Terms of AyrBNB Prices - compute the price for 3 days
-// Add a cleaning fee then break into 3 categories
+// Terms of AyrBNB Prices - compute the price for 3 days.
+// Add a cleaning fee then break into 3 ranges (buckets)
 
 async function get_Cohorts(req, res) {
   // Calculate the total price for 3 nights
@@ -15,15 +15,16 @@ async function get_Cohorts(req, res) {
   outputSpec.totalWithPool = {
     $sum: { $cond: { if: { $in: ["Pool", "$amenities"] }, then: 1, else: 0 } },
   };
-  outputSpec.medianPrice = { $median:  {input: priceFor3Days, method: "approximate" }};
+  outputSpec.medianPrice = { $median:  {
+      input: priceFor3Days, method: "approximate" }};
 
   // 3 Groups, Based on price, output as specified.
-  var cohortDefinition = { groupBy: priceFor3Days, buckets: 3, output: outputSpec };
+  var cohortDefinition = { groupBy: priceFor3Days, 
+        buckets: 3, output: outputSpec };
 
   var bucketAutoStage = { $bucketAuto: cohortDefinition };
 
   // For each cohort , compute the percentage that have a pool
-
   percentWithPool = {
     $set: {
       percentWithPool: {
@@ -37,7 +38,6 @@ async function get_Cohorts(req, res) {
   var pipeline = [bucketAutoStage, percentWithPool, renameId];
 
   var cursor = listingsCollection.aggregate(pipeline);
-
   var results = await cursor.toArray();
 
   res.status(200);

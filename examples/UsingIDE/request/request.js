@@ -12,8 +12,7 @@ function post_Echo(req, res) {
 
 function get_Echo(req, res) {
 
-  //req.query contains values from the URL
-
+  // req.query contains values from the URL
   var value = req.query.get("value");
   res.status(200);
   res.send({ echo: value });

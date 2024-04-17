@@ -22,9 +22,9 @@ async function get_PropertyViews(req, res) {
 
 async function post_PropertyViews(req, res) {
 
-  var sourceIp = req.sourceIp; // Source of the requests (randomized in simulator)
-
-  propertyId = req.params[3]
+  var sourceIp = req.sourceIp; // Source of the requests
+                               // (randomized in simulator)
+  propertyId = req.params[3];
   query = { _id:  propertyId};
 
   updateOps = {};
