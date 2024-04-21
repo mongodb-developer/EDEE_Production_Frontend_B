@@ -1,5 +1,9 @@
 
 ~~~Add org to telemetry~~~
+Move function timing to server end to avoid web service roundtrips
+  Standardise return from server calls  { ok: [true|false], error: X , result : {} , ms: 20 }
+  Provide API to 'time' server calls
+
 service needs to terminate children for commandRUnner on stop
 Certificate renewal monthly automated on commandRunner!!!
 Add transaction support [In Progress ]
